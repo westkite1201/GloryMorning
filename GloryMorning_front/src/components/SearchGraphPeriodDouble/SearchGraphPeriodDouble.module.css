@@ -1,0 +1,74 @@
+.searchbar_container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.center{
+    width: 100%;
+   
+}
+
+.left{
+    width: 49%;
+    margin-right: 1%
+}
+.right{
+    width: 49%;
+    margin-left: 1%
+}
+
+.buttonComponent{
+    margin-left: 10px;
+}
+
+/* dayPICKER인풋 수정 */ 
+.searchbar_container .DayPickerInput input{
+    margin-right: 5px;
+    padding: 4px;
+    border-radius: 5px;
+}
+
+
+.searchButtonClickContainer{
+    display: inline-block;
+}
+
+
+.searchButton{
+    background-color: grey; /* Green */
+    border: none;
+    color: white;
+    padding: 1px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.4s;
+}
+.searchButton:hover {
+    
+    background-color: #51cf66; /* Green */
+    color: white;
+  }
+.searchButtonClick{
+    background-color:  #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 1px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.4s;
+}
+
+.searchButtonClick:hover {
+    background-color:  #51cf66; /* Green */
+    border: none;
+    color: white;
+    padding: 1px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}

@@ -1,0 +1,254 @@
+@font-face{font-family:'NotoSansKR-Medium'; src:url('../../Styles/fonts/NotoSansKR-Medium.otf')}
+
+
+$body-bg: #c1bdba;
+$form-bg: #13232f;
+$white: #ffffff;
+
+$main: #ffa8a8;
+$main-light: lighten($main,5%);
+$main-dark: darken($main,5%);
+
+$gray-light: #a0b3b0;
+$gray: #ddd;
+
+$thin: 300;
+$normal: 400;
+$bold: 600;
+$br: 4px;
+
+// a {
+//   text-decoration:none;
+//   color:$main;
+//   transition:.5s ease;
+//   &:hover {
+//     color:$main-dark;
+//   }
+
+// }
+
+.loginWrappingContainer{
+    color: #fff;
+    background-attachment: scroll;
+    //background: #1c1e21 url(./apple-691282_1280.jpg);
+    background: #1c1e21 url(./abstract-3866486.jpg);
+    //background: #1c1e21 url(./abstract-3866492.jpg);
+    //background: #1c1e21 url(https://static.pexels.com/photos/8819/warsaw.jpg);
+    background-position: center center;
+    background-repeat: none;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    background-size: contain;
+    -o-background-size: contain;
+    min-height: 100%;
+    text-align: center;
+    background-attachment: fixed;
+    font-family:  'NotoSansKR-Medium';
+    
+}
+.form{
+    padding : 100px;
+    display: inline-block;
+}
+
+.userform {
+  background: rgba(0,0,0,0.5);
+  //background:rgba($form-bg,.9);
+  padding: 40px;
+  max-width:500px;
+  //margin:40px auto;
+  border-radius:$br;
+  box-shadow:0 4px 10px 4px rgba($form-bg,.3);
+
+}
+
+.tab-group {
+  list-style:none;
+  padding:0;
+  margin:0 0 40px 0;
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  li a {
+    display:block;
+    text-decoration:none;
+    padding:12px;
+    background:rgba($gray-light,.25);
+    color:$gray-light;
+    font-size:20px;
+    float:left;
+    width:50%;
+    text-align:center;
+    cursor:pointer;
+    transition:.5s ease;
+    &:hover {
+      background:$main-dark;
+      color:$white;
+    }
+  }
+  .tabActive a {
+    background:#15aabf;
+    color:$white;
+  }
+}
+
+// .tab-content > div:last-child {
+//   display:none;
+// }
+.bannerText {
+  margin: 0 0 20px;
+}
+.bannerText h1{
+    text-align:center;
+    color:$white;
+    font-weight:$thin;
+    margin:0 0 40px;
+}
+.bannerText h2{
+    text-align:center;
+    color:$white;
+    font-weight:$thin;
+    margin:0 0 40px;
+}
+
+
+
+.loginLabel {
+  position:absolute;
+  transform:translateY(4px);
+  left:13px;
+  color:rgba($white,.5);
+  transition:all 0.25s ease;
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+  font-size:17px;
+  .req {
+  	margin:2px;
+  	color:$main;
+  }
+ 
+}
+
+.loginLabel.active {
+  transform:translateY(-20px);
+  left:2px;
+  font-size:14px;
+  .req {
+    opacity:0;
+  }
+}
+
+.loginLabel.highlight {
+	color:$white;
+}
+
+.loginInput{
+  font-size:22px;
+  display:block;
+  width:100%;
+  height:100%;
+  padding:5px 10px;
+  background:none;
+  background-image:none;
+  border:1px solid $gray-light;
+  color:$white;
+  border-radius:0;
+  transition:border-color .25s ease, box-shadow .25s ease;
+  &:focus {
+		outline:0;
+		border-color:$main;
+  }
+}
+
+.loginTextarea{
+  font-size:22px;
+  display:block;
+  width:100%;
+  height:100%;
+  padding:5px 10px;
+  background:none;
+  background-image:none;
+  border:1px solid $gray-light;
+  color:$white;
+  border-radius:0;
+  transition:border-color .25s ease, box-shadow .25s ease;
+  &:focus {
+		outline:0;
+		border-color:$main;
+  }
+  
+}
+
+// input, textarea {
+//   font-size:22px;
+//   display:block;
+//   width:100%;
+//   height:100%;
+//   padding:5px 10px;
+//   background:none;
+//   background-image:none;
+//   border:1px solid $gray-light;
+//   color:$white;
+//   border-radius:0;
+//   transition:border-color .25s ease, box-shadow .25s ease;
+//   &:focus {
+// 		outline:0;
+// 		border-color:$main;
+//   }
+// }
+
+
+
+
+
+.field-wrap {
+  position:relative;
+  margin-bottom:40px;
+}
+
+.top-row {
+
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  > div {
+    float:left;
+    width:48%;
+    margin-right:4%;
+    &:last-child { 
+      margin:0;
+    }
+  }
+}
+
+.loginButton {
+  border:0;
+  outline:none;
+  border-radius:0;
+  padding:15px 0;
+  font-size:2rem;
+  font-weight:$bold;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  background:$main;
+  color:$white;
+  transition:all.5s ease;
+  -webkit-appearance: none;
+  &:hover, &:focus {
+    background:$main-dark;
+  }
+}
+
+.button-block {
+  display:block;
+  width:100%;
+}
+
+.forgot {
+  margin-top:-20px;
+  text-align:right;
+}

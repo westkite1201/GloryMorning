@@ -1,0 +1,121 @@
+.Container {
+  display: block;
+  width: 100%;
+  min-width: 380px;
+  height: 50px;
+  box-sizing: border-box;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: 15px;
+  background-color: #adb5bd;
+}
+.pageContainer{
+  width: calc(100% - 300px);
+  height: 50px;
+  background-color: #ffffff;
+  box-shadow: 1px 4px 3px -1px #999;
+  color: black;
+  box-sizing: border-box;
+  float :right;
+
+  
+  /*float: left;*/
+}
+.pageContainerWhite{
+  width: calc(100% - 300px);
+  height: 50px;
+  padding-top: 5px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  /*float: left;*/
+  float :right;
+  box-shadow:  1px 4px 3px -1px #999;
+}
+.page{
+  /*border: 1px solid #999;*/
+  height: 3vh;
+  font-size: 14px;
+  cursor: pointer;
+  width: 10%;
+  text-align: center;
+  display: inline-block;
+  font-weight: 600;
+  padding-top: 10px;
+}
+.page_home{
+  /*border: 1px solid #999;*/
+  height: 3vh;
+  font-size: 14px;
+  cursor: pointer;
+  width: 10%;
+  text-align: center;
+  display: inline-block;
+  font-weight: 600;
+  padding-top: 10px;
+}
+
+div .pageContainer .page:hover{
+      padding-bottom: 15px;
+    	border-bottom: 2px solid #fcc419;
+      outline: 0 none;
+}
+div .pageContainerWhite .page:hover{
+  padding-bottom: 15px;
+  border-bottom: 2px solid #fcc419;
+  outline: 0 none;
+ 
+}
+
+div .pageContainer .page_home:hover{
+  padding-bottom: 28px;
+  border-bottom: 2px solid #fcc419;
+  outline: 0 none;
+}
+div .pageContainerWhite .page_home:hover{
+  padding-bottom: 28px;
+  border-bottom: 2px solid #fcc419;
+  outline: 0 none;
+}
+
+
+.logo{
+  color: white;
+  background-color: #2E3E4E;
+  width: 300px;
+  height: 50px;
+  float: left;
+ 
+  padding-bottom :10px;
+  box-sizing: border-box;
+  text-align: center;
+  vertical-align: middle;
+ 
+}
+.saveButton{
+  display: inline-block;
+  margin-right: 5px;
+  float: right;
+  cursor: pointer;
+}
+
+.logo_image {
+  width : 300px;
+  height : 50px;
+  box-shadow: 1px 4px 3px -1px #999;
+  cursor: pointer;
+}
+
+.selected_Page {
+  border: 1px solid #999;
+  height: 3vh;
+  font-size: 18px;
+  cursor: pointer;
+  width: 15%;
+  text-align: center;
+  display: inline-block;
+  font-weight: 600;
+  color: #999;
+}
+
+.fontAwesomeLogo{
+  z-index: 99;
+}

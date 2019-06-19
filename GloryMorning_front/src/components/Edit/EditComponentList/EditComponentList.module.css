@@ -1,0 +1,30 @@
+@media screen {
+
+}
+.EditableList_Container {
+  text-align: left;
+  float: left;
+  display: inline-block;
+  justify-content: left;
+  width: 190px;
+
+  height: 100vh;
+  background-color: #2E3E4E;
+  box-sizing: border-box;
+  color: white;
+}
+.EditableList_Component{
+  background-color: #495057;
+  margin-bottom: 1px;
+  padding: 10px 10px 10px 15px;
+  cursor: pointer;
+  font-family: Roboto, 'Open Sans', Arial, sans-serif;
+}
+div .EditableList_Component:hover{
+  padding-left: 10px;
+  border-left: 5px solid #fcc419
+}
+.arrowIcon{
+  padding-top: 4px;
+  padding-right: 2px;
+}
