@@ -6,14 +6,14 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cors = require('cors')();
 var indexRouter = require('./routes/index');
-var authRouter = require('./routes/api/authController');
-var userRouter = require('./routes/api/userController');
-let boardApi = require('./routes/api/boardController')
-let busRouter = require('./routes/api/busController')
-let fileRouter = require('./routes/api/fileController')
+// var authRouter = require('./routes/api/authController');
+// var userRouter = require('./routes/api/userController');
+// let boardApi = require('./routes/api/boardController')
+// let busRouter = require('./routes/api/busController')
+// let fileRouter = require('./routes/api/fileController')
 let weatherApi = require('./routes/api/weatherController')
 
-var passport = require('./config/passport/localStrategy')
+//var passport = require('./config/passport/localStrategy')
 
 var session = require('express-session');
 
@@ -84,15 +84,15 @@ app.post('/api/login', (req, res, next) => {
 
 
 
-app.use('/api/auth', authRouter);   //2
+// app.use('/api/auth', authRouter);   //2
 
-//미들웨어 적용
-app.use('/api/user', authMiddleware)
-app.use('/api/user', userRouter)
-app.use('/api/board',boardApi)
+// //미들웨어 적용
+// app.use('/api/user', authMiddleware)
+// app.use('/api/user', userRouter)
+// app.use('/api/board',boardApi)
 app.use('/api/weather', weatherApi);
-app.use('/api/bus', busRouter)
-app.use('/api/file', fileRouter)
+// app.use('/api/bus', busRouter)
+// app.use('/api/file', fileRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
