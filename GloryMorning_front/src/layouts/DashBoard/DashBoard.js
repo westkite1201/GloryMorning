@@ -3,7 +3,6 @@ import style from './DashBoard.module.css'
 import { Switch, Route, Redirect } from "react-router-dom";
 import dashboardRoutes from "../../routes/dashboard.js";
 import SideBar from '../../components/SideBar';
-import CarouselSlide from '../../components/CarouselSlide'
 import SearchAppBar from '../../components/SearchAppBar'
 import { observer, inject, } from 'mobx-react'
 //import SideNav from '../../components/SideNav';

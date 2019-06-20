@@ -18,7 +18,8 @@ router.post('/getLocation',  async(req, res) => {
           weatherDao.connect(cb);
         },
         (conn, cb) => {
-          weatherDao.getLocation(conn,data, cb);
+          weatherDao.getLocation(conn, data, cb);
+
         }
       ],
       (error, conn, result) => {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
-import CarouselSlide from '../../CarouselSlide'
 import TemperatureChart from '../../Chart/WeatherChart/TemperatureChart'
 import RainChart from '../../Chart/WeatherChart/RainChart'
 import HumidityChart from '../../Chart/WeatherChart/HumidityChart'
@@ -185,12 +184,11 @@ class EditComponentList extends Component {
   
   getLocationAtDB = async(locationA, locationB, locationC) =>{
     try{ 
-      const response = await weatherApi.getLocation( locationA, 
+      const response = await weatherApi.getLocation( 
+                                                    locationA, 
                                                     locationB,
                                                     locationC
                                                   );
-
-  
     if (response.statusText === "OK") { //포스트 작성 성공 
       console.log(response)
     }
