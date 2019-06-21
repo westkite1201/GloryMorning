@@ -1,16 +1,18 @@
 
-const dbHelpers = require('./mysqlHelpers');
+const dbHelpers = require('./mysqlHelpersPromise');
 
 /* Step 2. get connection */
-const dbTest = async () => {
+const dbTest = async (param1, param2, param3) => {
 	try {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			/* Step 3. */
 			const ID = 'HELLO';
 			const PW = 'WORLD';
-			await connection.beginTransaction(); // START TRANSACTION
-			const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			//await connection.beginTransaction(); // START TRANSACTION
+			const [rows] = await connection.query('SELECT * FROM CQMS_MEMBER');
+			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
 			await connection.commit(); // COMMIT
 			connection.release();
             return rows;

@@ -50,6 +50,7 @@ class EditComponentList extends Component {
           let LocationC = resData.region_3depth_name
           console.log(LocationA, LocationB ,LocationC )
           this.getLocationAtDB(LocationA, LocationB, LocationC)
+          
         }
 
       })

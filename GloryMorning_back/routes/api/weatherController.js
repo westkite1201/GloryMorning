@@ -2,8 +2,25 @@ var express = require('express');
 var router = express.Router();
 let {PythonShell } = require('python-shell') 
 const weatherDao = require('../../model/mysql/weatherDao')
+const weatherDaoTest = require('../../model/mysql/weatherDaoTest')
 const async = require('async');
 /* 디비 조회하기  */
+router.post('/dbtest',  async(req, res) => {
+  try{
+    let rows = await weatherDaoTest.dbTest();
+    if(rows){
+        console.log(rows)
+        return res.json(rows)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+})
+
+
+
 router.post('/getLocation',  async(req, res) => {
   console.log("getLocation!!"  )
   const data = {
@@ -19,7 +36,6 @@ router.post('/getLocation',  async(req, res) => {
         },
         (conn, cb) => {
           weatherDao.getLocation(conn, data, cb);
-
         }
       ],
       (error, conn, result) => {
