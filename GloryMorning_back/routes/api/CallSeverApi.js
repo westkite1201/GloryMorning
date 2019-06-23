@@ -44,7 +44,7 @@ module.exports = function (callee) {
                     "base_time": base_time,
                     "nx" : nx,
                     "ny" : ny,
-                    "numOfRows" : 50,
+                    "numOfRows" : 80,
                     "_type" : type
                 })
                 OPTIONS.url += 'ServiceKey='+ serviceKey

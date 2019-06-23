@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
-import style from './HumidiyChart.module.css'
 import ReactHighcharts from  'react-highcharts'
+import _  from 'lodash'
 
-class HumidityChart extends Component {  
+/* 레인 차트는 강수확률이랑 강우량 두개를 가져가도록 함  */
+class RainChart extends Component {  
     componentDidMount(){
         console.log('chartCompon')
        this.getWeatherData()
@@ -16,18 +17,18 @@ class HumidityChart extends Component {
             weatherData
          } = this.props;
 
-            getWeather("HUMIDITY");
+            getWeather("RAIN");
     }
     componentDidUpdate(){
-        const { isFetchingHumi } = this.props;
+        const { isFetchingRain } = this.props;
         let chart = this.refs.chart.getChart();
-        if(isFetchingHumi){
+        if(isFetchingRain){
              chart.showLoading('Loading...');
         }else{
             chart.hideLoading('Loading...');
         }
         console.log('componentDidUpdate')
-        console.log('isFetching' , isFetchingHumi)
+        console.log('isFetching' , isFetchingRain)
         const {allChartResizing} = this.props; 
         allChartResizing();
         //this.chartUpdate()
@@ -35,8 +36,8 @@ class HumidityChart extends Component {
 
   render() {
     console.log('render')
-    const { wrapperid, humidityData } = this.props;
-    console.log('weatherData ' , humidityData)
+    const { wrapperid, rainData } = this.props;
+    console.log('weatherData ' , rainData)
 
 
     const config = {
@@ -49,11 +50,7 @@ class HumidityChart extends Component {
       },
      
     title: {
-        text: '습도',
-        style: {
-            fontFamily: style.NotoSansKR
-        }
-    
+        text: '강수확률'
     },
     id : wrapperid +'_c',
     
@@ -67,16 +64,26 @@ class HumidityChart extends Component {
         tickInterval: 1,
         labels: {
             enabled: true,
-            //formatter: function() { return humidityData[this.value][0];},
+            //formatter: function() { return rainData[this.value][0][0];},
         }
         //type: 'datetime',
         //tickPixelInterval: 150
     },
-    yAxis: {
+    yAxis: [{
         title: {
             text: '시간'
         }
     },
+     { // Secondary yAxis
+        title: {
+            text: 'Rainfall',
+        },
+        labels: {
+            format: '{value} mm',
+          
+        },
+        opposite: true
+    }],
     legend: {
         layout: 'vertical',
         align: 'right',
@@ -97,8 +104,8 @@ class HumidityChart extends Component {
     },
     series: [{
         type: 'spline',
-        name: '습도',
-        data: humidityData,
+        name: '강수확률',
+        data: rainData[0],
         zones: [{
             value: 0,
             color: '#1864ab'
@@ -111,8 +118,16 @@ class HumidityChart extends Component {
         },{
             value: 30,
             color: '#f03e3e'
+        }]
+    },
+    {
+        name: 'Rainfall',
+        type: 'column',
+        yAxis: 1,
+        data:  rainData[1],
+        tooltip: {
+            valueSuffix: ' mm'
         }
-    ]
     }],
 
     }
@@ -120,15 +135,16 @@ class HumidityChart extends Component {
     return (
 
         <div>
-               <ReactHighcharts config = {config} ref= "chart" ></ReactHighcharts>
+        {/*<button onClick = {this.setDisable}>버튼 클릭 </button>*/}
+             <ReactHighcharts config = {config} ref= "chart" ></ReactHighcharts>
         </div>
     )
   }
 }
 export default inject(({ weather, edit }) => ({
-    isFetchingHumi : weather.isFetchingHumi,
+    isFetchingRain : weather.isFetchingRain,
     getWeather : weather.getWeather,
-    humidityData : weather.humidityData,
+    rainData : weather.rainData,
     allChartResizing : edit.allChartResizing
     
-  }))(observer(HumidityChart));
+  }))(observer(RainChart));

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
-import style from './HumidiyChart.module.css'
 import ReactHighcharts from  'react-highcharts'
 
-class HumidityChart extends Component {  
+class TemperatureChart extends Component {  
     componentDidMount(){
         console.log('chartCompon')
        this.getWeatherData()
@@ -11,23 +10,24 @@ class HumidityChart extends Component {
 
     getWeatherData = () => { 
         const {
-            isFetching , 
             getWeather,
-            weatherData
          } = this.props;
 
-            getWeather("HUMIDITY");
+            getWeather("TEMPERATURE");
+            //this.setUpdating();
+            //this.chartUpdate()
+            //console.log('weatherdata ', weatherData);
     }
     componentDidUpdate(){
-        const { isFetchingHumi } = this.props;
+        const { isFetchingTemp } = this.props;
         let chart = this.refs.chart.getChart();
-        if(isFetchingHumi){
+        if(isFetchingTemp){
              chart.showLoading('Loading...');
         }else{
             chart.hideLoading('Loading...');
         }
         console.log('componentDidUpdate')
-        console.log('isFetching' , isFetchingHumi)
+        console.log('isFetching' , isFetchingTemp)
         const {allChartResizing} = this.props; 
         allChartResizing();
         //this.chartUpdate()
@@ -35,8 +35,8 @@ class HumidityChart extends Component {
 
   render() {
     console.log('render')
-    const { wrapperid, humidityData } = this.props;
-    console.log('weatherData ' , humidityData)
+    const { wrapperid, temperatureData } = this.props;
+    console.log('temperatureData ' , temperatureData)
 
 
     const config = {
@@ -49,11 +49,7 @@ class HumidityChart extends Component {
       },
      
     title: {
-        text: '습도',
-        style: {
-            fontFamily: style.NotoSansKR
-        }
-    
+        text: '온도'
     },
     id : wrapperid +'_c',
     
@@ -67,7 +63,7 @@ class HumidityChart extends Component {
         tickInterval: 1,
         labels: {
             enabled: true,
-            //formatter: function() { return humidityData[this.value][0];},
+            formatter: function() { return temperatureData[this.value][0];},
         }
         //type: 'datetime',
         //tickPixelInterval: 150
@@ -97,8 +93,16 @@ class HumidityChart extends Component {
     },
     series: [{
         type: 'spline',
-        name: '습도',
-        data: humidityData,
+        marker: {
+            lineWidth: 2,                                                                                       
+            lineColor: '#adb5bd',
+            fillColor: 'white'
+        },
+        color: '#adb5bd',       
+        dashStyle : 'shortdot',
+
+        name: '온도',
+        data: temperatureData,
         zones: [{
             value: 0,
             color: '#1864ab'
@@ -120,15 +124,16 @@ class HumidityChart extends Component {
     return (
 
         <div>
-               <ReactHighcharts config = {config} ref= "chart" ></ReactHighcharts>
+        {/*<button onClick = {this.setDisable}>버튼 클릭 </button>*/}
+             <ReactHighcharts config = {config} ref= "chart" ></ReactHighcharts>
         </div>
     )
   }
 }
 export default inject(({ weather, edit }) => ({
-    isFetchingHumi : weather.isFetchingHumi,
+    isFetchingTemp : weather.isFetchingTemp,
     getWeather : weather.getWeather,
-    humidityData : weather.humidityData,
+    temperatureData : weather.temperatureData,
     allChartResizing : edit.allChartResizing
     
-  }))(observer(HumidityChart));
+  }))(observer(TemperatureChart));

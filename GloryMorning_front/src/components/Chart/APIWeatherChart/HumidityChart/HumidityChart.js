@@ -5,8 +5,10 @@ import ReactHighcharts from  'react-highcharts'
 
 class HumidityChart extends Component {  
     componentDidMount(){
+        const {getLocaionName} =this.props; 
+        getLocaionName();
         console.log('chartCompon')
-       this.getWeatherData()
+       //this.getWeatherData()
     }
 
     getWeatherData = () => { 
@@ -16,27 +18,27 @@ class HumidityChart extends Component {
             weatherData
          } = this.props;
 
-            getWeather("HUMIDITY");
+         getWeather("HUMIDITY");
     }
     componentDidUpdate(){
-        const { isFetchingHumi } = this.props;
-        let chart = this.refs.chart.getChart();
-        if(isFetchingHumi){
-             chart.showLoading('Loading...');
-        }else{
-            chart.hideLoading('Loading...');
-        }
-        console.log('componentDidUpdate')
-        console.log('isFetching' , isFetchingHumi)
-        const {allChartResizing} = this.props; 
-        allChartResizing();
-        //this.chartUpdate()
+        // const { isFetchingHumi } = this.props;
+        // let chart = this.refs.chart.getChart();
+        // if(isFetchingHumi){
+        //      chart.showLoading('Loading...');
+        // }else{
+        //     chart.hideLoading('Loading...');
+        // }
+        // console.log('componentDidUpdate')
+        // console.log('isFetching' , isFetchingHumi)
+        // const {allChartResizing} = this.props; 
+        // allChartResizing();
+        // //this.chartUpdate()
     }
 
   render() {
     console.log('render')
-    const { wrapperid, humidityData } = this.props;
-    console.log('weatherData ' , humidityData)
+    const { wrapperid, humidityDataList } = this.props;
+    console.log('weatherData ' , humidityDataList)
 
 
     const config = {
@@ -67,7 +69,11 @@ class HumidityChart extends Component {
         tickInterval: 1,
         labels: {
             enabled: true,
-            //formatter: function() { return humidityData[this.value][0];},
+            formatter: function() { 
+                console.log(humidityDataList)
+                return humidityDataList[this.value][0];
+            
+            },
         }
         //type: 'datetime',
         //tickPixelInterval: 150
@@ -98,7 +104,7 @@ class HumidityChart extends Component {
     series: [{
         type: 'spline',
         name: '습도',
-        data: humidityData,
+        data: humidityDataList,
         zones: [{
             value: 0,
             color: '#1864ab'
@@ -126,9 +132,10 @@ class HumidityChart extends Component {
   }
 }
 export default inject(({ weather, edit }) => ({
-    isFetchingHumi : weather.isFetchingHumi,
-    getWeather : weather.getWeather,
-    humidityData : weather.humidityData,
-    allChartResizing : edit.allChartResizing
-    
+    // isFetchingHumi : weather.isFetchingHumi,
+    // getWeather : weather.getWeather,
+    // humidityData : weather.humidityData,
+    humidityDataList : weather.humidityDataList,
+    allChartResizing : edit.allChartResizing,
+    getLocaionName : weather.getLocaionName
   }))(observer(HumidityChart));
