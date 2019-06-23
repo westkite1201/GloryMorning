@@ -4,6 +4,98 @@ let {PythonShell } = require('python-shell')
 const weatherDao = require('../../model/mysql/weatherDao')
 const weatherDaoTest = require('../../model/mysql/weatherDaoTest')
 const async = require('async');
+const CallSeverApi = require('./CallSeverApi')('weather');
+const moment = require('moment')
+
+let newtime = 0;
+let newdate = 0;
+
+
+
+getNowTime = () => {
+  let date = new Date();
+  let hourMinute = parseInt( moment(date).format('HHMM'))
+  console.log( hourMinute )
+  if( 0 <= hourMinute && hourMinute < 230){
+     //하루전날 
+    newdate = moment(date).subtract(1, 'days').format('YYYYMMDD')
+    newtime = '2300'
+  }
+  else if ( 230 <= hourMinute && hourMinute < 530 ){
+
+    newdate = moment(date).format('YYYYMMDD')
+    newtime = '0200'
+  }
+  else if ( 530 <=  hourMinute && hourMinute < 830 ){
+    newdate = moment(date).format('YYYYMMDD')
+    newtime = '0500'
+  }
+  else if ( 830 <=  hourMinute && hourMinute < 1130 ){
+    newdate = moment(date).format('YYYYMMDD')
+    newtime = '0800'
+  }
+  else if ( 1130 <=  hourMinute && hourMinute < 1430 ){
+    newdate = moment(date).format('YYYYMMDD')
+    newtime = '1100'
+  }
+  else if ( 1430 <=  hourMinute && hourMinute < 1730 ){
+    newdate = moment(date).format('YYYYMMDD')
+    newtime = '1400'
+  }
+  else if ( 1730 <=  hourMinute && hourMinute < 2030 ){
+    newdate = moment(date).format('YYYYMMDD')
+    newtime = '1700'
+  }
+  else if ( 2030 <=  hourMinute && hourMinute  < 2330 ){
+    newdate = moment(date).format('YYYYMMDD')
+    newtime = '2000'
+  }
+}
+
+
+
+getWeatherData = async(res, nx, ny) => {
+      //nx, ny는 디비에서 가져오기 
+      //base_date오늘 날짜 
+      //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+      let base_date, base_time, type;
+      base_date = newdate
+      base_time = newtime
+
+      type = 'json'
+      await CallSeverApi.weather(base_date, base_time, nx, ny, type, function( err, result ){
+        if (!err) {
+          console.log('result' , result)
+          res.json(result);
+        } else {
+          console.log(err);
+        }
+      })
+
+}
+router.post('/testWeatherAPI', function (req, res) {
+      //nx, ny는 디비에서 가져오기 
+      //base_date오늘 날짜 
+      //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+      let base_date, base_time, nx, ny, type;
+      base_date = newdate
+      base_time = newtime
+      nx = 60,
+      ny = 127,
+      type = 'json'
+      CallSeverApi.weather(base_date, base_time, nx, ny, type, function( err, result ){
+        if (!err) {
+          console.log(result);
+          res.json(result);
+        } else {
+          console.log(err);
+            res.json(err);
+        }
+      })
+});
+
+
+
 /* 디비 조회하기  */
 router.post('/dbtest',  async(req, res) => {
   try{
@@ -18,6 +110,31 @@ router.post('/dbtest',  async(req, res) => {
     console.log('error' ,e)
   }
 })
+//서버에서 모두 처리
+// 이슈사항...AWAIT 으로 어떻게 이쁘게 받지.?ㅜㅜ
+router.post('/getLocation_chain',  async(req, res) => {
+  getNowTime(); //현재 시간 세팅
+  try{
+    const data = {
+      LOCATION_A :  req.body.LOCATION_A,
+      LOCATION_B :  req.body.LOCATION_B,
+      LOCATION_C :  req.body.LOCATION_C,
+    } 
+    console.log(data)
+    let rows = await weatherDaoTest.getLocation(data); // LOCATION 정보 XX,YY  
+    if(rows){ //온경우 
+        let nx = rows[0].X;
+        let ny = rows[0].Y; 
+        getWeatherData(res, nx, ny) // getwehaterDATA
+        //return res.json(response)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+})
+
 
 
 

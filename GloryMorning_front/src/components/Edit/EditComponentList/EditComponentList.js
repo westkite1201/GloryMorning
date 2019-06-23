@@ -7,6 +7,8 @@ import HumidityChart from '../../Chart/WeatherChart/HumidityChart'
 import style from './EditComponentList.module.css';
 import axios from 'axios'
 import * as weatherApi from '../../../lib/api/weatherApi'
+import moment from 'moment'
+
 
 let cx;
 let cy;
@@ -27,7 +29,7 @@ class EditComponentList extends Component {
     toggle =()=> {
         this.setState({ collapse: !this.state.collapse });
     }
-    axiosTest = () => { 
+    axiosTest = () => {  //현재 x,y 에 대한 동네 위치 요청 
       console.log("axiosTest!!")
       console.log(cx, cy)
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
@@ -43,22 +45,26 @@ class EditComponentList extends Component {
         },
         timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
       }).then(res => {
+        //카카오톡애 요청 
+
         if(res.data.documents) {
           let resData = res.data.documents[1];
           let LocationA = resData.region_1depth_name
           let LocationB = resData.region_2depth_name
           let LocationC = resData.region_3depth_name
           console.log(LocationA, LocationB ,LocationC )
-          this.getLocationAtDB(LocationA, LocationB, LocationC)
-          
-        }
 
+          this.getLocationAtDB(LocationA, LocationB, LocationC)
+        }
       })
     }
+
+
     convert = () =>{
       var RE = 6371.00877; // 지구 반경(km)
       var GRID = 5.0; // 격자 간격(km)
       var SLAT1 = 30.0; // 투영 위도1(degree)
+
       var SLAT2 = 60.0; // 투영 위도2(degree)
       var OLON = 126.0; // 기준점 경도(degree)
       var OLAT = 38.0; // 기준점 위도(degree)
@@ -204,6 +210,7 @@ class EditComponentList extends Component {
     const {mapToComponent} = this; 
     return (
       <div>
+      <button onClick ={this.getNowTime}>모멘트 테스트 </button>
         <button onClick = {this.convert}>convert</button>
         <button onClick={this.toggle}> 클릭</button>
         <button onClick={handlePage}> 클릭</button>
