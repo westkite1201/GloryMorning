@@ -4,20 +4,10 @@ import ReactHighcharts from  'react-highcharts'
 
 class TemperatureChart extends Component {  
     componentDidMount(){
-        console.log('chartCompon')
-       this.getWeatherData()
+        const {getWeatherData} =this.props; 
+        getWeatherData('temperature');
     }
 
-    getWeatherData = () => { 
-        const {
-            getWeather,
-         } = this.props;
-
-            getWeather("TEMPERATURE");
-            //this.setUpdating();
-            //this.chartUpdate()
-            //console.log('weatherdata ', weatherData);
-    }
     componentDidUpdate(){
         const { isFetchingTemp } = this.props;
         let chart = this.refs.chart.getChart();
@@ -35,8 +25,8 @@ class TemperatureChart extends Component {
 
   render() {
     console.log('render')
-    const { wrapperid, temperatureData } = this.props;
-    console.log('temperatureData ' , temperatureData)
+    const { wrapperid, temperatureDataList } = this.props;
+    console.log('temperatureData ' , temperatureDataList)
 
 
     const config = {
@@ -63,7 +53,7 @@ class TemperatureChart extends Component {
         tickInterval: 1,
         labels: {
             enabled: true,
-            formatter: function() { return temperatureData[this.value][0];},
+            formatter: function() { return temperatureDataList[this.value][0];},
         }
         //type: 'datetime',
         //tickPixelInterval: 150
@@ -102,7 +92,7 @@ class TemperatureChart extends Component {
         dashStyle : 'shortdot',
 
         name: '온도',
-        data: temperatureData,
+        data: temperatureDataList,
         zones: [{
             value: 0,
             color: '#1864ab'
@@ -132,8 +122,8 @@ class TemperatureChart extends Component {
 }
 export default inject(({ weather, edit }) => ({
     isFetchingTemp : weather.isFetchingTemp,
-    getWeather : weather.getWeather,
-    temperatureData : weather.temperatureData,
+    getWeatherData : weather.getWeatherData,
+    temperatureDataList : weather.temperatureDataList,
     allChartResizing : edit.allChartResizing
     
   }))(observer(TemperatureChart));

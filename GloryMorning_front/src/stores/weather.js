@@ -16,36 +16,77 @@ export default class WeatherStore {
 
 
 
-    @observable humidityDataList = [['6시',2],['10시',4]];
+    @observable isFetchingSky = false
+    @observable isFetchingRain = false
+    @observable isFetchingRainmm = false
+    @observable isFetchingTemp = false
+    @observable isFetchingHumi = false
 
 
-    getLocaionName = (cx, cy) => {  //현재 x,y 에 대한 동네 위치 요청 
+
+    @observable humidityDataList = [];  //습도 
+    @observable rainfallDataList = []; //강수확률
+    @observable rainfallmmDataList =[]; //강수량
+    @observable skyDataList =[]; //날씨
+    @observable temperatureDataList =[]; //온도 
+
+    @observable currentX; // 좌표 X
+    @observable currentY; // 좌표 Y
+
+    @observable LocationA;
+    @observable LocationB;
+    @observable LocationC;
+
+    @action
+    setHumidityDataListEmpty = () => {
+      this.humidityDataList = []
+    }
+    @action
+    setRainfallDataListEmpty = () => {
+      this.rainfallDataList = []
+    }
+    @action
+    setRainfallmmDataEmpty = () => {
+      this.rainfallmmDataList = []
+    }
+    @action
+    setSkyDataListEmpty = () => {
+      this.skyDataList = []
+    }    
+    @action
+    setTemperatureDataListEmpty = () => {
+      this.temperatureDataList = []
+    }
+
+
+    getLocationName = () => {  //현재 x,y 에 대한 동네 위치 요청 
       console.log("axiosTest!!")
-      _.isNil(cx) ? cx = 127.10459896729914 : cx = cx
-      _.isNil(cy) ? cy = 37.40269721785548 : cy = cy 
+      _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
+      _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{
         axios.get('https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?', {
           params: { // query string
             // x: '127.10459896729914',
             // y: '37.40269721785548'
-            x : cx.toString(),
-            y : cy.toString(),
+            x : this.currentX.toString(),
+            y : this.currentY.toString(),
           },
           headers: { // 요청 헤더
             'Authorization': 'KakaoAK 964c43954aeb54d0711aed4e57a588e5'
           },
           timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
         }).then(res => {
-          //카카오톡애 요청 
-
+          //카카오톡에 요청 
           if(res.data.documents) {
             let resData = res.data.documents[1];
             let LocationA = resData.region_1depth_name
             let LocationB = resData.region_2depth_name
             let LocationC = resData.region_3depth_name
+            this.LocationA = LocationA
+            this.LocationB = LocationB
+            this.LocationC = LocationC
             console.log(LocationA, LocationB ,LocationC )
-            this.getLocationAtDB(LocationA, LocationB, LocationC)
           }
         })
       }catch(e){
@@ -53,13 +94,23 @@ export default class WeatherStore {
       }
     }
     
+
+
+    //이걸 한시간 마다 호출하도록 
     @action
-    getLocationAtDB = async(locationA, locationB, locationC) =>{
+    getWeatherData = async( wantApi ) =>{
       try{ 
+        if( wantApi ==='humidity'){ this.isFetchingHumi = true }
+        if( wantApi ==='rainfall'){ this.isFetchingRain = true }
+        if( wantApi ==='rainfallmm'){ this.isFetchingRainmm = true }
+        if( wantApi ==='sky'){ this.isFetchingSky = true }
+        if( wantApi ==='temperature'){ this.isFetchingTemp = true }
+        //this.isFetchingHumi = true
+        //this.isFetchingRain = true
         const response = await weatherApi.getLocation( 
-                                                      locationA, 
-                                                      locationB,
-                                                      locationC
+                                                      this.locationA, 
+                                                      this.locationB,
+                                                      this.locationC
                                                     );
       if (response.statusText === "OK") { //포스트 작성 성공 
           console.log(response)
@@ -89,27 +140,115 @@ export default class WeatherStore {
               temperatureArr.push(item)
             }
           })
+
           console.log(rainfallArr)
           console.log(rainfallmmArr)
           console.log(humidityArr)
           console.log(skyArr)
           console.log(temperatureArr)
 
-        
-          humidityArr.map((item) =>{
-            this.humidityDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
-          })
+          if( wantApi ==='humidity'){
+              humidityArr.map((item) => {
+                this.humidityDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+              })
+          }
+          if( wantApi ==='rainfall'){
+              rainfallArr.map((item) => {
+                this.rainfallDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+              })
+          }
+          if( wantApi ==='rainfallmm' ){
+              rainfallmmArr.map((item) => {
+                this.rainfallmmDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+              })
+          }
+          if( wantApi ==='sky'){
+              skyArr.map((item) => {
+                this.skyDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+              })
+          }
+          if( wantApi ==='temperature'){
+              temperatureArr.map((item) =>{
+                this.temperatureDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+              })
+          }
+
+          if( wantApi ==='humidity'){ this.isFetchingHumi = false }
+          if( wantApi ==='rainfall'){ this.isFetchingRain = false  }
+          if( wantApi ==='rainfallmm'){ this.isFetchingRainmm = false }
+          if( wantApi ==='sky'){ this.isFetchingSky = false }
+          if( wantApi ==='temperature'){ this.isFetchingTemp = false }
+
         }
       }catch(e){
           console.log(e)
       }
     }
 
-
-    @action
-    fetchingData = () => {
-
+      @action
+      getAllWeatherData = async(locationA, locationB, locationC) =>{
+        try{ 
+          this.isFetchingHumi = true
+          this.isFetchingRain = true
+          const response = await weatherApi.getLocation( 
+                                                        locationA, 
+                                                        locationB,
+                                                        locationC
+                                                      );
+        if (response.statusText === "OK") { //포스트 작성 성공 
+            console.log(response)
+            let responseData= response.data.response.body;
+            let weatherArray = responseData.items.item;
+            console.log(weatherArray)
+    
+            let rainfallArr = []
+            let rainfallmmArr = [];
+            let humidityArr = [];
+            let skyArr = [];
+            let temperatureArr = [] 
+            weatherArray.map((item)=>{
+              if(item.category ==='POP'){
+                rainfallArr.push(item)
+              }
+              if(item.category ==='PTY'){
+                rainfallmmArr.push(item)
+              }
+              if(item.category ==='REH'){
+                humidityArr.push(item)
+              }
+              if(item.category ==='SKY'){
+                skyArr.push(item)
+              }
+              if(item.category ==='T3H'){
+                temperatureArr.push(item)
+              }
+            })
+  
+            humidityArr.map((item) => {
+              this.humidityDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+            })
+            rainfallArr.map((item) => {
+              this.rainfallDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+            })
+            rainfallmmArr.map((item) => {
+              this.rainfallmmDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+            })
+            skyArr.map((item) => {
+              this.skyDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+            })
+            temperatureArr.map((item) =>{
+              this.temperatureDataList.push([item.fcstTime.toString(), parseInt( item.fcstValue) ]) 
+            })
+            
+            this.isFetchingHumi = false;
+            this.isFetchingRain = false;
+          }
+        }catch(e){
+            console.log(e)
+        }
     }
+    
+
 
     
 

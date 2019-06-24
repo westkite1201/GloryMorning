@@ -5,42 +5,38 @@ import ReactHighcharts from  'react-highcharts'
 
 class HumidityChart extends Component {  
     componentDidMount(){
-        const {getLocaionName} =this.props; 
-        getLocaionName();
+        const {getWeatherData} =this.props; 
+        getWeatherData('humidity');
         console.log('chartCompon')
        //this.getWeatherData()
     }
 
-    getWeatherData = () => { 
-        const {
-            isFetching , 
-            getWeather,
-            weatherData
-         } = this.props;
 
-         getWeather("HUMIDITY");
-    }
     componentDidUpdate(){
-        // const { isFetchingHumi } = this.props;
-        // let chart = this.refs.chart.getChart();
-        // if(isFetchingHumi){
-        //      chart.showLoading('Loading...');
-        // }else{
-        //     chart.hideLoading('Loading...');
-        // }
-        // console.log('componentDidUpdate')
-        // console.log('isFetching' , isFetchingHumi)
-        // const {allChartResizing} = this.props; 
-        // allChartResizing();
-        // //this.chartUpdate()
+        const { isFetchingHumi } = this.props;
+
+        let chart = this.refs.chart.getChart();
+        if(isFetchingHumi){
+             chart.showLoading('Loading...');
+        }else{
+            chart.hideLoading('Loading...');
+        }
+        console.log('componentDidUpdate')
+        console.log('isFetching' , isFetchingHumi)
+
+        const { allChartResizing } = this.props; 
+        allChartResizing();
+        //this.chartUpdate()
+    }
+    componentWillUnmount(){
+        console.log("componentWillUnmount!!")
+        const { setHumidityDataListEmpty } = this.props 
+        setHumidityDataListEmpty();
     }
 
   render() {
     console.log('render')
     const { wrapperid, humidityDataList } = this.props;
-    console.log('weatherData ' , humidityDataList)
-
-
     const config = {
       chart : {
         //height: 100,
@@ -70,7 +66,7 @@ class HumidityChart extends Component {
         labels: {
             enabled: true,
             formatter: function() { 
-                console.log(humidityDataList)
+               // console.log(humidityDataList)
                 return humidityDataList[this.value][0];
             
             },
@@ -132,10 +128,11 @@ class HumidityChart extends Component {
   }
 }
 export default inject(({ weather, edit }) => ({
-    // isFetchingHumi : weather.isFetchingHumi,
+     isFetchingHumi : weather.isFetchingHumi,
     // getWeather : weather.getWeather,
     // humidityData : weather.humidityData,
     humidityDataList : weather.humidityDataList,
     allChartResizing : edit.allChartResizing,
-    getLocaionName : weather.getLocaionName
+    getWeatherData : weather.getWeatherData,
+    setHumidityDataListEmpty : weather.setHumidityDataListEmpty
   }))(observer(HumidityChart));

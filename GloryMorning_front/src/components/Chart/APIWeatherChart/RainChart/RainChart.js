@@ -6,19 +6,10 @@ import _  from 'lodash'
 /* 레인 차트는 강수확률이랑 강우량 두개를 가져가도록 함  */
 class RainChart extends Component {  
     componentDidMount(){
-        console.log('chartCompon')
-       this.getWeatherData()
+        const {getWeatherData} =this.props; 
+        getWeatherData('rainfall');
     }
 
-    getWeatherData = () => { 
-        const {
-            isFetching , 
-            getWeather,
-            weatherData
-         } = this.props;
-
-            getWeather("RAIN");
-    }
     componentDidUpdate(){
         const { isFetchingRain } = this.props;
         let chart = this.refs.chart.getChart();
@@ -33,12 +24,16 @@ class RainChart extends Component {
         allChartResizing();
         //this.chartUpdate()
     }
+    componentWillUnmount(){
+        console.log("componentWillUnmount!!")
+        const { setRainDataListEmpty } = this.props 
+        setRainDataListEmpty();
+    }
 
   render() {
     console.log('render')
-    const { wrapperid, rainData } = this.props;
-    console.log('weatherData ' , rainData)
-
+    const { wrapperid, rainfallDataList } = this.props;
+    console.log('weatherData ' , rainfallDataList)
 
     const config = {
       chart : {
@@ -64,7 +59,7 @@ class RainChart extends Component {
         tickInterval: 1,
         labels: {
             enabled: true,
-            //formatter: function() { return rainData[this.value][0][0];},
+            formatter: function() { return rainfallDataList[this.value][0];},
         }
         //type: 'datetime',
         //tickPixelInterval: 150
@@ -105,7 +100,7 @@ class RainChart extends Component {
     series: [{
         type: 'spline',
         name: '강수확률',
-        data: rainData[0],
+        data: rainfallDataList,
         zones: [{
             value: 0,
             color: '#1864ab'
@@ -120,15 +115,9 @@ class RainChart extends Component {
             color: '#f03e3e'
         }]
     },
-    {
-        name: 'Rainfall',
-        type: 'column',
-        yAxis: 1,
-        data:  rainData[1],
-        tooltip: {
-            valueSuffix: ' mm'
-        }
-    }],
+ 
+
+    ],
 
     }
     
@@ -142,9 +131,8 @@ class RainChart extends Component {
   }
 }
 export default inject(({ weather, edit }) => ({
+    getWeatherData : weather.getWeatherData,
     isFetchingRain : weather.isFetchingRain,
-    getWeather : weather.getWeather,
-    rainData : weather.rainData,
+    rainfallDataList : weather.rainfallDataList,
     allChartResizing : edit.allChartResizing
-    
   }))(observer(RainChart));

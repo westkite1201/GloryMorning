@@ -5,6 +5,8 @@ import TemperatureChart from '../../Chart/WeatherChart/TemperatureChart'
 import RainChart from '../../Chart/WeatherChart/RainChart'
 import HumidityChart from '../../Chart/WeatherChart/HumidityChart'
 import HumidityChart_ from '../../Chart/APIWeatherChart/HumidityChart'
+import RainChart_ from '../../Chart/APIWeatherChart/RainChart'
+import TemperatureChart_ from '../../Chart/APIWeatherChart/TemperatureChart'
 import style from './EditComponentList.module.css';
 import axios from 'axios'
 import * as weatherApi from '../../../lib/api/weatherApi'
@@ -21,6 +23,8 @@ class EditComponentList extends Component {
       putComponentList('강수확률' , RainChart);
       putComponentList('습도' , HumidityChart);
       putComponentList('습도NEW', HumidityChart_)
+      putComponentList('강수확률NEW', RainChart_)
+      putComponentList('온도NEW', TemperatureChart_)
       this.nowGeolocation();
 
     }
@@ -149,12 +153,16 @@ class EditComponentList extends Component {
 
     nowGeolocation = () => {
       console.log("nowGeolocation")
-      function getLocation() {
+      function getLocation(currentX, currentY) {
         if (navigator.geolocation) { // GPS를 지원하면
           navigator.geolocation.getCurrentPosition(function(position) {
             alert(position.coords.latitude + ' ' + position.coords.longitude);
-            cy = position.coords.latitude
             cx = position.coords.longitude
+            cy = position.coords.latitude
+  
+            currentX = position.coords.longitude
+            currentY = position.coords.latitude
+            
           }, function(error) {
             console.error(error);
           }, {
@@ -166,8 +174,9 @@ class EditComponentList extends Component {
           alert('GPS를 지원하지 않습니다');
         }
       }
-
-      getLocation();
+      const {currentX , currentY, getLocationName} = this.props; 
+      getLocation(currentX, currentY);
+      getLocationName();
     }
 
   /*
@@ -258,10 +267,12 @@ class EditComponentList extends Component {
     )
   }
 }
-export default inject(({ edit }) => ({
+export default inject(({ edit, weather }) => ({
   putComponentList : edit.putComponentList,
   addSelectedComponent : edit.addSelectedComponent,
   componentList : edit.componentList,
   handlePage : edit.handlePage,
-
+  getLocationName : weather.getLocationName,
+  currentX : weather.currentX,
+  currentY : weather.currentY
 }))(observer(EditComponentList));

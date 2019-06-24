@@ -36,9 +36,6 @@ class HumidityChart extends Component {
   render() {
     console.log('render')
     const { wrapperid, humidityData } = this.props;
-    console.log('weatherData ' , humidityData)
-
-
     const config = {
       chart : {
         //height: 100,
@@ -67,7 +64,9 @@ class HumidityChart extends Component {
         tickInterval: 1,
         labels: {
             enabled: true,
-            //formatter: function() { return humidityData[this.value][0];},
+            //
+            
+            formatter: function() { return humidityData[this.value][0];},
         }
         //type: 'datetime',
         //tickPixelInterval: 150
@@ -118,9 +117,8 @@ class HumidityChart extends Component {
     }
     
     return (
-
         <div>
-               <ReactHighcharts config = {config} ref= "chart" ></ReactHighcharts>
+            <ReactHighcharts config = {config} ref= "chart" ></ReactHighcharts>
         </div>
     )
   }

@@ -63,9 +63,10 @@ getWeatherData = async(res, nx, ny) => {
       base_time = newtime
 
       type = 'json'
-      await CallSeverApi.weather(base_date, base_time, nx, ny, type, function( err, result ){
+        await CallSeverApi.weather(base_date, base_time, nx, ny, type, ( err, result ) => {
         if (!err) {
-          console.log('result' , result)
+          console.log('in getWeatherData' , result)
+          //return result
           res.json(result);
         } else {
           console.log(err);
@@ -73,7 +74,7 @@ getWeatherData = async(res, nx, ny) => {
       })
 
 }
-router.post('/testWeatherAPI', function (req, res) {
+router.post('/testWeatherAPI',  (req, res) => {
       //nx, ny는 디비에서 가져오기 
       //base_date오늘 날짜 
       //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
@@ -113,19 +114,22 @@ router.post('/dbtest',  async(req, res) => {
 //서버에서 모두 처리
 // 이슈사항...AWAIT 으로 어떻게 이쁘게 받지.?ㅜㅜ
 router.post('/getLocation_chain',  async(req, res) => {
-  getNowTime(); //현재 시간 세팅
+  await getNowTime(); //현재 시간 세팅
   try{
     const data = {
       LOCATION_A :  req.body.LOCATION_A,
       LOCATION_B :  req.body.LOCATION_B,
       LOCATION_C :  req.body.LOCATION_C,
     } 
-    console.log(data)
+    //console.log(data)
     let rows = await weatherDaoTest.getLocation(data); // LOCATION 정보 XX,YY  
+
     if(rows){ //온경우 
         let nx = rows[0].X;
         let ny = rows[0].Y; 
-        getWeatherData(res, nx, ny) // getwehaterDATA
+        let response = await getWeatherData(res, nx, ny) // getwehaterDATA
+        console.log('response' , response)
+        console.log('getWeatherData 완료')
         //return res.json(response)
     }else{
       console.log('error')
