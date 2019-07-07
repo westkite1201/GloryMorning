@@ -75,6 +75,8 @@ getWeatherData = async(res, nx, ny) => {
 
 }
 router.post('/testWeatherAPI',  (req, res) => {
+    console.log("testWeatherAPI!")
+      getNowTime();
       //nx, ny는 디비에서 가져오기 
       //base_date오늘 날짜 
       //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
@@ -86,7 +88,22 @@ router.post('/testWeatherAPI',  (req, res) => {
       type = 'json'
       CallSeverApi.weather(base_date, base_time, nx, ny, type, function( err, result ){
         if (!err) {
-          console.log(result);
+          //console.log(result);
+          console.log( result.response.body.items.item ) 
+          let list = result.response.body.items.item.map((item) =>{
+            return (
+              [
+                item.fcstDate,
+                item.fcstTime,
+                item.category,
+                item.fcstValue,
+                item.nx,
+                item.ny
+              ]
+            )
+          });
+          weatherDaoTest.insertWeatherData(list)
+          console.log(list)
           res.json(result);
         } else {
           console.log(err);

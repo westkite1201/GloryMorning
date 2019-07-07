@@ -26,8 +26,8 @@ class RainChart extends Component {
     }
     componentWillUnmount(){
         console.log("componentWillUnmount!!")
-        const { setRainDataListEmpty } = this.props 
-        setRainDataListEmpty();
+        const { setRainfallDataListEmpty } = this.props 
+        setRainfallDataListEmpty();
     }
 
   render() {
@@ -132,6 +132,7 @@ class RainChart extends Component {
 }
 export default inject(({ weather, edit }) => ({
     getWeatherData : weather.getWeatherData,
+    setRainfallDataListEmpty : weather.setRainfallDataListEmpty,
     isFetchingRain : weather.isFetchingRain,
     rainfallDataList : weather.rainfallDataList,
     allChartResizing : edit.allChartResizing
