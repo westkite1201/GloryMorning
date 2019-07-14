@@ -77,6 +77,7 @@ class HumidityChart extends Component {
         //tickPixelInterval: 150
     },
     yAxis: {
+        min: 0,
         title: {
             text: '시간'
         }

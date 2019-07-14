@@ -4,6 +4,7 @@ import ReactHighcharts from  'react-highcharts'
 import _  from 'lodash'
 
 /* 레인 차트는 강수확률이랑 강우량 두개를 가져가도록 함  */
+/* 강수량 같은 경우는 6시간 단위로만 가져오고 있습  */
 class RainChart extends Component {  
     componentDidMount(){
         const {getWeatherData} =this.props;

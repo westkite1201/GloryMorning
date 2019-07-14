@@ -102,6 +102,12 @@ export default class WeatherStore {
       PTY = rainmm
       SKY = sky
       T3H = temperture
+
+      == SKY CODE ==  
+      ① 1 : 맑음
+      ② 2 : 구름조금
+      ③ 3 : 구름많음
+      ④ 4 : 흐림
     */
     @action
     getWeatherData = async( nx ,ny, category ) =>{
