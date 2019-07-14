@@ -79,24 +79,20 @@ const getLocation = async (parameter) => {
 
 const getWeatherData = async (parameter) => {
 	try {
-		const locationA = parameter.LOCATION_A === '서울' ? parameter.LOCATION_A + '특별시' : ( parameter.LOCATION_A) ;
-		const locationB = parameter.LOCATION_B;
-		const locationC = parameter.LOCATION_C;
-		console.log(locationA)
-		console.log(locationB)
-		console.log(locationC)
-		
+		const nx = parameter.nx;
+		const ny = parameter.ny;
+		const category = parameter.category;		
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			/* Step 3. */
 			let sql = ` SELECT *
 						FROM WEATHER
 						WHERE NX = ? AND NY = ?
-								AND CATEGORY = ?
-								AND FCST_DATE >= ( SELECT date_format( now(), '%Y%m%d') ) `
+							AND CATEGORY = ?
+							AND FCST_DATE >= ( SELECT date_format( now(), '%Y%m%d') ) `
 			
 			
-			const [rows] = await connection.query(sql, ['서울특별시', '관악구', '인헌동']);
+			const [rows] = await connection.query(sql, [ nx, ny, category ]);
 			
 			
 			//await connection.beginTransaction(); // START TRANSACTION

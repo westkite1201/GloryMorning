@@ -93,10 +93,84 @@ export default class WeatherStore {
         console.log(e)
       }
     }
+
+
+
+    /*
+      REH = humi
+      POP = rain
+      PTY = rainmm
+      SKY = sky
+      T3H = temperture
+    */
+    @action
+    getWeatherData = async( nx ,ny, category ) =>{
+      try{
+        if( category ==='REH'){ this.isFetchingHumi = true }
+        if( category ==='POP'){ this.isFetchingRain = true }
+        if( category ==='PTY'){ this.isFetchingRainmm = true }
+        if( category ==='SKY'){ this.isFetchingSky = true }
+        if( category ==='T3H'){ this.isFetchingTemp = true }
+
+        const response = await weatherApi.getWeatherData( 
+          nx, 
+          ny,
+          category
+        );
+        console.log(response)
+        if (response.statusText === "OK") { //포스트 작성 성공 
+
+          console.log(response)
+          let weatherArray= response.data
+
+          switch (category) {
+            case "REH" :
+              this.humidityDataList = weatherArray.map((item) => {
+                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+              })
+              this.isFetchingHumi = false;
+              break;
+            case 'POP' :
+              this.rainfallDataList = weatherArray.map((item) => {
+                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+              })
+              this.isFetchingRain = false
+              break;
+            case 'PTY' :
+              this.rainfallmmDataList = weatherArray.map((item) => {
+                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+              })
+              this.isFetchingRainmm = false
+              break;
+            case 'SKY' :
+              this.skyDataList = weatherArray.map((item) => {
+                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+              })
+              this.isFetchingSky = false
+              break;
+            case 'T3H' :
+              this.temperatureDataList = weatherArray.map((item) => {
+                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+              })
+              this.isFetchingTemp = false
+              break;
+            default :
+              alert('선택한 값이 없습니다.');
+              break;
+          }
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
+
+
+    
     
 
 
     //이걸 한시간 마다 호출하도록 
+    /*
     @action
     getWeatherData = async( wantApi ) =>{
       try{ 
@@ -184,6 +258,7 @@ export default class WeatherStore {
           console.log(e)
       }
     }
+    */
 
       @action
       getAllWeatherData = async(locationA, locationB, locationC) =>{

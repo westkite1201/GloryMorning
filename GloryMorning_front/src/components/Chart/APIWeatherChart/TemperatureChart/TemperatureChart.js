@@ -5,7 +5,7 @@ import ReactHighcharts from  'react-highcharts'
 class TemperatureChart extends Component {  
     componentDidMount(){
         const {getWeatherData} =this.props; 
-        getWeatherData('temperature');
+        getWeatherData(60, 127, 'T3H');
     }
 
     componentDidUpdate(){

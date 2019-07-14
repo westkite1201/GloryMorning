@@ -6,8 +6,8 @@ import _  from 'lodash'
 /* 레인 차트는 강수확률이랑 강우량 두개를 가져가도록 함  */
 class RainChart extends Component {  
     componentDidMount(){
-        const {getWeatherData} =this.props; 
-        getWeatherData('rainfall');
+        const {getWeatherData} =this.props;
+        getWeatherData(60, 127, 'POP');
     }
 
     componentDidUpdate(){

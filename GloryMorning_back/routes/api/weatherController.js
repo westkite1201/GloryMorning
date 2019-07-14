@@ -3,6 +3,7 @@ var router = express.Router();
 let {PythonShell } = require('python-shell') 
 const weatherDao = require('../../model/mysql/weatherDao')
 const weatherDaoTest = require('../../model/mysql/weatherDaoTest')
+const weatherDaoNew = require('../../model/mysql/weatherDaoNew')
 const async = require('async');
 const CallSeverApi = require('./CallSeverApi')('weather');
 const moment = require('moment')
@@ -74,6 +75,33 @@ getWeatherData = async(res, nx, ny) => {
       })
 
 }
+
+/* db에서 weather data 조회  */
+router.post('/getWeatherData',  async(req, res) => {
+  
+  try{
+    const data = {
+      nx :  req.body.nx,
+      ny :  req.body.ny,
+      category :  req.body.category,
+    } 
+    //console.log(data)
+    let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY  
+    if(rows){ //온경우
+        return res.json(rows)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+});
+
+
+
+
+
+/* 이건 일정하게 요청할 것! */
 router.post('/testWeatherAPI',  (req, res) => {
     console.log("testWeatherAPI!")
       getNowTime();

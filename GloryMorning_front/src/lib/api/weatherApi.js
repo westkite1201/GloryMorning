@@ -1,7 +1,6 @@
 import axios from 'axios';
 import cilentConfig from '../../configuration/clientConfig'
 
-/* 회원가입  */
 
  export const getLocation = (locationA, locationB, locationC) =>{
      const data = {
@@ -14,3 +13,14 @@ import cilentConfig from '../../configuration/clientConfig'
 }
 
 
+
+
+export const getWeatherData = (nx, ny, category) =>{
+     const data = {
+        nx: nx,
+        ny : ny,
+        category : category,
+      }
+      return (axios.post(cilentConfig.endpoint.api + "/weather/getWeatherData",data));
+      //return (axios.post("http://localhost:3031/api/member/test",data));
+}

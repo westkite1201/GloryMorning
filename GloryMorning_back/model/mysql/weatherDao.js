@@ -34,6 +34,39 @@ const getLocation = async(conn, parameter, cb) => {
 }
 
 
+/*get sky 테스트 해보기  */
+const getWeatherData = async(conn, parameter, cb) => {
+
+  const nx = parameter.nx;
+  const ny = parameter.ny;
+  const category = parameter.category;
+  conn.query(
+    `
+    SELECT X,Y 
+    FROM KOREA_LOCATION
+    WHERE LOCATION_A = ? 
+        AND LOCATION_B = ? 
+        AND LOCATION_C = ?
+    
+    `,
+    [
+        locationA,
+        locationB,
+        locationC
+    ],
+    (error, result) => {
+      if (error) {
+        return cb(error, conn);
+      }
+      else {
+        return cb(null, conn, result);
+      }
+    }
+  )
+}
+
+
+
 module.exports = {
   connect: dbHelpers.doConnect,
   release: dbHelpers.doRelease,

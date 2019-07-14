@@ -5,10 +5,11 @@ import ReactHighcharts from  'react-highcharts'
 
 class HumidityChart extends Component {  
     componentDidMount(){
-        const {getWeatherData} =this.props; 
-        getWeatherData('humidity');
+        const {getWeatherData , humidityDataList} =this.props; 
+        getWeatherData(60, 127, 'REH');
         console.log('chartCompon')
        //this.getWeatherData()
+       
     }
 
 
@@ -37,6 +38,7 @@ class HumidityChart extends Component {
   render() {
     console.log('render')
     const { wrapperid, humidityDataList } = this.props;
+    console.log("humidityDataList ", humidityDataList) 
     const config = {
       chart : {
         //height: 100,
@@ -101,6 +103,11 @@ class HumidityChart extends Component {
         type: 'spline',
         name: '습도',
         data: humidityDataList,
+        marker: {
+            fillColor: 'white',
+            lineWidth: 2,
+            lineColor: "#1864ab"
+        },
         zones: [{
             value: 0,
             color: '#1864ab'
