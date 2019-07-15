@@ -1,5 +1,6 @@
 import { observable, action, computed } from 'mobx';
 import axios from 'axios';
+import moment from 'moment'
 import * as _ from 'lodash';
 import * as weatherApi from  '../lib/api/weatherApi'
 export default class WeatherStore {
@@ -132,31 +133,52 @@ export default class WeatherStore {
           switch (category) {
             case "REH" :
               this.humidityDataList = weatherArray.map((item) => {
-                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
+             
+                return ([
+                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  parseInt( item.FCST_VALUE) ,
+                ])
               })
               this.isFetchingHumi = false;
               break;
             case 'POP' :
               this.rainfallDataList = weatherArray.map((item) => {
-                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
+                return ([
+                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  parseInt( item.FCST_VALUE) ,
+                ])
               })
               this.isFetchingRain = false
               break;
             case 'PTY' :
               this.rainfallmmDataList = weatherArray.map((item) => {
-                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
+                return ([
+                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  parseInt( item.FCST_VALUE) ,
+                ])
               })
               this.isFetchingRainmm = false
               break;
             case 'SKY' :
               this.skyDataList = weatherArray.map((item) => {
-                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
+                return ([
+                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  parseInt( item.FCST_VALUE) ,
+                ])
               })
               this.isFetchingSky = false
               break;
             case 'T3H' :
               this.temperatureDataList = weatherArray.map((item) => {
-                return ([item.FCST_TIME.toString(), parseInt( item.FCST_VALUE) ]) 
+                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
+                return ([
+                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  parseInt( item.FCST_VALUE) ,
+                ])
               })
               this.isFetchingTemp = false
               break;

@@ -156,7 +156,7 @@ class EditComponentList extends Component {
       function getLocation(currentX, currentY) {
         if (navigator.geolocation) { // GPS를 지원하면
           navigator.geolocation.getCurrentPosition(function(position) {
-            alert(position.coords.latitude + ' ' + position.coords.longitude);
+           // alert(position.coords.latitude + ' ' + position.coords.longitude);
             cx = position.coords.longitude
             cy = position.coords.latitude
   

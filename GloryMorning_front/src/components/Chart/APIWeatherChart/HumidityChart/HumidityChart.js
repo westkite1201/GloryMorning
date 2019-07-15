@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import style from './HumidiyChart.module.css'
 import ReactHighcharts from  'react-highcharts'
+import moment from 'moment'
+import 'moment/locale/ko';
 
 class HumidityChart extends Component {  
     componentDidMount(){
@@ -55,6 +57,15 @@ class HumidityChart extends Component {
         }
     
     },
+    tooltip: {
+        formatter : function() {
+      
+            // logs an object with properties: points, x, y
+            return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
+                  '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
+                   '' + this.series.name + ' : ' + this.point.y + '%<br/>'
+          }
+      },
     id : wrapperid +'_c',
     
     credits: {
@@ -63,23 +74,21 @@ class HumidityChart extends Component {
     subtitle: {
         //text: 'Source: thesolarfoundation.com'
     },
+
     xAxis: {
-        tickInterval: 1,
-        labels: {
-            enabled: true,
-            formatter: function() { 
-               // console.log(humidityDataList)
-                return humidityDataList[this.value][0];
-            
-            },
-        }
-        //type: 'datetime',
-        //tickPixelInterval: 150
-    },
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%H:%M:%S',
+        },
+
+        labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
+
+    }
+  },
     yAxis: {
         min: 0,
         title: {
-            text: '시간'
+            text: '%'
         }
     },
     legend: {
@@ -107,8 +116,9 @@ class HumidityChart extends Component {
         marker: {
             fillColor: 'white',
             lineWidth: 2,
-            lineColor: "#1864ab"
+            lineColor: "#748ffc"
         },
+        color : "#748ffc",
         zones: [{
             value: 0,
             color: '#1864ab'

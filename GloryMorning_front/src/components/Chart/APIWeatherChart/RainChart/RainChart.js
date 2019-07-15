@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import ReactHighcharts from  'react-highcharts'
 import _  from 'lodash'
-
+import moment from 'moment'
+import 'moment/locale/ko';
 /* 레인 차트는 강수확률이랑 강우량 두개를 가져가도록 함  */
 /* 강수량 같은 경우는 6시간 단위로만 가져오고 있습  */
 class RainChart extends Component {  
@@ -48,6 +49,15 @@ class RainChart extends Component {
     title: {
         text: '강수확률'
     },
+    tooltip: {
+        formatter : function() {
+      
+            // logs an object with properties: points, x, y
+            return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
+                  '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
+                   '' + this.series.name + ' : ' + this.point.y + '%<br/>'
+          }
+      },
     id : wrapperid +'_c',
     
     credits: {
@@ -57,17 +67,18 @@ class RainChart extends Component {
         //text: 'Source: thesolarfoundation.com'
     },
     xAxis: {
-        tickInterval: 1,
-        labels: {
-            enabled: true,
-            formatter: function() { return rainfallDataList[this.value][0];},
-        }
-        //type: 'datetime',
-        //tickPixelInterval: 150
-    },
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%H:%M:%S',
+        },
+
+        labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
+
+    }
+  },
     yAxis: [{
         title: {
-            text: '시간'
+            text: '%'
         }
     },
      { // Secondary yAxis

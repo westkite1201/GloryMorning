@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import ReactHighcharts from  'react-highcharts'
-
+import _  from 'lodash'
+import moment from 'moment'
+import 'moment/locale/ko';
 class TemperatureChart extends Component {  
     componentDidMount(){
         const {getWeatherData} =this.props; 
@@ -41,6 +43,15 @@ class TemperatureChart extends Component {
     title: {
         text: '온도'
     },
+    tooltip: {
+        formatter : function() {
+      
+            // logs an object with properties: points, x, y
+            return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
+                  '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
+                   '' + this.series.name + ' : ' + this.point.y + '%<br/>'
+          }
+      },
     id : wrapperid +'_c',
     
     credits: {
@@ -50,17 +61,18 @@ class TemperatureChart extends Component {
         //text: 'Source: thesolarfoundation.com'
     },
     xAxis: {
-        tickInterval: 1,
-        labels: {
-            enabled: true,
-            formatter: function() { return temperatureDataList[this.value][0];},
-        }
-        //type: 'datetime',
-        //tickPixelInterval: 150
-    },
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%H:%M:%S',
+        },
+
+        labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
+
+    }
+  },
     yAxis: {
         title: {
-            text: '시간'
+            text: '섭씨'
         }
     },
     legend: {
