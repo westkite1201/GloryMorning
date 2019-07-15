@@ -159,6 +159,41 @@ const insertWeatherData = async (parameter) => {
 	}
 };
 
+const insertWeatherDataShortTerm = async (parameter) => {
+	let list = parameter;
+	try {
+
+		const connection = await dbHelpers.pool.getConnection(async conn => conn);
+		try {
+			/* Step 3. */
+			let sql = `REPLACE INTO weather_short_term(FCST_DATE, FCST_TIME,CATEGORY, FCST_VALUE, NX ,NY)
+			VALUES ?`
+
+				
+			const [rows] = await connection.query(sql, [list]);
+					
+			//await connection.beginTransaction(); // START TRANSACTION
+			//const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
+			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			await connection.commit(); // COMMIT
+			connection.release();
+			console.log('success QueryInserting ')
+            return rows;
+            
+		} catch(err) {
+			await connection.rollback(); // ROLLBACK
+			connection.release();
+			console.log('Query Error');
+			return false;
+        }
+        
+	} catch(err) {
+		console.log('DB Error');
+		return false;
+	}
+};
+
 
 
 
@@ -169,4 +204,5 @@ module.exports = {
 	getLocation : getLocation,
 	getWeatherData : getWeatherData,
 	insertWeatherData : insertWeatherData,
+	insertWeatherDataShortTerm : insertWeatherDataShortTerm,
   }

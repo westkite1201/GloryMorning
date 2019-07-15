@@ -19,9 +19,11 @@ class EditComponentList extends Component {
 
     componentDidMount(){
       const { putComponentList } = this.props;
+      /*
       putComponentList('온도' , TemperatureChart)
       putComponentList('강수확률' , RainChart);
       putComponentList('습도' , HumidityChart);
+      */
       putComponentList('습도NEW', HumidityChart_)
       putComponentList('강수확률NEW', RainChart_)
       putComponentList('온도NEW', TemperatureChart_)

@@ -11,6 +11,8 @@ module.exports = function (callee) {
         };
         const PORT = '3500';
         const BASE_PATH = '/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?';
+        const BASE_PATH_SHORT_TERM = '/service/SecndSrtpdFrcstInfoService2/ForecastTimeData?';
+    
         var HOST = null;
         (function () {
             switch (callee) {
@@ -32,10 +34,15 @@ module.exports = function (callee) {
         })(callee);
         return {
             //?base_date=20190619&base_time=0630&nx=60&ny=125&_type=json
-            weather : function (base_date, base_time, nx, ny, type, callback) {
+            weather : function (base_date, base_time, nx, ny, type, shortTermYn, callback) {
                 const request =  require('request')
                 const querystring = require('querystring')
-                OPTIONS.url = HOST + BASE_PATH;
+                if( shortTermYn ){
+                    OPTIONS.url = HOST + BASE_PATH_SHORT_TERM;
+                }else{
+                    OPTIONS.url = HOST + BASE_PATH;
+                }
+               
                 //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
                let serviceKey = 'ns4Rq1qCb0Ha1vAp30y5ScWW0l%2FBjb3VC1sCe%2B2rPqpxvqBWeHMyKjft7yDnxUsPAqQtf4eeYsMicQc90PAFLg%3D%3D' + '&'
             

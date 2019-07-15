@@ -108,13 +108,15 @@ router.post('/testWeatherAPI',  (req, res) => {
       //nx, ny는 디비에서 가져오기 
       //base_date오늘 날짜 
       //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
-      let base_date, base_time, nx, ny, type;
+      let base_date, base_time, nx, ny, type, shortTermYn;
       base_date = newdate
       base_time = newtime
       nx = 60,
       ny = 127,
       type = 'json'
-      CallSeverApi.weather(base_date, base_time, nx, ny, type, function( err, result ){
+
+
+      CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
         if (!err) {
           //console.log(result);
           console.log( result.response.body.items.item ) 
@@ -130,7 +132,7 @@ router.post('/testWeatherAPI',  (req, res) => {
               ]
             )
           });
-          weatherDaoTest.insertWeatherData(list)
+          weatherDaoNew.insertWeatherData(list)
           console.log(list)
           res.json(result);
         } else {
@@ -139,6 +141,51 @@ router.post('/testWeatherAPI',  (req, res) => {
         }
       })
 });
+
+
+/* 합칠것  */
+router.post('/insertshortTerm',  (req, res) => {
+  console.log("testWeatherAPI!")
+    getNowTime();
+    //nx, ny는 디비에서 가져오기 
+    //base_date오늘 날짜 
+    //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+    let base_date, base_time, nx, ny, type, shortTermYn;
+    base_date = newdate
+    base_time = newtime
+    nx = 60,
+    ny = 127,
+    type = 'json'
+
+
+    CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
+      if (!err) {
+        //console.log(result);
+        console.log( result.response.body.items.item ) 
+        let list = result.response.body.items.item.map((item) =>{
+          return (
+            [
+              item.fcstDate,
+              item.fcstTime,
+              item.category,
+              item.fcstValue,
+              item.nx,
+              item.ny
+            ]
+          )
+        });
+        weatherDaoNew.insertWeatherDataShortTerm(list)
+        console.log(list)
+        res.json(result);
+      } else {
+        console.log(err);
+          res.json(err);
+      }
+    })
+});
+
+
+
 
 
 
