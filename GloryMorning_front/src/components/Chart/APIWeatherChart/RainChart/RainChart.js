@@ -68,10 +68,15 @@ class RainChart extends Component {
     },
     xAxis: {
         type: 'datetime',
-        dateTimeLabelFormats: { // don't display the dummy year
-            month: '%H:%M:%S',
-        },
-
+        dateTimeLabelFormats: {
+            second: '%H:%M:%S',
+            minute: '%H:%M',
+            hour: '%H:%M',
+            day: '%b. %e',
+            week: '%b. %e',
+            month: '%b. %y',
+            year: '%Y'
+          },
         labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
 
     }
@@ -79,7 +84,9 @@ class RainChart extends Component {
     yAxis: [{
         title: {
             text: '%'
-        }
+        },
+        min: 0,
+        max : 100
     },
      { // Secondary yAxis
         title: {

@@ -44,6 +44,7 @@ module.exports = function (callee) {
                 }
                
                 //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
+                //공개 위험
                let serviceKey = 'ns4Rq1qCb0Ha1vAp30y5ScWW0l%2FBjb3VC1sCe%2B2rPqpxvqBWeHMyKjft7yDnxUsPAqQtf4eeYsMicQc90PAFLg%3D%3D' + '&'
             
                let propertiesObject = querystring.stringify({

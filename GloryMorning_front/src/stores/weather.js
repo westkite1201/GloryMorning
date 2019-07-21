@@ -136,7 +136,7 @@ export default class WeatherStore {
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
              
                 return ([
-                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  ((momentobj._d).valueOf() ) ,
                   parseInt( item.FCST_VALUE) ,
                 ])
               })
@@ -146,7 +146,7 @@ export default class WeatherStore {
               this.rainfallDataList = weatherArray.map((item) => {
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
                 return ([
-                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  ((momentobj._d).valueOf()  ),
                   parseInt( item.FCST_VALUE) ,
                 ])
               })
@@ -156,7 +156,7 @@ export default class WeatherStore {
               this.rainfallmmDataList = weatherArray.map((item) => {
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
                 return ([
-                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  ((momentobj._d).valueOf() ) ,
                   parseInt( item.FCST_VALUE) ,
                 ])
               })
@@ -166,7 +166,7 @@ export default class WeatherStore {
               this.skyDataList = weatherArray.map((item) => {
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
                 return ([
-                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  ((momentobj._d).valueOf())  ,
                   parseInt( item.FCST_VALUE) ,
                 ])
               })
@@ -176,7 +176,7 @@ export default class WeatherStore {
               this.temperatureDataList = weatherArray.map((item) => {
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
                 return ([
-                  ((momentobj._d).valueOf() ) +  ( 9  * ( 60000 * 60 ) ),
+                  ((momentobj._d).valueOf()  ),
                   parseInt( item.FCST_VALUE) ,
                 ])
               })
