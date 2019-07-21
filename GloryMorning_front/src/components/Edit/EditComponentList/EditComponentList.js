@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
+/* componet Import  */
 import TemperatureChart from '../../Chart/WeatherChart/TemperatureChart'
 import RainChart from '../../Chart/WeatherChart/RainChart'
 import HumidityChart from '../../Chart/WeatherChart/HumidityChart'
 import HumidityChart_ from '../../Chart/APIWeatherChart/HumidityChart'
 import RainChart_ from '../../Chart/APIWeatherChart/RainChart'
 import TemperatureChart_ from '../../Chart/APIWeatherChart/TemperatureChart'
+import WeatherInfo from '../../WeatherInfo/'
+
+
+
+
 import style from './EditComponentList.module.css';
 import axios from 'axios'
 import * as weatherApi from '../../../lib/api/weatherApi'
@@ -27,6 +33,7 @@ class EditComponentList extends Component {
       putComponentList('습도NEW', HumidityChart_)
       putComponentList('강수확률NEW', RainChart_)
       putComponentList('온도NEW', TemperatureChart_)
+      putComponentList('weatherInfo' ,WeatherInfo)
       this.nowGeolocation();
 
     }

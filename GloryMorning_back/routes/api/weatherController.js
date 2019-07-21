@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 let {PythonShell } = require('python-shell') 
 const weatherDao = require('../../model/mysql/weatherDao')
-const weatherDaoTest = require('../../model/mysql/weatherDaoTest')
+//const weatherDaoTest = require('../../model/mysql/weatherDaoTest')
 const weatherDaoNew = require('../../model/mysql/weatherDaoNew')
 const async = require('async');
 const CallSeverApi = require('./CallSeverApi')('weather');
@@ -76,6 +76,29 @@ getWeatherData = async(res, nx, ny) => {
 
 }
 
+
+/* db에서 weather shortTerm data 조회  */
+router.post('/getWeatherDataShortTerm',  async(req, res) => {
+  
+  try{
+    const data = {
+      nx :  req.body.nx,
+      ny :  req.body.ny,
+      category :  req.body.category,
+    } 
+    //console.log(data)
+    let rows = await weatherDaoNew.getWeatherDataShortTerm(data); // LOCATION 정보 XX,YY  
+    if(rows){ //온경우
+        return res.json(rows)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+});
+
+
 /* db에서 weather data 조회  */
 router.post('/getWeatherData',  async(req, res) => {
   
@@ -102,7 +125,7 @@ router.post('/getWeatherData',  async(req, res) => {
 
 
 /* 이건 일정하게 요청할 것! */
-router.post('/testWeatherAPI',  (req, res) => {
+router.post('/insertWeatherData',  (req, res) => {
     console.log("testWeatherAPI!")
       getNowTime();
       //nx, ny는 디비에서 가져오기 
@@ -128,7 +151,9 @@ router.post('/testWeatherAPI',  (req, res) => {
                 item.category,
                 item.fcstValue,
                 item.nx,
-                item.ny
+                item.ny,
+                item.baseDate,
+                item.baseTime,
               ]
             )
           });
@@ -144,7 +169,8 @@ router.post('/testWeatherAPI',  (req, res) => {
 
 
 /* 합칠것  */
-router.post('/insertshortTerm',  (req, res) => {
+/* 일단 현행 유지  */
+router.post('/insertWeatherDataShortTerm',  (req, res) => {
   console.log("testWeatherAPI!")
     getNowTime();
     //nx, ny는 디비에서 가져오기 
@@ -170,7 +196,9 @@ router.post('/insertshortTerm',  (req, res) => {
               item.category,
               item.fcstValue,
               item.nx,
-              item.ny
+              item.ny,
+              item.baseDate,
+              item.baseTime,
             ]
           )
         });
@@ -214,7 +242,7 @@ router.post('/getLocation_chain',  async(req, res) => {
       LOCATION_C :  req.body.LOCATION_C,
     } 
     //console.log(data)
-    let rows = await weatherDaoTest.getLocation(data); // LOCATION 정보 XX,YY  
+    let rows = await weatherDaoNew.getLocation(data); // LOCATION 정보 XX,YY  
 
     if(rows){ //온경우 
         let nx = rows[0].X;

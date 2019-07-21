@@ -9,6 +9,17 @@ export default class WeatherStore {
     @observable isFetchingRain = false
     @observable isFetchingTemp = false
     @observable isFetchingHumi = false
+
+    @observable weatherInfObject = {
+      weatherclassNames : '',
+      temperatureNow : '',
+      rainNow : '',
+      humidityNow : ''
+    }
+
+    @observable weatherClassName = ''
+    @observable temperatureNow = ''
+    @observable weatherInfoData = []
     @observable weatherData = []
     @observable rainData = [];
     @observable humidityData = [];
@@ -58,6 +69,167 @@ export default class WeatherStore {
     setTemperatureDataListEmpty = () => {
       this.temperatureDataList = []
     }
+
+
+    @action
+    getWeatherDataShortTerm = async(nx, ny ) => {
+      try{
+        const response = await weatherApi.getWeatherDataShortTerm( 
+          nx, 
+          ny,
+        );
+        let weatherInfo = response.data
+        console.log(weatherInfo)
+        let sky;  //날씨  
+        let pty;  //강수형태 
+        let temperatureNow;
+        let humidityNow;
+        let rainNow; 
+        weatherInfo.map((item) =>{
+            console.log('item', item.CATEGORY)
+            if( item.CATEGORY === 'SKY'){
+              sky = item.FCST_VALUE; 
+            }
+            if( item.CATEGORY === 'PTY'){
+              pty = item.FCST_VALUE; 
+            }
+            if( item.CATEGORY === 'T1H') {
+              temperatureNow = item.FCST_VALUE;
+            }
+            if( item.CATEGORY === 'RN1') {
+              rainNow = item.FCST_VALUE;
+            }
+            if( item.CATEGORY === 'REH') {
+              humidityNow = item.FCST_VALUE;
+            }
+        })
+        let skyInfoStr = String(sky) + String(pty)
+
+
+        
+        //.temperatureNow = temperatureNow;
+        //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
+        //this.weatherInfoData = weatherInfo;
+        let weatherClassName = this.getWeatherClassName(skyInfoStr)
+        let weatherInfObject= { 
+          weatherClassName : weatherClassName,
+          temperatureNow : temperatureNow,
+          rainNow : rainNow,
+          humidityNow : humidityNow
+        }
+        this.weatherInfObject = weatherInfObject;
+
+
+      }catch(e){
+        console.log(e)
+      }
+    }
+    
+    getWeatherClassName =(skyInfoStr) =>{
+      let className = ''
+      // sky 
+      // ① 1 : 맑음
+      // ② 2 : 구름조금
+      // ③ 3 : 구름많음
+      // ④ 4 : 흐림
+
+      // pty 
+      // ① 0 : 없음
+      // ② 1 : 비
+      // ③ 2 : 비/눈
+      // ④ 3 : 눈/비
+      // ⑤ 4 : 눈
+      switch (skyInfoStr) {
+        //맑음 
+        case "10" :
+          className = 'wi wi-day-sunny '
+          break;
+
+        case "20" :
+          className = 'wi wi-day-cloudy'
+          break;
+        case "21" :
+            className = 'wi wi-day-rain'
+          break;
+        case "22" :
+            className = 'wi wi-day-sleet'
+          break;
+        case "23" :
+            className = 'wi wi-day-sleet'
+          break;
+        case "24" :
+            className = 'wi wi-day-snow'
+          break;
+
+
+        case "30" :
+            className = 'wi wi-cloud'
+            break;
+        case "31" :
+            className = 'wi wi-rain'
+            break;
+        case "32" :
+            className = 'wi wi-sleet'
+            break;
+        case "33" :
+            className = 'wi wi-sleet'
+            break;
+        case "34" :
+            className = 'wi wi-snow'
+            break;
+
+        case "40" :
+            className = 'wi wi-cloudy'
+            break;
+        case "41" :
+            className = 'wi wi-rainy'
+            break;
+        case "42" :
+            className = 'wi wi-sleet'
+            break;
+        case "43" :
+            className = 'wi wi-sleet'
+            break;
+          case "44" :
+            className = 'wi wi-snow'
+            break;
+
+        default :
+          break;
+      }
+      //---------weather code 
+
+      // 10 맑음  wi-day-sunny 
+      //-- 존재 불가 
+      // 11  맑음 비 
+      // 12  맑은 비/눈
+      // 13  맑은 눈/비
+      // 14  맑은 눈 
+      
+
+      // 20 구름조금    wi-day-cloudy
+      // 21  구름조금 비   wi-day-rain
+      // 22  구름조금 비/눈 wi-day-sleet
+      // 23  구름조금 눈/비   wi-day-sleet
+      // 24  구름조금 눈  wi-day-snow
+
+      // 30 구름많음 wi-cloud
+      // 31  구름많음 비  wi-rain
+      // 32  구름많음 비/눈 wi-sleet
+      // 33  구름많음 눈/비  wi-sleet
+      // 34  구름많음 눈   wi-snow
+
+
+      // 40  흐림 wi-cloudy
+      // 41  흐림 비  wi-rain
+      // 42  흐림 비/눈  wi-sleet
+      // 43  흐림 눈/비   wi-sleet
+      // 44  흐림 눈  wi-snow
+      return className
+    }
+
+
+
 
 
     getLocationName = () => {  //현재 x,y 에 대한 동네 위치 요청 
@@ -287,7 +459,7 @@ export default class WeatherStore {
       }
     }
     */
-
+      /* */
       @action
       getAllWeatherData = async(locationA, locationB, locationC) =>{
         try{ 

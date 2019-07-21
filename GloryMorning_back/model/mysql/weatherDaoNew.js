@@ -84,6 +84,8 @@ const getWeatherData = async (parameter) => {
 		const category = parameter.category;		
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
+
+		
 			/* Step 3. */
 			let sql = ` SELECT *
 						FROM WEATHER
@@ -118,12 +120,50 @@ const getWeatherData = async (parameter) => {
 };
 
 
+const getWeatherDataShortTerm = async (parameter) => {
+	try {
+		const nx = parameter.nx;
+		const ny = parameter.ny;
+		//const category = parameter.category;		
+		const connection = await dbHelpers.pool.getConnection(async conn => conn);
+		try {
+			/* Step 3. */
+			let sql = ` 
+						SELECT *
+						FROM weather_short_term
+						WHERE NX = ? AND NY = ?
+						AND FCST_DATE = ( SELECT date_format( now(), '%Y%m%d') )
+						AND FCST_TIME = ( SELECT date_format( now(), '%H00') )  `
+			
+			const [rows] = await connection.query(sql, [ nx, ny ]);
+			
+			//await connection.beginTransaction(); // START TRANSACTION
+			//const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
+			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			await connection.commit(); // COMMIT
+			connection.release();
 
+            return rows;
+            
+		} catch(err) {
+			await connection.rollback(); // ROLLBACK
+			connection.release();
+			console.log('Query Error');
+			return false;
+        }
+        
+	} catch(err) {
+		console.log('DB Error');
+		return false;
+	}
+};
 
 
 
 
 /* 현재 성공 함 */
+/* WEATHER DATA REPLACE  */
 const insertWeatherData = async (parameter) => {
 	let list = parameter;
 	try {
@@ -131,7 +171,7 @@ const insertWeatherData = async (parameter) => {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			/* Step 3. */
-			let sql = `REPLACE INTO weather(FCST_DATE, FCST_TIME,CATEGORY, FCST_VALUE, NX ,NY)
+			let sql = `REPLACE INTO weather(FCST_DATE, FCST_TIME,CATEGORY, FCST_VALUE, NX ,NY, BASE_DATE, BASE_TIME)
 			VALUES ?`
 
 				
@@ -143,7 +183,7 @@ const insertWeatherData = async (parameter) => {
 			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
 			await connection.commit(); // COMMIT
 			connection.release();
-			console.log('success QueryInserting ')
+			console.log('success Query Inserting ')
             return rows;
             
 		} catch(err) {
@@ -166,7 +206,7 @@ const insertWeatherDataShortTerm = async (parameter) => {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			/* Step 3. */
-			let sql = `REPLACE INTO weather_short_term(FCST_DATE, FCST_TIME,CATEGORY, FCST_VALUE, NX ,NY)
+			let sql = `REPLACE INTO weather_short_term(FCST_DATE, FCST_TIME,CATEGORY, FCST_VALUE, NX ,NY,BASE_DATE, BASE_TIME)
 			VALUES ?`
 
 				
@@ -203,6 +243,7 @@ module.exports = {
 	dbTest : dbTest,
 	getLocation : getLocation,
 	getWeatherData : getWeatherData,
+	getWeatherDataShortTerm : getWeatherDataShortTerm,
 	insertWeatherData : insertWeatherData,
 	insertWeatherDataShortTerm : insertWeatherDataShortTerm,
   }

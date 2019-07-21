@@ -66,14 +66,19 @@ module.exports = function (callee) {
         };
     }
     function statusCodeErrorHandler(statusCode, callback , data) {
-        switch (statusCode) {
-            case 200:
-                callback(null, JSON.parse(data));
-                break;
-            default:
-                callback('error', JSON.parse(data));
-                break;
+        try{
+            switch (statusCode) {
+                case 200:
+                    callback(null, JSON.parse(data));
+                    break;
+                default:
+                    callback('error', JSON.parse(data));
+                    break;
+            }
+        }catch(e){
+            console.log(e)
         }
+
     }
     var INSTANCE;
     if (INSTANCE === undefined) {

@@ -24,3 +24,13 @@ export const getWeatherData = (nx, ny, category) =>{
       return (axios.post(cilentConfig.endpoint.api + "/weather/getWeatherData",data));
       //return (axios.post("http://localhost:3031/api/member/test",data));
 }
+
+
+export const getWeatherDataShortTerm = (nx, ny) => {
+  const data = {
+    nx: nx,
+    ny : ny,
+  }
+  return (axios.post(cilentConfig.endpoint.api + "/weather/getWeatherDataShortTerm",data));
+
+}
