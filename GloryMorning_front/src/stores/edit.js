@@ -8,7 +8,7 @@ import _ from "lodash";
 import Highcharts from 'highcharts';
 let LayoutTemporaryStorage;
 export default class EditStore {
-    @observable page_number = '분석'
+    @observable page_number = 'home'
     @observable layout = []
     @observable editPageFlag = true
     @observable savePageFlag = false
@@ -139,9 +139,10 @@ export default class EditStore {
     addSelectedComponent = (e) => {
       //console.log(e);
       let selectedId = e.target.id ;
-      //console.log(selectedId)
+      console.log(
+        "selectedId", selectedId)
       let Tag = this.searchComponentByName( selectedId );
-      //console.log('Tag' , Tag)
+      console.log('Tag' , Tag)
       let timeStamp = new Date().getTime();
       this.layout.push({
             i: 'n' + timeStamp,
@@ -154,6 +155,7 @@ export default class EditStore {
         })
     }
 
+    /* 컴포넌트 추가  */
     @action  
     putComponentList = ( ListViewName, component) => {
       this.componentList.push({
@@ -219,7 +221,7 @@ export default class EditStore {
 createElement = (el,key) => {
 
   const{onRemoveItem}  =this;
-  console.log(el, key)
+  console.log("createElement", el, key)
   const removeStyle = {
     position: "absolute",
     right: "2px",
@@ -274,7 +276,8 @@ x를 클릭한 컴포넌트를 제거하는 함수
   }
 
   saveToLocal = (key, value) => {
-    //LayoutTemporaryStorage = JSON.stringify({ [key]: value });
+    LayoutTemporaryStorage = JSON.stringify({ [key]: value });
+    console.log("LayoutTemporaryStorage!!!", LayoutTemporaryStorage)
   }
 
   	/*
@@ -301,9 +304,10 @@ x를 클릭한 컴포넌트를 제거하는 함수
     현재 layout이 나타내는 페이지를 저장한다.
   */
  handleSavePage = () => {
+   console.log("handleSavePage")
   axios.post(clientConfig.endpoint.api + '/bus/set_user_components', {
     user_id : 'sampleId',
-    page_number : this.state.page_number,
+    page_number : this.page_number,
     component_list: LayoutTemporaryStorage
   })
   .then(res => {
@@ -328,7 +332,7 @@ x를 클릭한 컴포넌트를 제거하는 함수
     }
   })
 
-   this.saveToLocal("layout", layout);
+   this.saveToLocal("layout", this.layout);
    //this.allChartResizing();
 }
 

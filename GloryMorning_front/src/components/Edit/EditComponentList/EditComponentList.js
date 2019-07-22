@@ -195,7 +195,7 @@ class EditComponentList extends Component {
 		 div를 클릭하면 layout에 해당 컴포넌트가 추가될 수 있도록 해준다.
 	*/
 	mapToComponent = () => {
-    const { componentList } = this.props;
+    const { componentList, addSelectedComponent } = this.props;
 		return componentList.map((item, i) => {
 			let name;
 			for(let compName in item){
@@ -203,7 +203,7 @@ class EditComponentList extends Component {
 			}
 			return (
             <div className  = {style.EditableList_Component}
-                  onClick    = {this.props.addSelectedComponent}
+                  onClick    = {addSelectedComponent}
                   key  		= {i}
                   id			= {name}>
                   {name}
@@ -260,7 +260,7 @@ class EditComponentList extends Component {
 
     
   render() {
-    const {componentList, handlePage}  = this.props;
+    const {componentList, handlePage, handleSavePage}  = this.props;
     const {mapToComponent} = this; 
     return (
       <div>
@@ -269,6 +269,7 @@ class EditComponentList extends Component {
         <button onClick={handlePage}> 클릭</button>
         <button onClick ={this.axiosTest}> 클릭 </button>
         <button onClick ={this.dbAxiosTest}> 클릭 </button>
+        <button onClick ={handleSavePage}> handleSavePage </button>
         <Collapse isOpen={this.state.collapse}>
             {this.mapToComponent()}
         </Collapse>
@@ -277,6 +278,7 @@ class EditComponentList extends Component {
   }
 }
 export default inject(({ edit, weather }) => ({
+  handleSavePage : edit.handleSavePage,
   putComponentList : edit.putComponentList,
   addSelectedComponent : edit.addSelectedComponent,
   componentList : edit.componentList,

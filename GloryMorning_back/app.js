@@ -9,7 +9,7 @@ var indexRouter = require('./routes/index');
 // var authRouter = require('./routes/api/authController');
 // var userRouter = require('./routes/api/userController');
 // let boardApi = require('./routes/api/boardController')
-// let busRouter = require('./routes/api/busController')
+let busRouter = require('./routes/api/busController')
 // let fileRouter = require('./routes/api/fileController')
 let weatherApi = require('./routes/api/weatherController')
 
@@ -91,7 +91,7 @@ app.post('/api/login', (req, res, next) => {
 // app.use('/api/user', userRouter)
 // app.use('/api/board',boardApi)
 app.use('/api/weather', weatherApi);
-// app.use('/api/bus', busRouter)
+app.use('/api/bus', busRouter)
 // app.use('/api/file', fileRouter)
 
 // catch 404 and forward to error handler
