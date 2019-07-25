@@ -11,7 +11,21 @@ const moment = require('moment')
 let newtime = 0;
 let newdate = 0;
 
-
+/* shortTerm은 간격이 짧음  */
+getNowTimeForShortTerm = () => {
+  let date = new Date();
+  let hourMinute = parseInt( moment(date).format('HHMM'))
+  console.log( hourMinute )
+  if( 0 <= hourMinute && hourMinute < 230) {
+     //하루전날 
+    newdate = moment(date).subtract(1, 'days').format('YYYYMMDD')
+    newtime = '2300'
+  }
+  else{
+    newdate = moment(date).format('YYYYMMDD')
+    newtime =  moment(date).subtract(1,'hours').format('HH') + '00'
+  }
+}
 
 getNowTime = () => {
   let date = new Date();
@@ -170,9 +184,10 @@ router.post('/insertWeatherData',  (req, res) => {
 
 /* 합칠것  */
 /* 일단 현행 유지  */
+/* 일정하게 계속 호출할 것   */
 router.post('/insertWeatherDataShortTerm',  (req, res) => {
   console.log("testWeatherAPI!")
-    getNowTime();
+    getNowTimeForShortTerm();
     //nx, ny는 디비에서 가져오기 
     //base_date오늘 날짜 
     //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
@@ -303,7 +318,7 @@ router.post('/getLocation',  async(req, res) => {
     });
   }
 })
-
+/* 파이썬 shell */
   router.post('/PYTHONTEST',function (req,res){
     console.log('PYTHONTEST')
 

@@ -38,11 +38,11 @@ class WeatherInfo extends Component {
                 <hr></hr>
                  <div className = "weather_info">
                     <div className ="rain">
-                        <i className ="wi wi-raindrop"></i>
-                        {weatherInfObject.rainNow} 
+                        <i className ="wi wi-umbrella"></i>
+                        {weatherInfObject.rainNow}%
                     </div>
                      <div className ="huminity">
-                        <i className = "wi wi-humidity"></i>                      "
+                        <i className = "wi wi-humidity"></i>
                         {weatherInfObject.humidityNow} 
                     </div>
                  </div>
