@@ -45,9 +45,9 @@ export default class WeatherStore {
     @observable currentX; // 좌표 X
     @observable currentY; // 좌표 Y
 
-    @observable LocationA;
-    @observable LocationB;
-    @observable LocationC;
+    @observable LocationA='';
+    @observable LocationB='';
+    @observable LocationC='';
 
     @action
     setHumidityDataListEmpty = () => {
@@ -88,19 +88,19 @@ export default class WeatherStore {
         weatherInfo.map((item) =>{
             console.log('item', item.CATEGORY)
             if( item.CATEGORY === 'SKY'){
-              sky = item.FCST_VALUE; 
+              sky = parseInt(item.FCST_VALUE); 
             }
             if( item.CATEGORY === 'PTY'){
-              pty = item.FCST_VALUE; 
+              pty = parseInt(item.FCST_VALUE); 
             }
             if( item.CATEGORY === 'T1H') {
-              temperatureNow = item.FCST_VALUE;
+              temperatureNow = parseInt(item.FCST_VALUE);
             }
             if( item.CATEGORY === 'RN1') {
               rainNow = item.FCST_VALUE;
             }
             if( item.CATEGORY === 'REH') {
-              humidityNow = item.FCST_VALUE;
+              humidityNow = parseInt(item.FCST_VALUE);
             }
         })
         let skyInfoStr = String(sky) + String(pty)
@@ -228,10 +228,34 @@ export default class WeatherStore {
       return className
     }
 
+    /* gps 좌표를 바탕으로 
+      현재 gps 세팅함 
+    */
+    @action 
+    nowGeolocation = () => {
+      let { currentX, currentY } =this; 
+      console.log("nowGeolocation")
+      if (navigator.geolocation) { // GPS를 지원하면
+          navigator.geolocation.getCurrentPosition((position) => {
+            console.log("hello", position.coords.latitude + ' ' + position.coords.longitude);
+            this.currentX = position.coords.longitude
+            this.currentY = position.coords.latitude
+            this.getLocationName();
+          }, function(error) {
+            console.error(error);
+          }, {
+            enableHighAccuracy: false,
+            maximumAge: 0,
+            timeout: Infinity
+          });
+        } else {
+          alert('GPS를 지원하지 않습니다');
+        }
+    }
 
 
 
-
+    @action
     getLocationName = () => {  //현재 x,y 에 대한 동네 위치 요청 
       console.log("axiosTest!!")
       _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX

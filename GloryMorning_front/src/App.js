@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import EditView from './components/EditView'
 import EditComponentList from './components/Edit/EditComponentList'
 import DevTools from 'mobx-react-devtools';

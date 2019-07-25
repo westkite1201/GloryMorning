@@ -24,7 +24,8 @@ let cy;
 class EditComponentList extends Component {
 
     componentDidMount(){
-      const { putComponentList } = this.props;
+      const { putComponentList,
+              nowGeolocation } = this.props;
       /*
       putComponentList('온도' , TemperatureChart)
       putComponentList('강수확률' , RainChart);
@@ -34,7 +35,7 @@ class EditComponentList extends Component {
       putComponentList('강수확률NEW', RainChart_)
       putComponentList('온도NEW', TemperatureChart_)
       putComponentList('weatherInfo' ,WeatherInfo)
-      this.nowGeolocation();
+      nowGeolocation();
 
     }
     state = {
@@ -160,33 +161,6 @@ class EditComponentList extends Component {
   //     this.nowGeolocation();
   //   }
 
-    nowGeolocation = () => {
-      console.log("nowGeolocation")
-      function getLocation(currentX, currentY) {
-        if (navigator.geolocation) { // GPS를 지원하면
-          navigator.geolocation.getCurrentPosition(function(position) {
-           // alert(position.coords.latitude + ' ' + position.coords.longitude);
-            cx = position.coords.longitude
-            cy = position.coords.latitude
-  
-            currentX = position.coords.longitude
-            currentY = position.coords.latitude
-            
-          }, function(error) {
-            console.error(error);
-          }, {
-            enableHighAccuracy: false,
-            maximumAge: 0,
-            timeout: Infinity
-          });
-        } else {
-          alert('GPS를 지원하지 않습니다');
-        }
-      }
-      const {currentX , currentY, getLocationName} = this.props; 
-      getLocation(currentX, currentY);
-      getLocationName();
-    }
 
   /*
 	mapToComponent
@@ -285,5 +259,6 @@ export default inject(({ edit, weather }) => ({
   handlePage : edit.handlePage,
   getLocationName : weather.getLocationName,
   currentX : weather.currentX,
-  currentY : weather.currentY
+  currentY : weather.currentY,
+  nowGeolocation : weather.nowGeolocation
 }))(observer(EditComponentList));
