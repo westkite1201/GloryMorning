@@ -11,6 +11,7 @@ const moment = require('moment')
 let newtime = 0;
 let newdate = 0;
 
+
 /* shortTerm은 간격이 짧음  */
 getNowTimeForShortTerm = () => {
   let date = new Date();
@@ -136,8 +137,110 @@ router.post('/getWeatherData',  async(req, res) => {
 
 
 
+insertWeatherData = () => {
+    getNowTime();
+      //nx, ny는 디비에서 가져오기 
+      //base_date오늘 날짜 
+      //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+      let base_date, base_time, nx, ny, type, shortTermYn;
+      base_date = newdate
+      base_time = newtime
+      nx = 60,
+      ny = 127,
+      type = 'json'
+
+      CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
+        if (!err) {
+          //console.log(result);
+          console.log( result.response.body.items.item ) 
+          let list = result.response.body.items.item.map((item) =>{
+            return (
+              [
+                item.fcstDate,
+                item.fcstTime,
+                item.category,
+                item.fcstValue,
+                item.nx,
+                item.ny,
+                item.baseDate,
+                item.baseTime,
+              ]
+            )
+          });
+          weatherDaoNew.insertWeatherData(list)
+          console.log("success")
+        } else {
+          console.log("error!")
+        }
+      })
+}
+
+insertWeatherDataShortTerm = () => {
+  console.log("testWeatherAPI!")
+  getNowTimeForShortTerm();
+  //nx, ny는 디비에서 가져오기 
+  //base_date오늘 날짜 
+  //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+  let base_date, base_time, nx, ny, type, shortTermYn;
+  base_date = newdate
+  base_time = newtime
+  nx = 60,
+  ny = 127,
+  type = 'json'
 
 
+  CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
+    if (!err) {
+      //console.log(result);
+      console.log( result.response.body.items.item ) 
+      let list = result.response.body.items.item.map((item) =>{
+        return (
+          [
+            item.fcstDate,
+            item.fcstTime,
+            item.category,
+            item.fcstValue,
+            item.nx,
+            item.ny,
+            item.baseDate,
+            item.baseTime,
+          ]
+        )
+      });
+      weatherDaoNew.insertWeatherDataShortTerm(list)
+      console.log("success")
+
+    } else {
+      console.log(err);
+    }
+  })
+}
+
+
+
+
+/* 이거를 crontab으로 할지   */
+settingWeatherData = () => {
+  //그냥 매 정시 마다 실행 시키도록 함 
+  let d = new Date();
+  // d.getTime()	
+  // d.getHours()
+  let Minutes = d.getMinutes()
+  let second = d.getSeconds()	
+  console.log(Minutes + " " + second)
+  if( Minutes === 0 && second === 0 ){ // 매 정시 
+    insertWeatherDataShortTerm();
+    insertWeatherData();
+  }
+}
+
+setInterval(()=>{
+  settingWeatherData();
+},1000)
+
+
+insertWeatherDataShortTerm();
+insertWeatherData();
 /* 이건 일정하게 요청할 것! */
 router.post('/insertWeatherData',  (req, res) => {
     console.log("testWeatherAPI!")
