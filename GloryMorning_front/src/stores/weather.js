@@ -1,9 +1,18 @@
 import { observable, action, computed } from 'mobx';
 import axios from 'axios';
 import moment from 'moment'
+import io from 'socket.io-client';
 import * as _ from 'lodash';
 import * as weatherApi from  '../lib/api/weatherApi'
 export default class WeatherStore {
+    @observable socket = ''
+    @observable timeSocket = null
+    @observable timeObj = {
+      hour : '',
+      minute : '',
+      second : '',
+    }
+
     //LEGACY
     @observable error = null
     @observable isFetchingRain = false
@@ -69,6 +78,31 @@ export default class WeatherStore {
     setTemperatureDataListEmpty = () => {
       this.temperatureDataList = []
     }
+
+    @action
+    setSocketConnection = () => {
+      const timeSocket = io('http://localhost:3031/time');
+      // console.log(socket)
+       timeSocket.on('connection',() =>{ console.log('connected')});
+       this.socket = timeSocket;
+       this.timeSocket = timeSocket;
+
+       /* socketIo를 통한 시계 구현  */
+       this.timeSocket.emit("time",'getTimeStart');
+
+       this.timeSocket.on("getTime", (data) => {
+        if( !_.isNil(data.serverTime)){
+            this.timeObj = data.serverTime
+        }
+      })
+
+    }
+
+    @action
+    setSocketDisconnect =() =>{
+      this.timeSocket.emit('disconnect', 'disconnect')
+    }
+
 
 
     @action
@@ -284,6 +318,41 @@ export default class WeatherStore {
             this.LocationB = LocationB
             this.LocationC = LocationC
             console.log(LocationA, LocationB ,LocationC )
+            this.getTmCordinate();
+          }
+        })
+      }catch(e){
+        console.log(e)
+      }
+    }
+    
+    /* 가져오는 것 확인  */
+    @action
+    getTmCordinate= () => {  //현재 x,y 에 대한 동네 위치 요청 
+      console.log("axiosTest!!")
+      _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
+      _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
+      //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
+      try{
+        //?x=160710.37729270622&y=-4388.879299157299&input_coord=WTM&output_coord=WGS84" 
+        axios.get("https://dapi.kakao.com/v2/local/geo/transcoord.json?", {
+          params: { // query string
+            // x: '127.10459896729914',
+            // y: '37.40269721785548'
+            x : this.currentX.toString(),
+            y : this.currentY.toString(),
+            input_coord : 'WGS84',
+            output_coord : 'TM'
+          },
+          headers: { // 요청 헤더
+            'Authorization': 'KakaoAK 964c43954aeb54d0711aed4e57a588e5'
+          },
+          timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
+        }).then(res => {
+          //카카오톡에 요청 
+          if(res.data.documents) {
+            let resData = res.data.documents;
+            console.log("resData ", resData)
           }
         })
       }catch(e){

@@ -9,7 +9,7 @@ import HumidityChart_ from '../../Chart/APIWeatherChart/HumidityChart'
 import RainChart_ from '../../Chart/APIWeatherChart/RainChart'
 import TemperatureChart_ from '../../Chart/APIWeatherChart/TemperatureChart'
 import WeatherInfo from '../../WeatherInfo/'
-
+import Clock from '../../Clock'
 
 
 
@@ -35,6 +35,7 @@ class EditComponentList extends Component {
       putComponentList('강수확률NEW', RainChart_)
       putComponentList('온도NEW', TemperatureChart_)
       putComponentList('weatherInfo' ,WeatherInfo)
+      putComponentList('Clock' , Clock)
       nowGeolocation();
 
     }

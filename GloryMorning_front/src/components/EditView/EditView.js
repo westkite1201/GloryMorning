@@ -116,4 +116,6 @@ export default inject(({ edit }) => ({
     onRemoveItem : edit.onRemoveItem,
     allChartResizing : edit.allChartResizing,
     handleResizeChildComponent : edit.handleResizeChildComponent,
+
+
 }))(observer(EditView));

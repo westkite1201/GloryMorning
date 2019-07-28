@@ -227,7 +227,7 @@ settingWeatherData = () => {
   // d.getHours()
   let Minutes = d.getMinutes()
   let second = d.getSeconds()	
-  console.log(Minutes + " " + second)
+  //console.log(Minutes + " " + second)
   if( Minutes === 0 && second === 0 ){ // 매 정시 
     insertWeatherDataShortTerm();
     insertWeatherData();
