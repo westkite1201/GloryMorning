@@ -18,9 +18,11 @@ class Clock extends Component {
     console.log("timeObj " , timeObj)
     return (
       <div className = "clock-wrapper">
-       {timeObj.hour} : {timeObj.minute } : {timeObj.second}
+       {timeObj.hour} : 
+       {timeObj.minute <= 9 ? "0"+timeObj.minute : timeObj.minute} : 
+       {timeObj.second <= 9 ? "0"+timeObj.second : timeObj.second}
        <div className ="header-info">
-        반갑습니다.
+       🔥고뇌하는자 항상 성취하리라🔥
        </div> 
       </div>
 

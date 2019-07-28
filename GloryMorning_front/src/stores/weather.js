@@ -20,6 +20,8 @@ export default class WeatherStore {
     @observable isFetchingHumi = false
 
     @observable weatherInfObject = {
+      baseTime : '',
+      baseDate : '',
       weatherclassNames : '',
       temperatureNow : '',
       rainNow : '',
@@ -119,6 +121,8 @@ export default class WeatherStore {
         let temperatureNow;
         let humidityNow;
         let rainNow; 
+        let baseDate;
+        let baseTime;
         weatherInfo.map((item) =>{
             console.log('item', item.CATEGORY)
             if( item.CATEGORY === 'SKY'){
@@ -136,6 +140,8 @@ export default class WeatherStore {
             if( item.CATEGORY === 'REH') {
               humidityNow = parseInt(item.FCST_VALUE);
             }
+            baseDate = item.BASE_DATE;
+            baseTime = item.BASE_TIME;
         })
         let skyInfoStr = String(sky) + String(pty)
 
@@ -145,7 +151,9 @@ export default class WeatherStore {
         //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
         //this.weatherInfoData = weatherInfo;
         let weatherClassName = this.getWeatherClassName(skyInfoStr)
-        let weatherInfObject= { 
+        let weatherInfObject= {
+          baseDate : baseDate,
+          baseTime : baseTime,
           weatherClassName : weatherClassName,
           temperatureNow : temperatureNow,
           rainNow : rainNow,
@@ -380,7 +388,7 @@ export default class WeatherStore {
       try{
         if( category ==='REH'){ this.isFetchingHumi = true }
         if( category ==='POP'){ this.isFetchingRain = true }
-        if( category ==='PTY'){ this.isFetchingRainmm = true }
+        if( category ==='R06'){ this.isFetchingRainmm = true }
         if( category ==='SKY'){ this.isFetchingSky = true }
         if( category ==='T3H'){ this.isFetchingTemp = true }
 
@@ -417,8 +425,9 @@ export default class WeatherStore {
               })
               this.isFetchingRain = false
               break;
-            case 'PTY' :
+            case 'R06' :
               this.rainfallmmDataList = weatherArray.map((item) => {
+                console.log("R06!!!", item)
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
                 return ([
                   ((momentobj._d).valueOf() ) ,

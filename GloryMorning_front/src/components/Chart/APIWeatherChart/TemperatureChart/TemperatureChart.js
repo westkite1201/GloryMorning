@@ -41,7 +41,11 @@ class TemperatureChart extends Component {
       },
      
     title: {
-        text: '온도'
+        text: '☀️온도',
+        style: {
+            color: '#e9ecef',
+        }
+
     },
     tooltip: {
         formatter : function() {
@@ -49,7 +53,7 @@ class TemperatureChart extends Component {
             // logs an object with properties: points, x, y
             return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
                   '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
-                   '' + this.series.name + ' : ' + this.point.y + '%<br/>'
+                   '' + this.series.name + ' : ' + this.point.y + 'ºC<br/>'
           }
       },
     id : wrapperid +'_c',
@@ -96,12 +100,12 @@ class TemperatureChart extends Component {
     series: [{
         type: 'spline',
         marker: {
-            lineWidth: 2,                                                                                       
-            lineColor: '#adb5bd',
-            fillColor: 'white'
+            fillColor: 'white',
+            lineWidth: 2,
+            lineColor: "#d9480f"
         },
-        color: '#adb5bd',       
-        dashStyle : 'shortdot',
+        color: '#d9480f',       
+        //dashStyle : 'shortdot',
 
         name: '온도',
         data: temperatureDataList,

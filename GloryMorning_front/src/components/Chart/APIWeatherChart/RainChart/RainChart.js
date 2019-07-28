@@ -10,6 +10,7 @@ class RainChart extends Component {
     componentDidMount(){
         const {getWeatherData} =this.props;
         getWeatherData(60, 127, 'POP');
+        getWeatherData(60, 127, 'R06');
     }
 
     componentDidUpdate(){
@@ -34,28 +35,35 @@ class RainChart extends Component {
 
   render() {
     console.log('render')
-    const { wrapperid, rainfallDataList } = this.props;
+    const { wrapperid, rainfallDataList, rainfallmmDataList } = this.props;
     console.log('weatherData ' , rainfallDataList)
 
     const config = {
       chart : {
         //height: 100,
         backgroundColor: 'none',
-        events: {
-           
-        }
+        style: {
+            color: 'white',
+        },
       },
      
     title: {
-        text: '강수확률'
+        text: '☔️강수확률',
+        style: {
+            color: '#e9ecef',
+        }
+   
     },
     tooltip: {
         formatter : function() {
-      
+            let identify = "%"
+            if(this.series.name ==="강수량"){
+                identify = 'mm'
+            }
             // logs an object with properties: points, x, y
             return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
                   '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
-                   '' + this.series.name + ' : ' + this.point.y + '%<br/>'
+                   '' + this.series.name + ' : ' + this.point.y + identify+'<br/>'
           }
       },
     id : wrapperid +'_c',
@@ -109,7 +117,7 @@ class RainChart extends Component {
             label: {
                 connectorAllowed: false
             },
-            color: 'blue',
+            color: '#4dabf7',
             //pointStart: 2010
         }
     },
@@ -120,6 +128,11 @@ class RainChart extends Component {
         type: 'spline',
         name: '강수확률',
         data: rainfallDataList,
+        marker: {
+            fillColor: 'white',
+            lineWidth: 2,
+            lineColor: "#4dabf7"
+        },
         zones: [{
             value: 0,
             color: '#1864ab'
@@ -131,11 +144,16 @@ class RainChart extends Component {
             color: '#d9480f'
         },{
             value: 30,
-            color: '#f03e3e'
+            color: '#4dabf7'
         }]
     },
+    {
+        type:'column',
+        name:'강수량',
+        data : rainfallmmDataList,
+        color : '#748ffc'
+    }
  
-
     ],
 
     }
@@ -154,5 +172,6 @@ export default inject(({ weather, edit }) => ({
     setRainfallDataListEmpty : weather.setRainfallDataListEmpty,
     isFetchingRain : weather.isFetchingRain,
     rainfallDataList : weather.rainfallDataList,
+    rainfallmmDataList :weather.rainfallmmDataList,
     allChartResizing : edit.allChartResizing
   }))(observer(RainChart));

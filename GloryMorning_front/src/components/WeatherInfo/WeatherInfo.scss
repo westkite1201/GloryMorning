@@ -3,6 +3,7 @@
 .weather_wrapper {
     width: 100%;
     padding:1rem;
+    color : #e9ecef;
     //border: 10px solid rgba(255,255,255,.15);
     //background: linear-gradient(to right, #30CFD0 0%, #330867 100%);
     // -webkit-background-clip: text;
@@ -29,7 +30,12 @@
         padding: 1rem;
         width: 100%;
         font-size: 3rem;
-
+        .rain_icon{
+            color: #1864ab
+        }
+        .humidity_icon{
+            color : #748ffc
+        }
     }
 }
 

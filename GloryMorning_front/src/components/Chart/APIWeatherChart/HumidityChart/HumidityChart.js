@@ -51,9 +51,11 @@ class HumidityChart extends Component {
       },
      
     title: {
-        text: '습도',
+        text: '💧습도',
         style: {
-            fontFamily: style.NotoSansKR
+            fontFamily: style.NotoSansKR,
+            color: '#e9ecef',
+            
         }
     
     },

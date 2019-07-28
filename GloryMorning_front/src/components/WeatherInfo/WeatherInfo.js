@@ -31,7 +31,9 @@ class WeatherInfo extends Component {
                  <div className = "location_info">
                     {LocationA} {LocationB} {LocationC} 
                  </div>
-
+                 <div>
+                 {weatherInfObject.baseDate} {weatherInfObject.baseTime}
+                 </div>
                  <div className = "weather_icon_wrapper">
                     <i className={weatherClassNames}></i>
                  </div>
@@ -43,11 +45,17 @@ class WeatherInfo extends Component {
                 <hr></hr>
                  <div className = "weather_info">
                     <div className ="rain">
-                        <i className ="wi wi-umbrella"></i>
+                        <span style ={{ marginRight : '10px'}}>
+                            <i className ="wi wi-umbrella rain_icon"></i>
+                        </span>
                         {weatherInfObject.rainNow}mm
+                        <Progress backgroundColor ="#1864ab"
+                                  fcstValue ={weatherInfObject.rainNow}/>
                     </div>
                      <div className ="huminity">
-                        <i className = "wi wi-humidity"></i>
+                        <span style ={{ marginLeft: '10px',marginRight : '15px'}}>
+                            <i className = "wi wi-humidity humidity_icon"></i>
+                        </span>
                         {weatherInfObject.humidityNow} %
                         <Progress backgroundColor ="#748ffc"
                                     fcstValue ={weatherInfObject.humidityNow}/>
