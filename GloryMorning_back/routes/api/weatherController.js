@@ -6,6 +6,7 @@ const weatherDao = require('../../model/mysql/weatherDao')
 const weatherDaoNew = require('../../model/mysql/weatherDaoNew')
 const async = require('async');
 const CallSeverApi = require('./CallSeverApi')('weather');
+const CallSeverApiDust = require('./CallSeverApi')('dust');
 const moment = require('moment')
 
 let newtime = 0;
@@ -67,6 +68,52 @@ getNowTime = () => {
     newtime = '2000'
   }
 }
+
+
+router.post('/getNearbyMsrstnList',  async(req, res) => {
+  console.log("getNearbyMsrstnList!")
+  let tmX = req.body.tmX
+  let tmY = req.body.tmY
+
+  console.log(tmX, tmY)
+  try{
+
+    //console.log(data)
+    // await CallSeverApiDust.getDustNearStation(tmX, tmY, ( err, result ) => {
+    //   if (!err) {
+    //     console.log('in getWeatherData' ,  result.list[0])
+    //     let addr = result.list[0]; //측정소 주소 
+    //     let stationName = result.list[0].stationName; //측정소 이름 
+    //     let distance = result.list[0].tm; //거리 
+
+
+    //     //return result
+    //     //res.json(result);
+    //   } else {
+    //     console.log(err);
+    //   }
+    // })
+    const response = await CallSeverApiDust.getDustNearStation(tmX, tmY);
+    //sconsole.log(response)
+    let addr = response.data.list[0].addr; //측정소 주소 
+    let stationName = response.data.list[0].stationName; //측정소 이름 
+    let distance = response.data.list[0].tm; //거리 
+
+    console.log("addr ", addr, "stationName ", stationName," distance ",distance )
+    if( response.message !== 'error' ){
+      const dustInfoResponse = await CallSeverApiDust.getDustInfo(stationName);
+      //console.log("dustInfoResponse ", dustInfoResponse)
+      if( dustInfoResponse.message !== 'error' ){
+        console.log( dustInfoResponse.data.list[0])
+      }
+    }
+
+
+  }catch(e){
+    console.log('error' ,e)
+  }
+})
+
 
 
 

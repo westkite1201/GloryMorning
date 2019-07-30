@@ -235,16 +235,17 @@ class EditComponentList extends Component {
 
     
   render() {
-    const {componentList, handlePage, handleSavePage}  = this.props;
+    const {componentList, handlePage, handleSavePage, getDustInfo}  = this.props;
     const {mapToComponent} = this; 
     return (
       <div>
       <button onClick ={this.getNowTime}>모멘트 테스트 </button>
-        <button onClick={this.toggle}> 클릭</button>
-        <button onClick={handlePage}> 클릭</button>
-        <button onClick ={this.axiosTest}> 클릭 </button>
-        <button onClick ={this.dbAxiosTest}> 클릭 </button>
+        <button onClick={this.toggle}> 토글</button>
+        <button onClick={handlePage}> 핸들페이지</button>
+
+        <button onClick ={getDustInfo}> getDustInfo </button>
         <button onClick ={handleSavePage}> handleSavePage </button>
+        
         <Collapse isOpen={this.state.collapse}>
             {this.mapToComponent()}
         </Collapse>
@@ -253,6 +254,7 @@ class EditComponentList extends Component {
   }
 }
 export default inject(({ edit, weather }) => ({
+  getDustInfo : weather.getDustInfo,
   handleSavePage : edit.handleSavePage,
   putComponentList : edit.putComponentList,
   addSelectedComponent : edit.addSelectedComponent,

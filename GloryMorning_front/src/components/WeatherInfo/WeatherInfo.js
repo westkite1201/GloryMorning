@@ -25,6 +25,8 @@ class WeatherInfo extends Component {
             LocationB,
             LocationC }  =this.props;
         let weatherClassNames = weatherInfObject.weatherClassName + " weather_icon"
+        console.log("weatherClassNames!!!!" , weatherClassNames)
+        
         return (
             <div className = "weather_wrapper">
 

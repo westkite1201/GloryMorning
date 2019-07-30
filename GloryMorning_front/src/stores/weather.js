@@ -105,6 +105,28 @@ export default class WeatherStore {
       this.timeSocket.emit('disconnect', 'disconnect')
     }
 
+  
+    //현재 위치 알것  nowGeolocation이용 
+    //현재 위치 에서 가장 근처에 있는 측정소를 찾을 것 
+    //가장 근처에 있는 측정소 미세먼지 정보 RETURN 
+    @action
+    getDustInfo = async() => {
+      try{
+        let tmCordinate = await this.getTmCordinate();
+        console.log(tmCordinate)
+        let tmX = tmCordinate.x;
+        let tmY = tmCordinate.y;
+        const response = await weatherApi.getNearbyMsrstnList(tmX, tmY);
+
+
+
+      }catch(e){
+        console.log("error" , e)
+      }
+    }
+
+
+
 
 
     @action
@@ -224,7 +246,7 @@ export default class WeatherStore {
             className = 'wi wi-cloudy'
             break;
         case "41" :
-            className = 'wi wi-rainy'
+            className = 'wi wi-rain'
             break;
         case "42" :
             className = 'wi wi-sleet'
@@ -326,7 +348,7 @@ export default class WeatherStore {
             this.LocationB = LocationB
             this.LocationC = LocationC
             console.log(LocationA, LocationB ,LocationC )
-            this.getTmCordinate();
+            //this.getTmCordinate();
           }
         })
       }catch(e){
@@ -336,14 +358,14 @@ export default class WeatherStore {
     
     /* 가져오는 것 확인  */
     @action
-    getTmCordinate= () => {  //현재 x,y 에 대한 동네 위치 요청 
+    getTmCordinate= async() => {  //현재 x,y 에 대한 동네 위치 요청 
       console.log("axiosTest!!")
       _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
       _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{
         //?x=160710.37729270622&y=-4388.879299157299&input_coord=WTM&output_coord=WGS84" 
-        axios.get("https://dapi.kakao.com/v2/local/geo/transcoord.json?", {
+        const response = await axios.get("https://dapi.kakao.com/v2/local/geo/transcoord.json?", {
           params: { // query string
             // x: '127.10459896729914',
             // y: '37.40269721785548'
@@ -356,13 +378,15 @@ export default class WeatherStore {
             'Authorization': 'KakaoAK 964c43954aeb54d0711aed4e57a588e5'
           },
           timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
-        }).then(res => {
-          //카카오톡에 요청 
-          if(res.data.documents) {
-            let resData = res.data.documents;
-            console.log("resData ", resData)
-          }
-        })
+        });
+        if(response.data.documents) {
+            let resData = response.data.documents;
+            console.log("resData ", resData[0])
+            return resData[0]
+          }else{
+            return false;
+        }
+      
       }catch(e){
         console.log(e)
       }
