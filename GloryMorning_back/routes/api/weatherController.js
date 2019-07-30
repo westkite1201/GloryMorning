@@ -77,22 +77,6 @@ router.post('/getNearbyMsrstnList',  async(req, res) => {
 
   console.log(tmX, tmY)
   try{
-
-    //console.log(data)
-    // await CallSeverApiDust.getDustNearStation(tmX, tmY, ( err, result ) => {
-    //   if (!err) {
-    //     console.log('in getWeatherData' ,  result.list[0])
-    //     let addr = result.list[0]; //측정소 주소 
-    //     let stationName = result.list[0].stationName; //측정소 이름 
-    //     let distance = result.list[0].tm; //거리 
-
-
-    //     //return result
-    //     //res.json(result);
-    //   } else {
-    //     console.log(err);
-    //   }
-    // })
     const response = await CallSeverApiDust.getDustNearStation(tmX, tmY);
     //sconsole.log(response)
     let addr = response.data.list[0].addr; //측정소 주소 
@@ -104,7 +88,41 @@ router.post('/getNearbyMsrstnList',  async(req, res) => {
       const dustInfoResponse = await CallSeverApiDust.getDustInfo(stationName);
       //console.log("dustInfoResponse ", dustInfoResponse)
       if( dustInfoResponse.message !== 'error' ){
-        console.log( dustInfoResponse.data.list[0])
+        let dustInfo = dustInfoResponse.data.list[0]
+            dustInfo['addr'] = addr
+            dustInfo['stationName'] = stationName
+            dustInfo['distance'] = distance
+        //console.log( dustInfoResponse.data.list[0])
+        res.json(dustInfo);
+        // return
+        // { 
+        //   coGrade : dustInfo.coGrade
+        //   coValue: dustInfo.coValue
+        //   dataTerm: dustInfo.dataTerm
+        //   dataTime: dustInfo.dataTime
+        //   khaiGrade: dustInfo.khaiGrade
+        //   khaiValue: dustInfo.khaiValue
+        //   mangName: dustInfo.mangName
+        //   no2Grade: dustInfo.no2Grade
+        //   no2Value: dustInfo.no2Value
+        //   numOfRows: dustInfo.numOfRows
+        //   o3Grade: dustInfo.o3Grade
+        //   o3Value: dustInfo.o3Value
+        //   pageNo: dustInfo.pageNo
+        //   pm10Grade: dustInfo.pm10Grade
+        //   pm10Grade1h: dustInfo.pm10Grade1h
+        //   pm10Value: dustInfo.pm10Value
+        //   pm10Value24: dustInfo.pm10Value24
+        //   pm25Grade: dustInfo.pm25Grade
+        //   pm25Grade1h: dustInfo.pm25Grade1h
+        //   pm25Value: dustInfo.pm25Value
+        //   pm25Value24:dustInfo.pm25Value24
+        //   sidoName: dustInfo.sidoName
+        //   so2Grade: dustInfo.so2Grade
+        //   so2Value: dustInfoso2Value
+        // }
+
+
       }
     }
 

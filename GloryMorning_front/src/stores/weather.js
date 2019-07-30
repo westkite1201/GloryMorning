@@ -117,7 +117,7 @@ export default class WeatherStore {
         let tmX = tmCordinate.x;
         let tmY = tmCordinate.y;
         const response = await weatherApi.getNearbyMsrstnList(tmX, tmY);
-
+        console.log("getDustInfo ", response)
 
 
       }catch(e){

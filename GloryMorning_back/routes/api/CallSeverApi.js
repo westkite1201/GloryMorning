@@ -120,6 +120,7 @@ module.exports = function (callee) {
                     "dataTerm" : "DAILY",
                     "pageNo" : 1,
                     "numOfRows" : 1,
+                    "ver" : 1.3,
                     "_returnType" : 'json'
                 })
               
@@ -131,8 +132,7 @@ module.exports = function (callee) {
                 OPTIONS.url += '&ServiceKey='+ serviceKey
 
                 console.log( OPTIONS.url)
-             
-
+            
                 //async를 위해 request 함수 선언 
                 function doRequest() {
                     return new Promise(function (resolve, reject) {
