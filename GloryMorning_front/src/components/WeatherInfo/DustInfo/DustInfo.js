@@ -18,24 +18,39 @@ class DustInfo extends Component {
     }
     render() {
         const {dustInfoObject} = this.props;
+        let str= "😍"
         console.log(dustInfoObject)
         return (
             <div className ="dust_info_container">
                 <div className = "station_info" >
-                    <div> 측정일  {dustInfoObject.dateTime} </div>
+                    <div> 측정일  {dustInfoObject.dataTime} </div>
                     <div> 가장 가까운 관측소와의 거리는 {dustInfoObject.distance} 입니다</div>
                     <div> 관측소 이름:  {dustInfoObject.addr}</div>
                 </div>
+
                 <div className = "display_icon_wrapper" >
-   
-                
+                    <div className ="info_header"> 
+                        {dustInfoObject.dustMessageInfoPm10.InfoHeader} 
+                    </div>
+                    <div className ="info_icon"> 
+                        {dustInfoObject.dustMessageInfoPm10.infoIcon} 
+                    </div>
+                    <div className ="info_value"> 
+                        미세먼지  {dustInfoObject.pm10Value} 
+                    </div>
+                    <div className ="infoMessage"> 
+                        {dustInfoObject.dustMessageInfoPm10.infoMessage} 
+                    </div>
                 </div>
-                <div> 미세먼지  {dustInfoObject.pm10Value} </div>
-                <div> 초미세먼지  {dustInfoObject.pm25Value}</div>
-                <div> 오존 {dustInfoObject.o3Value} </div>
-                <div> 일산화탄소{dustInfoObject.coValue} </div>   
-                <div> 이산화질소 {dustInfoObject.no2Value}</div>   
-                <div> 아황산가스 {dustInfoObject.so2Value} </div>
+                
+                <div className ="sub_dust_info">
+                    <div> 초미세먼지  {dustInfoObject.pm25Value}</div>
+                    <div> 오존 {dustInfoObject.o3Value} </div>
+                    <div> 일산화탄소{dustInfoObject.coValue} </div>   
+                    <div> 이산화질소 {dustInfoObject.no2Value}</div>   
+                    <div> 아황산가스 {dustInfoObject.so2Value} </div>  
+                </div>
+             
             </div>
         )
     }

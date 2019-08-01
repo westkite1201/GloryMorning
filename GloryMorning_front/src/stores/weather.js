@@ -3,6 +3,7 @@ import axios from 'axios';
 import moment from 'moment'
 import io from 'socket.io-client';
 import * as _ from 'lodash';
+import * as helpers from  '../lib/helpers'
 import * as weatherApi from  '../lib/api/weatherApi'
 export default class WeatherStore {
     @observable socket = ''
@@ -20,6 +21,7 @@ export default class WeatherStore {
     @observable isFetchingHumi = false
 
     @observable dustInfoObject = { 
+      dustMessageInfoPm10 : {},
       addr: "",
       coGrade: "",
       coValue: "",
@@ -156,15 +158,15 @@ export default class WeatherStore {
         const response = await weatherApi.getNearbyMsrstnList(tmX, tmY);
         console.log("getDustInfo ", response)
         if ( response.status === 200  && response.statusText === "OK"){
-          this.dustInfoObject = response.data;
+          let dustInfoObject = response.data;
+           dustInfoObject.dustMessageInfoPm10 = helpers.getDustIcon("pm10",parseInt(dustInfoObject.pm10Value))
+          this.dustInfoObject = dustInfoObject;
         }
       }catch(e){
         console.log("error" , e)
       }
     }
-
-
-
+ 
 
 
     @action

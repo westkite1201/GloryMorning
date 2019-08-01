@@ -2,6 +2,112 @@
 /**
  * Global helper functions - client & server
  */
+
+/* dust IcoMaker */
+   // 최고 😍
+    // 좋음 :😆 
+    // 양호 😊
+    // 보통 😐
+    // 나쁨 😭
+    // 상당히 나쁨 😱
+    // 매우 나쁨 👿
+    // 최악 🖕💩🖕
+
+let dustMessageInfo1;
+let dustMessageInfo2;
+let dustMessageInfo3;
+let dustMessageInfo4;
+let dustMessageInfo5;
+let dustMessageInfo6;
+let dustMessageInfo7;
+let dustMessageInfo8;
+const dustMessageObjectList = [
+  dustMessageInfo1 = { 
+    category : "",
+    InfoHeader : "최고야!!",
+    infoIcon : "😍",
+    infoMessage  : "끝내주는 공기입니다 ><",
+ },
+  dustMessageInfo2 = { 
+    category : "",
+    InfoHeader : "좋아!",
+    infoIcon : "😆",
+    infoMessage  : "좋은 공기를 즐기세요!",
+  },
+  dustMessageInfo3 = { 
+    category : "",
+    InfoHeader : "양호",
+    infoIcon : "😊",
+    infoMessage  : "괜찮아요 그래도! 버틸만 하네요.",
+  },
+  dustMessageInfo4 = { 
+    category : "",
+    InfoHeader : "보통이에요",
+    infoIcon : "😐",
+    infoMessage  : "그럭저럭이네요",
+  },
+  dustMessageInfo5 = { 
+    category : "",
+    InfoHeader : "나쁨",
+    infoIcon : "😭",
+    infoMessage  : "마스크를 꼭 챙기세요",
+  },
+  dustMessageInfo6 = { 
+    category : "",
+    InfoHeader : "상당히 나빠요...",
+    infoIcon : "😱",
+    infoMessage  : "하...이러지말자.",
+  },
+  dustMessageInfo7 = { 
+    category : "",
+    InfoHeader : "매우 나빠요..",
+    infoIcon : "👿",
+    infoMessage  : "당신은 밖에 나갈 생각을 하지 말아야합니다.(단호)",
+  },  
+  dustMessageInfo8 = { 
+    category : "",
+    InfoHeader : "FUCK",
+    infoIcon : "🖕💩🖕",
+    infoMessage  : "모든 것을 포기하세요~ yey ~.~",
+  },
+];
+
+
+const getDustIcon  = ( category, value ) => {
+      //미세먼지
+      if( category ==="pm10"){
+        //0 15 최고
+        if( 0 <= value & value < 15 ){ return dustMessageObjectList[0]}
+        //16-30 좋음
+        if( 16 <= value & value < 30 ){return dustMessageObjectList[1]}
+        //31-40 양호
+        if( 31 <= value & value < 40 ){return dustMessageObjectList[2]}
+        // 41-50 보통
+        if( 41 <= value & value < 50 ){return dustMessageObjectList[3]}
+        // 51-75 나쁨
+        if( 51 <= value & value < 75 ){return dustMessageObjectList[4]}
+        //76-100 상당히 나쁨
+        if( 76 <= value & value < 100 ){return dustMessageObjectList[5]}
+        //101-150// 매우 나쁨
+        if( 101 <= value & value < 150 ){return dustMessageObjectList[6]}
+        //151~ 최악
+        if( 151 <= value  ){return dustMessageObjectList[7]}
+      }
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
 // ---------------------------------------------------------
 // isEmpty
 //
@@ -271,7 +377,7 @@ module.exports = {
   // methods
   getHash: getHash,
   getRandomInt: getRandomInt,
-
+  getDustIcon : getDustIcon,
   isEmpty: isEmpty,
   isImageFormat: isImageFormat,
   checkFileFormat: checkFileFormat,
