@@ -10,6 +10,7 @@ import RainChart_ from '../../Chart/APIWeatherChart/RainChart'
 import TemperatureChart_ from '../../Chart/APIWeatherChart/TemperatureChart'
 import WeatherInfo from '../../WeatherInfo/'
 import Clock from '../../Clock'
+import DustInfo from '../../WeatherInfo/DustInfo'
 
 
 
@@ -36,6 +37,7 @@ class EditComponentList extends Component {
       putComponentList('온도NEW', TemperatureChart_)
       putComponentList('weatherInfo' ,WeatherInfo)
       putComponentList('Clock' , Clock)
+      putComponentList('DustInfo', DustInfo)
       nowGeolocation();
 
     }

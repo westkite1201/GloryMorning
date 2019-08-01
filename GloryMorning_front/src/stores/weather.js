@@ -19,6 +19,43 @@ export default class WeatherStore {
     @observable isFetchingTemp = false
     @observable isFetchingHumi = false
 
+    @observable dustInfoObject = { 
+      addr: "",
+      coGrade: "",
+      coValue: "",
+      dataTerm: "",
+      dataTime: "",
+      distance: 0,
+      khaiGrade: "",
+      khaiValue: "",
+      mangName: "",
+      no2Grade: "",
+      no2Value: "",
+      numOfRows: "",
+      o3Grade: "",
+      o3Value: "",
+      pageNo: "",
+      pm10Grade: "",
+      pm10Grade1h: "",
+      pm10Value: "",
+      pm10Value24: "",
+      pm25Grade: "",
+      pm25Grade1h: "",
+      pm25Value: "",
+      pm25Value24: "",
+      resultCode: "",
+      resultMsg: "",
+      rnum: 0,
+      serviceKey: "",
+      sidoName: "",
+      so2Grade: "",
+      so2Value: "",
+      stationCode: "",
+      stationName: "",
+      totalCount: "",
+      ver: "",
+      _returnType: "",
+    }
     @observable weatherInfObject = {
       baseTime : '',
       baseDate : '',
@@ -118,8 +155,9 @@ export default class WeatherStore {
         let tmY = tmCordinate.y;
         const response = await weatherApi.getNearbyMsrstnList(tmX, tmY);
         console.log("getDustInfo ", response)
-
-
+        if ( response.status === 200  && response.statusText === "OK"){
+          this.dustInfoObject = response.data;
+        }
       }catch(e){
         console.log("error" , e)
       }
