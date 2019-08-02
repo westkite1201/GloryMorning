@@ -13,6 +13,8 @@ let newtime = 0;
 let newdate = 0;
 
 
+let defaultLocationList = [ { nx : 59 , ny : 125, location : "서울특별시 관악구 인헌동" } ]
+
 /* shortTerm은 간격이 짧음  */
 getNowTimeForShortTerm = () => {
   let date = new Date();
@@ -25,7 +27,7 @@ getNowTimeForShortTerm = () => {
   }
   else{
     newdate = moment(date).format('YYYYMMDD')
-    newtime =  moment(date).subtract(1,'hours').format('HH') + '00'
+    newtime =  moment(date).format('HH') + '00'
   }
 }
 
@@ -203,16 +205,14 @@ router.post('/getWeatherData',  async(req, res) => {
 
 
 
-insertWeatherData = () => {
+insertWeatherData = (nx, ny) => {
     getNowTime();
       //nx, ny는 디비에서 가져오기 
       //base_date오늘 날짜 
       //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
-      let base_date, base_time, nx, ny, type, shortTermYn;
+      let base_date, base_time, type, shortTermYn;
       base_date = newdate
       base_time = newtime
-      nx = 60,
-      ny = 127,
       type = 'json'
 
       CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
@@ -241,17 +241,15 @@ insertWeatherData = () => {
       })
 }
 
-insertWeatherDataShortTerm = () => {
+insertWeatherDataShortTerm = (nx, ny) => {
   console.log("testWeatherAPI!")
   getNowTimeForShortTerm();
   //nx, ny는 디비에서 가져오기 
   //base_date오늘 날짜 
   //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
-  let base_date, base_time, nx, ny, type, shortTermYn;
+  let base_date, base_time, type, shortTermYn;
   base_date = newdate
   base_time = newtime
-  nx = 60,
-  ny = 127,
   type = 'json'
 
 
@@ -295,8 +293,14 @@ settingWeatherData = () => {
   let second = d.getSeconds()	
   //console.log(Minutes + " " + second)
   if( Minutes === 0 && second === 0 ){ // 매 정시 
-    insertWeatherDataShortTerm();
-    insertWeatherData();
+    defaultLocationList.map((item)=>{
+      setTimeout(()=>{
+        insertWeatherDataShortTerm(item.nx, item.ny);
+      }, 1500 )
+      setTimeout(()=>{
+        insertWeatherData(item.nx, item.ny);
+      }, 1500 )
+    })
   }
 }
 
@@ -305,8 +309,14 @@ setInterval(()=>{
 },1000)
 
 
-insertWeatherDataShortTerm();
-insertWeatherData();
+defaultLocationList.map((item)=>{
+  setTimeout(()=>{
+    insertWeatherDataShortTerm(item.nx, item.ny);
+  }, 1500 )
+  setTimeout(()=>{
+    insertWeatherData(item.nx, item.ny);
+  }, 1500 )
+})
 /* 이건 일정하게 요청할 것! */
 router.post('/insertWeatherData',  (req, res) => {
     console.log("testWeatherAPI!")
@@ -317,8 +327,8 @@ router.post('/insertWeatherData',  (req, res) => {
       let base_date, base_time, nx, ny, type, shortTermYn;
       base_date = newdate
       base_time = newtime
-      nx = 60,
-      ny = 127,
+      nx = defaultLocationList[0].nx,
+      ny = defaultLocationList[0].ny,
       type = 'json'
 
 
@@ -353,7 +363,7 @@ router.post('/insertWeatherData',  (req, res) => {
 
 /* 합칠것  */
 /* 일단 현행 유지  */
-/* 일정하게 계속 호출할 것   */
+/* 일정하게 계속 호출할 것  이거 사용여부 프론트에서 확인해바  */
 router.post('/insertWeatherDataShortTerm',  (req, res) => {
   console.log("testWeatherAPI!")
     getNowTimeForShortTerm();
