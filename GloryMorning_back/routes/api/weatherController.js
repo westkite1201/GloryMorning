@@ -19,7 +19,7 @@ let defaultLocationList = [ { nx : 59 , ny : 125, location : "서울특별시 �
 getNowTimeForShortTerm = () => {
   let date = new Date();
   let hourMinute = parseInt( moment(date).format('HHMM'))
-  console.log( hourMinute )
+ // console.log( hourMinute )
   if( 0 <= hourMinute && hourMinute < 230) {
      //하루전날 
     newdate = moment(date).subtract(1, 'days').format('YYYYMMDD')
@@ -34,7 +34,7 @@ getNowTimeForShortTerm = () => {
 getNowTime = () => {
   let date = new Date();
   let hourMinute = parseInt( moment(date).format('HHMM'))
-  console.log( hourMinute )
+  //console.log( hourMinute )
   if( 0 <= hourMinute && hourMinute < 230){
      //하루전날 
     newdate = moment(date).subtract(1, 'days').format('YYYYMMDD')
@@ -77,7 +77,7 @@ router.post('/getNearbyMsrstnList',  async(req, res) => {
   let tmX = req.body.tmX
   let tmY = req.body.tmY
 
-  console.log(tmX, tmY)
+  //console.log(tmX, tmY)
   try{
     const response = await CallSeverApiDust.getDustNearStation(tmX, tmY);
     //sconsole.log(response)
@@ -85,7 +85,7 @@ router.post('/getNearbyMsrstnList',  async(req, res) => {
     let stationName = response.data.list[0].stationName; //측정소 이름 
     let distance = response.data.list[0].tm; //거리 
 
-    console.log("addr ", addr, "stationName ", stationName," distance ",distance )
+    //console.log("addr ", addr, "stationName ", stationName," distance ",distance )
     if( response.message !== 'error' ){
       const dustInfoResponse = await CallSeverApiDust.getDustInfo(stationName);
       //console.log("dustInfoResponse ", dustInfoResponse)
@@ -149,7 +149,7 @@ getWeatherData = async(res, nx, ny) => {
       type = 'json'
         await CallSeverApi.weather(base_date, base_time, nx, ny, type, ( err, result ) => {
         if (!err) {
-          console.log('in getWeatherData' , result)
+         // console.log('in getWeatherData' , result)
           //return result
           res.json(result);
         } else {
@@ -242,7 +242,7 @@ insertWeatherData = (nx, ny) => {
 }
 
 insertWeatherDataShortTerm = (nx, ny) => {
-  console.log("testWeatherAPI!")
+  console.log("insertWeatherDataShortTerm!")
   getNowTimeForShortTerm();
   //nx, ny는 디비에서 가져오기 
   //base_date오늘 날짜 
@@ -252,11 +252,11 @@ insertWeatherDataShortTerm = (nx, ny) => {
   base_time = newtime
   type = 'json'
 
-
+  console.log(nx, ny)
   CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
     if (!err) {
-      //console.log(result);
-      console.log( result.response.body.items.item ) 
+      console.log(result);
+      //console.log( result.response.body.items.item ) 
       let list = result.response.body.items.item.map((item) =>{
         return (
           [
@@ -294,32 +294,24 @@ settingWeatherData = () => {
   //console.log(Minutes + " " + second)
   if( Minutes === 0 && second === 0 ){ // 매 정시 
     defaultLocationList.map((item)=>{
-      setTimeout(()=>{
         insertWeatherDataShortTerm(item.nx, item.ny);
-      }, 1500 )
-      setTimeout(()=>{
         insertWeatherData(item.nx, item.ny);
-      }, 1500 )
     })
   }
 }
 
-setInterval(()=>{
-  settingWeatherData();
-},1000)
+// setInterval(()=>{
+//   settingWeatherData();
+// },1000)
 
 
 defaultLocationList.map((item)=>{
-  setTimeout(()=>{
     insertWeatherDataShortTerm(item.nx, item.ny);
-  }, 1500 )
-  setTimeout(()=>{
     insertWeatherData(item.nx, item.ny);
-  }, 1500 )
 })
 /* 이건 일정하게 요청할 것! */
 router.post('/insertWeatherData',  (req, res) => {
-    console.log("testWeatherAPI!")
+    console.log("insertWeatherData!")
       getNowTime();
       //nx, ny는 디비에서 가져오기 
       //base_date오늘 날짜 
@@ -335,7 +327,7 @@ router.post('/insertWeatherData',  (req, res) => {
       CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
         if (!err) {
           //console.log(result);
-          console.log( result.response.body.items.item ) 
+          //console.log( result.response.body.items.item ) 
           let list = result.response.body.items.item.map((item) =>{
             return (
               [
@@ -351,10 +343,10 @@ router.post('/insertWeatherData',  (req, res) => {
             )
           });
           weatherDaoNew.insertWeatherData(list)
-          console.log(list)
+          //console.log(list)
           res.json(result);
         } else {
-          console.log(err);
+         // console.log(err);
             res.json(err);
         }
       })
@@ -365,7 +357,7 @@ router.post('/insertWeatherData',  (req, res) => {
 /* 일단 현행 유지  */
 /* 일정하게 계속 호출할 것  이거 사용여부 프론트에서 확인해바  */
 router.post('/insertWeatherDataShortTerm',  (req, res) => {
-  console.log("testWeatherAPI!")
+  console.log("insertWeatherDataShortTerm!")
     getNowTimeForShortTerm();
     //nx, ny는 디비에서 가져오기 
     //base_date오늘 날짜 
@@ -381,7 +373,7 @@ router.post('/insertWeatherDataShortTerm',  (req, res) => {
     CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
       if (!err) {
         //console.log(result);
-        console.log( result.response.body.items.item ) 
+       // console.log( result.response.body.items.item ) 
         let list = result.response.body.items.item.map((item) =>{
           return (
             [
@@ -397,10 +389,10 @@ router.post('/insertWeatherDataShortTerm',  (req, res) => {
           )
         });
         weatherDaoNew.insertWeatherDataShortTerm(list)
-        console.log(list)
+        //console.log(list)
         res.json(result);
       } else {
-        console.log(err);
+       // console.log(err);
           res.json(err);
       }
     })
@@ -416,7 +408,7 @@ router.post('/dbtest',  async(req, res) => {
   try{
     let rows = await weatherDaoTest.dbTest();
     if(rows){
-        console.log(rows)
+        //console.log(rows)
         return res.json(rows)
     }else{
       console.log('error')
@@ -442,8 +434,8 @@ router.post('/getLocation_chain',  async(req, res) => {
         let nx = rows[0].X;
         let ny = rows[0].Y; 
         let response = await getWeatherData(res, nx, ny) // getwehaterDATA
-        console.log('response' , response)
-        console.log('getWeatherData 완료')
+        //console.log('response' , response)
+        //console.log('getWeatherData 완료')
         //return res.json(response)
     }else{
       console.log('error')
@@ -533,7 +525,7 @@ router.post('/getLocation',  async(req, res) => {
         let decodingStr = unescape(replaceAll(results.toString(),"\\","%"));
         let splitList = decodingStr.split(',');
         let weatherList = splitList.map( item => replaceAll(item,'"',''));
-        console.log(weatherList);
+        //console.log(weatherList);
        // var strContents =  Buffer.from(results);
        // let decodingString = (iconv.decode(strContents,'UTF-8').toString());
         //console.log('results: %j', value);

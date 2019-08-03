@@ -37,9 +37,9 @@ const getLocation = async (parameter) => {
 		const locationA = parameter.LOCATION_A === '서울' ? parameter.LOCATION_A + '특별시' : ( parameter.LOCATION_A) ;
 		const locationB = parameter.LOCATION_B;
 		const locationC = parameter.LOCATION_C;
-		console.log(locationA)
-		console.log(locationB)
-		console.log(locationC)
+		// console.log(locationA)
+		// console.log(locationB)
+		// console.log(locationC)
 		
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {

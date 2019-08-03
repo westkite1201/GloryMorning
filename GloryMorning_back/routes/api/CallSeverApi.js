@@ -1,6 +1,6 @@
 module.exports = function (callee) {
     function CallSeverApi(callee) {
-        console.log(callee)
+        //console.log(callee)
         var OPTIONS = {
             url: null,
             qs: null,
@@ -79,7 +79,7 @@ module.exports = function (callee) {
                 })
                 OPTIONS.url += 'ServiceKey='+ serviceKey
                 OPTIONS.url += propertiesObject 
-                console.log(OPTIONS)
+                //console.log(OPTIONS)
 
                 let response;
 
@@ -128,10 +128,10 @@ module.exports = function (callee) {
                 propertiesObject = querystring.unescape(propertiesObject);
                 OPTIONS.url += propertiesObject 
                 OPTIONS.url = encodeURI(OPTIONS.url); 
-                console.log(OPTIONS)
+                //console.log(OPTIONS)
                 OPTIONS.url += '&ServiceKey='+ serviceKey
 
-                console.log( OPTIONS.url)
+                //console.log( OPTIONS.url)
             
                 //async를 위해 request 함수 선언 
                 function doRequest() {
@@ -145,7 +145,7 @@ module.exports = function (callee) {
                              else{
                                 reject(err);
                              }
-                             console.log(response)
+                             //console.log(response)
                         });
                     });
                 }
