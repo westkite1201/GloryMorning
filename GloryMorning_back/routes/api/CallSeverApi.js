@@ -64,6 +64,51 @@ module.exports = function (callee) {
                    statusCodeErrorHandler(res.statusCode, callback, result);
                 });
             },
+            weatherAsync :  async(base_date, base_time, nx, ny, type, shortTermYn, callback) => {
+                const request =  require('request')
+                const querystring = require('querystring')
+                if( shortTermYn ){
+                    OPTIONS.url = HOST + BASE_PATH_SHORT_TERM;
+                }else{
+                    OPTIONS.url = HOST + BASE_PATH;
+                }
+               
+                //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
+                //공개 위험
+               let serviceKey = 'ns4Rq1qCb0Ha1vAp30y5ScWW0l%2FBjb3VC1sCe%2B2rPqpxvqBWeHMyKjft7yDnxUsPAqQtf4eeYsMicQc90PAFLg%3D%3D' + '&'
+            
+               let propertiesObject = querystring.stringify({
+                    "base_date": base_date,
+                    "base_time": base_time,
+                    "nx" : nx,
+                    "ny" : ny,
+                    "numOfRows" : 175,
+                    "_type" : type
+                })
+                OPTIONS.url += 'ServiceKey='+ serviceKey
+                OPTIONS.url += propertiesObject 
+                console.log(OPTIONS)
+  
+                           //async를 위해 request 함수 선언 
+                function doRequest() {
+                    return new Promise(function (resolve, reject) {
+                        request(OPTIONS, (err, res, result) => {
+                             response =  statusCodeErrorHandlerAsync(res.statusCode, result);
+                             if(response.message  !== 'error'){
+                                 resolve(response)
+                             }
+                             else{
+                                reject(err);
+                             }
+                             //console.log(response)
+                        });
+                    });
+                }
+
+                let res = await doRequest();
+                //console.log("response " , res)
+                return res
+            },
             getDustNearStation :  async(tmX, tmY) =>{
                 const request =  require('request')
                 const querystring = require('querystring')
@@ -173,7 +218,7 @@ module.exports = function (callee) {
         try{
             switch (statusCode) {
                 case 200:
-                    return  { message : null,  data : JSON.parse(data) }
+                    return  { message : 'success',  data : JSON.parse(data) }
                 default:
                     return  { message : 'error', data : JSON.parse(data) } 
              

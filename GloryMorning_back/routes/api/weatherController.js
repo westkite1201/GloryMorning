@@ -145,17 +145,18 @@ getWeatherData = async(res, nx, ny) => {
       let base_date, base_time, type;
       base_date = newdate
       base_time = newtime
-
       type = 'json'
-        await CallSeverApi.weather(base_date, base_time, nx, ny, type, ( err, result ) => {
-        if (!err) {
+
+  
+      await CallSeverApi.weather(base_date, base_time, nx, ny, type, ( err, result ) => {
+      if (!err) {
          // console.log('in getWeatherData' , result)
           //return result
-          res.json(result);
-        } else {
+        res.json(result);
+      } else {
           console.log(err);
-        }
-      })
+      }
+    })
 
 }
 
@@ -191,7 +192,7 @@ router.post('/getWeatherData',  async(req, res) => {
       ny :  req.body.ny,
       category :  req.body.category,
     } 
-    //console.log(data)
+
     let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY  
     if(rows){ //온경우
         return res.json(rows)
@@ -203,9 +204,35 @@ router.post('/getWeatherData',  async(req, res) => {
   }
 });
 
+/* api에서 조회  */
+router.post('/getWeatherDataPublicMode',  async(req, res) => {
+  try{
+    getNowTime();
+    //nx, ny는 디비에서 가져오기 
+    //base_date오늘 날짜 
+    //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+    let base_date, base_time, type,nx,ny, shortTermYn;
+    base_date = newdate
+    base_time = newtime
+    type = 'json'
+    shortTermYn = req.body.shortTermYn;
+    nx = req.body.nx;
+    ny = req.body.ny;
+    console.log(nx , ny)
+    let response = await CallSeverApi.weatherAsync(base_date, base_time, nx, ny, type, shortTermYn);
+    console.log('resposne ', response)
+    if(response.message !== 'error'){ //온경우
+        return res.json(response)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+});
 
 
-insertWeatherData = (nx, ny) => {
+insertWeatherData = async(nx, ny) => {
     getNowTime();
       //nx, ny는 디비에서 가져오기 
       //base_date오늘 날짜 
@@ -304,99 +331,101 @@ settingWeatherData = () => {
 //   settingWeatherData();
 // },1000)
 
-
-defaultLocationList.map((item)=>{
-    insertWeatherDataShortTerm(item.nx, item.ny);
-    insertWeatherData(item.nx, item.ny);
-})
-/* 이건 일정하게 요청할 것! */
-router.post('/insertWeatherData',  (req, res) => {
-    console.log("insertWeatherData!")
-      getNowTime();
-      //nx, ny는 디비에서 가져오기 
-      //base_date오늘 날짜 
-      //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
-      let base_date, base_time, nx, ny, type, shortTermYn;
-      base_date = newdate
-      base_time = newtime
-      nx = defaultLocationList[0].nx,
-      ny = defaultLocationList[0].ny,
-      type = 'json'
+/*DB 에서 일정기간 마다 조회  */
+// defaultLocationList.map((item)=>{
+//     insertWeatherDataShortTerm(item.nx, item.ny);
+//     insertWeatherData(item.nx, item.ny);
+// })
+// /* 이건 일정하게 요청할 것! */
+// router.post('/insertWeatherData',  (req, res) => {
 
 
-      CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
-        if (!err) {
-          //console.log(result);
-          //console.log( result.response.body.items.item ) 
-          let list = result.response.body.items.item.map((item) =>{
-            return (
-              [
-                item.fcstDate,
-                item.fcstTime,
-                item.category,
-                item.fcstValue,
-                item.nx,
-                item.ny,
-                item.baseDate,
-                item.baseTime,
-              ]
-            )
-          });
-          weatherDaoNew.insertWeatherData(list)
-          //console.log(list)
-          res.json(result);
-        } else {
-         // console.log(err);
-            res.json(err);
-        }
-      })
-});
+//     console.log("insertWeatherData!")
+//       getNowTime();
+//       //nx, ny는 디비에서 가져오기 
+//       //base_date오늘 날짜 
+//       //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+//       let base_date, base_time, nx, ny, type, shortTermYn;
+//       base_date = newdate
+//       base_time = newtime
+//       nx = req.body.currentX;
+//       ny = req.body.currentY;
+//       type = 'json'
 
 
-/* 합칠것  */
-/* 일단 현행 유지  */
-/* 일정하게 계속 호출할 것  이거 사용여부 프론트에서 확인해바  */
-router.post('/insertWeatherDataShortTerm',  (req, res) => {
-  console.log("insertWeatherDataShortTerm!")
-    getNowTimeForShortTerm();
-    //nx, ny는 디비에서 가져오기 
-    //base_date오늘 날짜 
-    //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
-    let base_date, base_time, nx, ny, type, shortTermYn;
-    base_date = newdate
-    base_time = newtime
-    nx = 60,
-    ny = 127,
-    type = 'json'
+//       CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
+//         if (!err) {
+//           //console.log(result);
+//           //console.log( result.response.body.items.item ) 
+//           let list = result.response.body.items.item.map((item) =>{
+//             return (
+//               [
+//                 item.fcstDate,
+//                 item.fcstTime,
+//                 item.category,
+//                 item.fcstValue,
+//                 item.nx,
+//                 item.ny,
+//                 item.baseDate,
+//                 item.baseTime,
+//               ]
+//             )
+//           });
+//           weatherDaoNew.insertWeatherData(list)
+//           //console.log(list)
+//           res.json(result);
+//         } else {
+//          // console.log(err);
+//             res.json(err);
+//         }
+//       })
+// });
 
 
-    CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
-      if (!err) {
-        //console.log(result);
-       // console.log( result.response.body.items.item ) 
-        let list = result.response.body.items.item.map((item) =>{
-          return (
-            [
-              item.fcstDate,
-              item.fcstTime,
-              item.category,
-              item.fcstValue,
-              item.nx,
-              item.ny,
-              item.baseDate,
-              item.baseTime,
-            ]
-          )
-        });
-        weatherDaoNew.insertWeatherDataShortTerm(list)
-        //console.log(list)
-        res.json(result);
-      } else {
-       // console.log(err);
-          res.json(err);
-      }
-    })
-});
+// /* 합칠것  */
+// /* 일단 현행 유지  */
+// /* 일정하게 계속 호출할 것  이거 사용여부 프론트에서 확인해바  */
+// router.post('/insertWeatherDataShortTerm',  (req, res) => {
+//   console.log("insertWeatherDataShortTerm!")
+//     getNowTimeForShortTerm();
+//     //nx, ny는 디비에서 가져오기 
+//     //base_date오늘 날짜 
+//     //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
+//     let base_date, base_time, nx, ny, type, shortTermYn;
+//     base_date = newdate
+//     base_time = newtime
+//     nx = 60,
+//     ny = 127,
+//     type = 'json'
+
+
+//     CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
+//       if (!err) {
+//         //console.log(result);
+//        // console.log( result.response.body.items.item ) 
+//         let list = result.response.body.items.item.map((item) =>{
+//           return (
+//             [
+//               item.fcstDate,
+//               item.fcstTime,
+//               item.category,
+//               item.fcstValue,
+//               item.nx,
+//               item.ny,
+//               item.baseDate,
+//               item.baseTime,
+//             ]
+//           )
+//         });
+//         weatherDaoNew.insertWeatherDataShortTerm(list)
+//         //console.log(list)
+//         res.json(result);
+//       } else {
+//        // console.log(err);
+//           res.json(err);
+//       }
+//     })
+// });
 
 
 

@@ -22,9 +22,18 @@ export const getNearbyMsrstnList = (tmX, tmY) =>{
       //return (axios.post("http://localhost:3031/api/member/test",data));
 }
 
+/* api 이용 */
+export const getWeatherDataPublicMode = (nx, ny, shortTermYn) => {
+  const data = {
+    nx: nx,
+    ny : ny,
+    shortTermYn : shortTermYn,
+  }
+  return (axios.post(cilentConfig.endpoint.api + "/weather/getWeatherDataPublicMode",data));
+}
 
 
-
+/* db 조회용 */
 export const getWeatherData = (nx, ny, category) =>{
      const data = {
         nx: nx,

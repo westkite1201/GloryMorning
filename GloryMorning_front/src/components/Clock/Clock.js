@@ -15,7 +15,7 @@ class Clock extends Component {
 
   render() {
     const { timeObj } = this.props; 
-    console.log("timeObj " , timeObj)
+    //console.log("timeObj " , timeObj)
     return (
       <div className = "clock-wrapper">
        {timeObj.hour} : 

@@ -88,6 +88,7 @@ class EditView extends Component {
                 resizableHandle=".resizeHandle"
                 margin ={[25,25]}
                 onResize = {handleResizeChildComponent}
+                //verticalCompact ={false}
                 {...this.props}
               >
               { 
