@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 import * as _ from 'lodash';
 import * as helpers from  '../lib/helpers'
 import * as weatherApi from  '../lib/api/weatherApi'
+import clientConfig from '../configuration/clientConfig'
 const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
 export default class WeatherStore {
     
@@ -391,7 +392,7 @@ export default class WeatherStore {
             y : this.currentY.toString(),
           },
           headers: { // 요청 헤더
-            'Authorization': 'KakaoAK 964c43954aeb54d0711aed4e57a588e5'
+            'Authorization': clientConfig.apiKeys.kakaoApiKey
           },
           timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
         }).then(res => {
@@ -433,7 +434,7 @@ export default class WeatherStore {
             output_coord : 'TM'
           },
           headers: { // 요청 헤더
-            'Authorization': 'KakaoAK 964c43954aeb54d0711aed4e57a588e5'
+            'Authorization': clientConfig.apiKeys.kakaoApiKey
           },
           timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
         });

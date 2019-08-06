@@ -1,3 +1,5 @@
 node_modules/
+/GloryMorning_back/config/auth/apiKeys.js
+/GloryMorning_front/src/configuration/
 
 ignore-file.txt

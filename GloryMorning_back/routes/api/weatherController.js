@@ -332,10 +332,11 @@ settingWeatherData = () => {
 // },1000)
 
 /*DB 에서 일정기간 마다 조회  */
-// defaultLocationList.map((item)=>{
-//     insertWeatherDataShortTerm(item.nx, item.ny);
-//     insertWeatherData(item.nx, item.ny);
-// })
+defaultLocationList.map((item)=>{
+  console.log(item)
+    // insertWeatherDataShortTerm(item.nx, item.ny);
+    // insertWeatherData(item.nx, item.ny);
+})
 // /* 이건 일정하게 요청할 것! */
 // router.post('/insertWeatherData',  (req, res) => {
 

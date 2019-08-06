@@ -48,38 +48,7 @@ class EditComponentList extends Component {
     toggle =()=> {
         this.setState({ collapse: !this.state.collapse });
     }
-    axiosTest = () => {  //현재 x,y 에 대한 동네 위치 요청 
-      console.log("axiosTest!!")
-      console.log(cx, cy)
-      //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
-      try{
-        axios.get('https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?', {
-          params: { // query string
-            // x: '127.10459896729914',
-            // y: '37.40269721785548'
-            x : cx.toString(),
-            y : cy.toString(),
-          },
-          headers: { // 요청 헤더
-            'Authorization': 'KakaoAK 964c43954aeb54d0711aed4e57a588e5'
-          },
-          timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
-        }).then(res => {
-          //카카오톡애 요청 
 
-          if(res.data.documents) {
-            let resData = res.data.documents[1];
-            let LocationA = resData.region_1depth_name
-            let LocationB = resData.region_2depth_name
-            let LocationC = resData.region_3depth_name
-            console.log(LocationA, LocationB ,LocationC )
-            this.getLocationAtDB(LocationA, LocationB, LocationC)
-          }
-        })
-      }catch(e){
-        console.log(e)
-      }
-    }
 
 
   //   convert = () =>{
