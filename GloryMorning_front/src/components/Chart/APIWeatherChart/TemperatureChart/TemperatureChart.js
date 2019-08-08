@@ -7,7 +7,7 @@ import 'moment/locale/ko';
 class TemperatureChart extends Component {  
     componentDidMount(){
         const {getWeatherData} =this.props; 
-        getWeatherData(60, 127, 'T3H');
+        getWeatherData('T3H');
     }
 
     componentDidUpdate(){

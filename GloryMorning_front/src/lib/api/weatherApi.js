@@ -23,13 +23,13 @@ export const getNearbyMsrstnList = (tmX, tmY) =>{
 }
 
 /* api 이용 */
-export const getWeatherDataPublicMode = (nx, ny, shortTermYn) => {
+export const getWeatherDataPrivateMode = (nx, ny, shortTermYn) => {
   const data = {
     nx: nx,
     ny : ny,
     shortTermYn : shortTermYn,
   }
-  return (axios.post(cilentConfig.endpoint.api + "/weather/getWeatherDataPublicMode",data));
+  return (axios.post(cilentConfig.endpoint.api + "/weather/getWeatherDataPrivateMode",data));
 }
 
 

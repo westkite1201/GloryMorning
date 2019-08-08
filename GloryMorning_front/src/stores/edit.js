@@ -59,15 +59,15 @@ export default class EditStore {
   */
  @action
   allChartResizing = () => {
-    console.log("allChartResizing")
+    //console.log("allChartResizing")
     Highcharts.charts.some( chart => {
-      console.log('chart ' , chart)
+      //console.log('chart ' , chart)
       if( !helpers.isEmpty(chart) ) {
         if(helpers.isEmpty(chart.userOptions.id)){
           return false;
         }
        let rect = document.getElementById(chart.userOptions.id.replace('_c','')).getBoundingClientRect();
-        console.log('rect ' , rect)
+     //   console.log('rect ' , rect)
        chart.setSize(rect.width, rect.height);
       }
     })
@@ -100,7 +100,7 @@ export default class EditStore {
   (단, 컴포넌트의 root div에 wrapperid  + _c 가 id 로 잡혀있는 경우만 해당)
   */
  handleResizeChildComponent = ( allChild, target ) => {
-  console.log('handleResizeChildComponent ,allChild', allChild, ' target ', target.i);
+ // console.log('handleResizeChildComponent ,allChild', allChild, ' target ', target.i);
   let rect = document.getElementById(target.i).getBoundingClientRect();
 
   let targetDiv =document.getElementById(target.i+ '_c');
@@ -116,10 +116,10 @@ export default class EditStore {
     */
     @action
     searchComponentByName = (thisComponentName) => {
-      console.log('thisComponentName ', thisComponentName)
+      //console.log('thisComponentName ', thisComponentName)
       let tag;
       this.componentList.forEach((item) => {
-        console.log('item ' , item)
+        //console.log('item ' , item)
         for(let name in item){
           if(name === thisComponentName){
             tag = item[name];
@@ -139,10 +139,10 @@ export default class EditStore {
     addSelectedComponent = (e) => {
       //console.log(e);
       let selectedId = e.target.id ;
-      console.log(
-        "selectedId", selectedId)
+      // console.log(
+      //   "selectedId", selectedId)
       let Tag = this.searchComponentByName( selectedId );
-      console.log('Tag' , Tag)
+     // console.log('Tag' , Tag)
       let timeStamp = new Date().getTime();
       this.layout.push({
             i: 'n' + timeStamp,
@@ -161,19 +161,19 @@ export default class EditStore {
       this.componentList.push({
           [ListViewName] : component,
       });
-      console.log('putComponentList ' ,this.componentList)
+    //  console.log('putComponentList ' ,this.componentList)
     }
     
 
     @action loadPage = async() => {
-        console.log('loadpage' );
+        //console.log('loadpage' );
       axios.post(clientConfig.endpoint.api + '/bus/get_user_components', {
         user_id : 'sampleId',
         page_number : this.page_number,
       })
       .then(async res => {
           
-          console.log('res', res.data.component_list);
+          //console.log('res', res.data.component_list);
         if(helpers.isEmpty(res.data.component_list)){
           this.initlayout( this.page_number );
           this.page_number = this.page_number
@@ -221,7 +221,7 @@ export default class EditStore {
 createElement = (el,key) => {
 
   const{onRemoveItem}  =this;
-  console.log("createElement", el, key)
+ //console.log("createElement", el, key)
   const removeStyle = {
     position: "absolute",
     right: "2px",
@@ -270,14 +270,14 @@ x를 클릭한 컴포넌트를 제거하는 함수
 */
   @action
   onRemoveItem =(i) => {
-    console.log(i)
-    console.log('hello', this.layout)
+    // console.log(i)
+    // console.log('hello', this.layout)
     this.layout =  _.reject(this.layout, { i: i }) 
   }
 
   saveToLocal = (key, value) => {
     LayoutTemporaryStorage = JSON.stringify({ [key]: value });
-    console.log("LayoutTemporaryStorage!!!", LayoutTemporaryStorage)
+    //console.log("LayoutTemporaryStorage!!!", LayoutTemporaryStorage)
   }
 
   	/*
@@ -304,7 +304,7 @@ x를 클릭한 컴포넌트를 제거하는 함수
     현재 layout이 나타내는 페이지를 저장한다.
   */
  handleSavePage = () => {
-   console.log("handleSavePage")
+   //console.log("handleSavePage")
   axios.post(clientConfig.endpoint.api + '/bus/set_user_components', {
     user_id : 'sampleId',
     page_number : this.page_number,
@@ -323,7 +323,7 @@ x를 클릭한 컴포넌트를 제거하는 함수
     map 함수를 통해 현재 유지하고 있는 state.layout의 정보들을 추가하여 저장한다.
   */
  onLayoutChange =  (layout) => {
-  console.log('onLayoutChange ', layout)
+ // console.log('onLayoutChange ', layout)
   this.layout = layout.map((item,i) => {
     return {
       ...item,

@@ -8,7 +8,7 @@ import 'moment/locale/ko';
 class HumidityChart extends Component {  
     componentDidMount(){
         const {getWeatherData , humidityDataList} =this.props; 
-        getWeatherData(60, 127, 'REH');
+        getWeatherData('REH');
         console.log('chartCompon')
        //this.getWeatherData()
        

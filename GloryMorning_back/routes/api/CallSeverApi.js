@@ -69,7 +69,9 @@ module.exports = function (callee) {
             weatherAsync :  async(base_date, base_time, nx, ny, type, shortTermYn, callback) => {
                 const request =  require('request')
                 const querystring = require('querystring')
-                if( shortTermYn ){
+                console.log("shortTermYn " , (shortTermYn) )
+                if( shortTermYn ==='true' || shortTermYn ){
+                    console.log("tq")
                     OPTIONS.url = HOST + BASE_PATH_SHORT_TERM;
                 }else{
                     OPTIONS.url = HOST + BASE_PATH;

@@ -9,8 +9,8 @@ import 'moment/locale/ko';
 class RainChart extends Component {  
     componentDidMount(){
         const {getWeatherData} =this.props;
-        getWeatherData(60, 127, 'POP');
-        getWeatherData(60, 127, 'R06');
+        getWeatherData('POP');
+        getWeatherData('R06');
     }
 
     componentDidUpdate(){

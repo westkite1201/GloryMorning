@@ -154,13 +154,17 @@ export default class WeatherStore {
     //가장 근처에 있는 측정소 미세먼지 정보 RETURN 
     @action
     getDustInfo = async() => {
+      console.log("getDustInfo1")
+      await this.nowGeolocation()
       try{
-        let tmCordinate = await this.getTmCordinate();
+        console.log("getDustInfo2")
+        let tmCordinate = await this.getCordinate('TM');
+        console.log("getDustInfo3")
         console.log(tmCordinate)
         let tmX = tmCordinate.x;
         let tmY = tmCordinate.y;
         const response = await weatherApi.getNearbyMsrstnList(tmX, tmY);
-        console.log("getDustInfo ", response)
+        //console.log("getDustInfo ", response)
         if ( response.status === 200  && response.statusText === "OK"){
           let dustInfoObject = response.data;
            dustInfoObject.dustMessageInfoPm10 = helpers.getDustIcon("pm10",parseInt(dustInfoObject.pm10Value))
@@ -174,14 +178,27 @@ export default class WeatherStore {
 
 
     @action
-    getWeatherDataShortTerm = async(nx, ny ) => {
+    getWeatherDataShortTerm = async() => {
+      await this.nowGeolocation();
+      let responsedata = this.convert(this.currentY, this.currentX);
+      console.log("getWeatherDataShortTerm ", responsedata )
+      let nx = responsedata.x;
+      let ny = responsedata.y;
       try{
-        const response = await weatherApi.getWeatherDataShortTerm( 
-          nx, 
-          ny,
-        );
-        let weatherInfo = response.data
-        console.log(weatherInfo)
+        let response;
+        if( MODE ==='MEMBER_MODE'){
+            response = await weatherApi.getWeatherDataShortTerm( 
+            nx, 
+            ny,
+          );
+          }
+          else if ( MODE ==='PRIVATE_MODE') {
+            response = await weatherApi.getWeatherDataPrivateMode( 
+              nx, 
+              ny,
+              true
+              );
+          }
         let sky;  //날씨  
         let pty;  //강수형태 
         let temperatureNow;
@@ -189,45 +206,83 @@ export default class WeatherStore {
         let rainNow; 
         let baseDate;
         let baseTime;
-        weatherInfo.map((item) =>{
-            console.log('item', item.CATEGORY)
-            if( item.CATEGORY === 'SKY'){
-              sky = parseInt(item.FCST_VALUE); 
-            }
-            if( item.CATEGORY === 'PTY'){
-              pty = parseInt(item.FCST_VALUE); 
-            }
-            if( item.CATEGORY === 'T1H') {
-              temperatureNow = parseInt(item.FCST_VALUE);
-            }
-            if( item.CATEGORY === 'RN1') {
-              rainNow = item.FCST_VALUE;
-            }
-            if( item.CATEGORY === 'REH') {
-              humidityNow = parseInt(item.FCST_VALUE);
-            }
-            baseDate = item.BASE_DATE;
-            baseTime = item.BASE_TIME;
-        })
-        let skyInfoStr = String(sky) + String(pty)
+        let weatherInfo;
+        if( MODE === 'PRIVATE_MODE'){
+            let responseData= response.data.data.response.body;
+            console.log("responseData" , responseData)
+            weatherInfo = responseData.items.item;
 
-
-        
-        //.temperatureNow = temperatureNow;
-        //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
-        //this.weatherInfoData = weatherInfo;
-        let weatherClassName = this.getWeatherClassName(skyInfoStr)
-        let weatherInfObject= {
-          baseDate : baseDate,
-          baseTime : baseTime,
-          weatherClassName : weatherClassName,
-          temperatureNow : temperatureNow,
-          rainNow : rainNow,
-          humidityNow : humidityNow
+            weatherInfo.map((item) =>{
+              //console.log('item', item.CATEGORY)
+              if( item.category === 'SKY'){
+                sky = parseInt(item.fcstValue); 
+              }
+              if( item.category === 'PTY'){
+                pty = parseInt(item.fcstValue); 
+              }
+              if( item.category === 'T1H') {
+                temperatureNow = parseInt(item.fcstValue);
+              }
+              if( item.category === 'RN1') {
+                rainNow = item.fcstValue;
+              }
+              if( item.category === 'REH') {
+                humidityNow = parseInt(item.fcstValue);
+              }
+              baseDate = item.baseDate;
+              baseTime = item.baseTime;
+          })
+          let skyInfoStr = String(sky) + String(pty)
+          let weatherClassName = this.getWeatherClassName(skyInfoStr)
+          let weatherInfObject= {
+            baseDate : baseDate,
+            baseTime : baseTime,
+            weatherClassName : weatherClassName,
+            temperatureNow : temperatureNow,
+            rainNow : rainNow,
+            humidityNow : humidityNow
+          }
+          this.weatherInfObject = weatherInfObject;
         }
-        this.weatherInfObject = weatherInfObject;
+        if( MODE ==='MEMBER_MODE'){
+          weatherInfo = response.data
+          //console.log(weatherInfo)
+          weatherInfo.map((item) =>{
+              //console.log('item', item.CATEGORY)
+              if( item.CATEGORY === 'SKY'){
+                sky = parseInt(item.FCST_VALUE); 
+              }
+              if( item.CATEGORY === 'PTY'){
+                pty = parseInt(item.FCST_VALUE); 
+              }
+              if( item.CATEGORY === 'T1H') {
+                temperatureNow = parseInt(item.FCST_VALUE);
+              }
+              if( item.CATEGORY === 'RN1') {
+                rainNow = item.FCST_VALUE;
+              }
+              if( item.CATEGORY === 'REH') {
+                humidityNow = parseInt(item.FCST_VALUE);
+              }
+              baseDate = item.BASE_DATE;
+              baseTime = item.BASE_TIME;
+          })
+          let skyInfoStr = String(sky) + String(pty)
 
-
+          //.temperatureNow = temperatureNow;
+          //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
+          //this.weatherInfoData = weatherInfo;
+          let weatherClassName = this.getWeatherClassName(skyInfoStr)
+          let weatherInfObject= {
+            baseDate : baseDate,
+            baseTime : baseTime,
+            weatherClassName : weatherClassName,
+            temperatureNow : temperatureNow,
+            rainNow : rainNow,
+            humidityNow : humidityNow
+          }
+          this.weatherInfObject = weatherInfObject;
+      }
       }catch(e){
         console.log(e)
       }
@@ -340,14 +395,14 @@ export default class WeatherStore {
       현재 gps 세팅함 
     */
     @action 
-    nowGeolocation = () => {
-      let { currentX, currentY } =this; 
+    nowGeolocation = async() => {
       console.log("nowGeolocation")
       if (navigator.geolocation) { // GPS를 지원하면
           navigator.geolocation.getCurrentPosition((position) => {
             console.log("hello", position.coords.latitude + ' ' + position.coords.longitude);
             this.currentX = position.coords.longitude
             this.currentY = position.coords.latitude
+
             this.getLocationName();
           }, function(error) {
             console.error(error);
@@ -379,9 +434,11 @@ export default class WeatherStore {
     
     @action
     getLocationName = () => {  //현재 x,y 에 대한 동네 위치 요청 
-      console.log("axiosTest!!")
+      //console.log("axiosTest!!")
       _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
       _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
+      console.log( this.currentX ,   this.currentY)
+      
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{
         axios.get('https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?', {
@@ -405,7 +462,7 @@ export default class WeatherStore {
             this.LocationA = LocationA
             this.LocationB = LocationB
             this.LocationC = LocationC
-            console.log(LocationA, LocationB ,LocationC )
+            console.log("getLocationName", LocationA, LocationB ,LocationC )
             //this.getTmCordinate();
           }
         })
@@ -417,7 +474,7 @@ export default class WeatherStore {
     /* tm 좌표를 가져옴  */
     /* 미세먼지 좌표를 위한  */
     @action
-    getTmCordinate= async() => {  //현재 x,y 에 대한 동네 위치 요청 
+    getCordinate= async(outputCoord) => {  //현재 x,y 에 대한 동네 위치 요청 
       console.log("axiosTest!!")
       _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
       _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
@@ -431,7 +488,7 @@ export default class WeatherStore {
             x : this.currentX.toString(),
             y : this.currentY.toString(),
             input_coord : 'WGS84',
-            output_coord : 'TM'
+            output_coord : outputCoord
           },
           headers: { // 요청 헤더
             'Authorization': clientConfig.apiKeys.kakaoApiKey
@@ -468,11 +525,13 @@ export default class WeatherStore {
     */
     @action
     //X,Y가 거꾸로 되어 있는거 같음 
-    getWeatherData = async( nx ,ny, category) =>{
+    getWeatherData = async( category) =>{
       // _.isNil(this.currentY) ? nx = 37 : nx = parseInt(this.currentY)
       // _.isNil(this.currentX) ? ny = 126 : ny = parseInt(this.currentX)
-     nx = 37
-     ny = 126
+      let responsedata = this.convert(this.currentY, this.currentX);
+      console.log("getWeatherDataShortTerm ", responsedata )
+      let nx = responsedata.x;
+      let ny = responsedata.y;
       let response;
       try{
         if( category ==='REH'){ this.isFetchingHumi = true }
@@ -488,7 +547,7 @@ export default class WeatherStore {
         );
         }
         else if ( MODE ==='PRIVATE_MODE') {
-          response = await weatherApi.getWeatherDataPublicMode( 
+          response = await weatherApi.getWeatherDataPrivateMode( 
             nx, 
             ny,
             false
@@ -508,12 +567,12 @@ export default class WeatherStore {
           }
         
 
-          console.log(weatherArray)
+          //console.log(weatherArray)
           if( MODE === 'MEMBER_MODE'){
           switch (category) {
             case "REH" :
               this.humidityDataList = weatherArray.map((item) => {
-                console.log(item)
+               // console.log(item)
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
       
                 return ([
@@ -535,7 +594,7 @@ export default class WeatherStore {
               break;
             case 'R06' :
               this.rainfallmmDataList = weatherArray.map((item) => {
-                console.log("R06!!!", item)
+                //console.log("R06!!!", item)
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
                 return ([
                   ((momentobj._d).valueOf() ) ,
@@ -579,7 +638,7 @@ export default class WeatherStore {
               case "REH" :
                 this.humidityDataList = weatherArray.map((item) => {
                   let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
-                  console.log(momentobj)
+                  //console.log(momentobj)
                   return ([
                     ((momentobj._d).valueOf() ) ,
                       parseInt( item.fcstValue) ,
@@ -599,7 +658,7 @@ export default class WeatherStore {
                 break;
               case 'R06' :
                 this.rainfallmmDataList = weatherArray.map((item) => {
-                  console.log("R06!!!", item)
+                 // console.log("R06!!!", item)
                   let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
                   return ([
                     ((momentobj._d).valueOf() ) ,
@@ -654,10 +713,10 @@ export default class WeatherStore {
                                                         locationC
                                                       );
         if (response.statusText === "OK") { //포스트 작성 성공 
-            console.log(response)
+            //console.log(response)
             let responseData= response.data.response.body;
             let weatherArray = responseData.items.item;
-            console.log(weatherArray)
+            //console.log(weatherArray)
     
             let rainfallArr = []
             let rainfallmmArr = [];
@@ -722,11 +781,11 @@ export default class WeatherStore {
       // weatherInfo.push(humidityList)     //습도
       // weatherInfo.push(proPrecipitationList) // 강수확률
       // weatherInfo.push(precipitation)     //강수량
-      console.log(resData)
+      //console.log(resData)
       //시간 온도 
       if( wantApi === "TEMPERATURE" ){
         let timeList = resData[0]
-        console.log(timeList);
+       // console.log(timeList);
         let weatherDetailList = resData[1]
         let temperatureList= resData[2];
         
@@ -871,4 +930,90 @@ export default class WeatherStore {
       }
     }
 
+
+    convert = (xx , yy) =>{
+      var RE = 6371.00877; // 지구 반경(km)
+      var GRID = 5.0; // 격자 간격(km)
+      var SLAT1 = 30.0; // 투영 위도1(degree)
+    
+      var SLAT2 = 60.0; // 투영 위도2(degree)
+      var OLON = 126.0; // 기준점 경도(degree)
+      var OLAT = 38.0; // 기준점 위도(degree)
+      var XO = 43; // 기준점 X좌표(GRID)
+      var YO = 136; // 기1준점 Y좌표(GRID)
+    
+    // LCC DFS 좌표변환 ( code : 
+    //          "toXY"(위경도->좌표, v1:위도, v2:경도), 
+    //          "toLL"(좌표->위경도,v1:x, v2:y) )
+    //
+      function dfs_xy_conv(code, v1, v2) {
+        
+          var DEGRAD = Math.PI / 180.0;
+          var RADDEG = 180.0 / Math.PI;
+          
+          var re = RE / GRID;
+          var slat1 = SLAT1 * DEGRAD;
+          var slat2 = SLAT2 * DEGRAD;
+          var olon = OLON * DEGRAD;
+          var olat = OLAT * DEGRAD;
+          
+          var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+          sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+          var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+          sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+          var ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+          ro = re * sf / Math.pow(ro, sn);
+          var rs = {};
+          if (code == "toXY") {
+              rs['lat'] = v1;
+              rs['lng'] = v2;
+              var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+              ra = re * sf / Math.pow(ra, sn);
+              var theta = v2 * DEGRAD - olon;
+              if (theta > Math.PI) theta -= 2.0 * Math.PI;
+              if (theta < -Math.PI) theta += 2.0 * Math.PI;
+              theta *= sn;
+              rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+              rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+          }
+          else {
+              rs['x'] = v1;
+              rs['y'] = v2;
+              var xn = v1 - XO;
+              var yn = ro - v2 + YO;
+              ra = Math.sqrt(xn * xn + yn * yn);
+              if (sn < 0.0) {
+                ra = -ra;
+              }
+              var alat = Math.pow((re * sf / ra), (1.0 / sn));
+              alat = 2.0 * Math.atan(alat) - Math.PI * 0.5;
+              
+              if (Math.abs(xn) <= 0.0) {
+                  theta = 0.0;
+              }
+              else {
+                  if (Math.abs(yn) <= 0.0) {
+                      theta = Math.PI * 0.5;
+                      if (xn < 0.0){
+                        theta = -theta;
+                      } 
+                  }
+                  else theta = Math.atan2(xn, yn);
+              }
+              var alon = theta / sn + olon;
+              rs['lat'] = alat * RADDEG;
+              rs['lng'] = alon * RADDEG;
+          }
+          return rs;
+      }
+    
+    
+      var rs = dfs_xy_conv("toXY", xx, yy);
+      console.log(rs)
+    
+      return rs;
+    }
+
 }
+
+

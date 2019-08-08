@@ -205,7 +205,7 @@ router.post('/getWeatherData',  async(req, res) => {
 });
 
 /* api에서 조회  */
-router.post('/getWeatherDataPublicMode',  async(req, res) => {
+router.post('/getWeatherDataPrivateMode',  async(req, res) => {
   try{
     getNowTime();
     //nx, ny는 디비에서 가져오기 
@@ -218,7 +218,7 @@ router.post('/getWeatherDataPublicMode',  async(req, res) => {
     shortTermYn = req.body.shortTermYn;
     nx = req.body.nx;
     ny = req.body.ny;
-    console.log(nx , ny)
+    console.log(nx , ny, shortTermYn)
     let response = await CallSeverApi.weatherAsync(base_date, base_time, nx, ny, type, shortTermYn);
     console.log('resposne ', response)
     if(response.message !== 'error'){ //온경우
