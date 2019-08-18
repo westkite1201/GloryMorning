@@ -17,6 +17,9 @@ module.exports = function (callee) {
         const BASE_PATH_SHORT_TERM = '/service/SecndSrtpdFrcstInfoService2/ForecastTimeData?';
         const BASE_PATH_GET_DUST_INFO = '/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?'
         const BASE_PATH_NEAR_STATION = '/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?'
+        
+        const BASE_PATH_RIST_SET =  '/B090041/openapi/service/RiseSetInfoService/getAreaRiseSetInfo?'
+        
         var HOST = null;
         (function () {
             switch (callee) {
@@ -29,8 +32,8 @@ module.exports = function (callee) {
                 case 'prod':
                     HOST = 'https://prod-api.com';
                     break;
-                case 'another':
-                    HOST = 'http://localhost';
+                case 'riseSet':
+                    HOST = 'http://apis.data.go.kr';
                     break;
                 default:
                     HOST = 'http://localhost';
@@ -178,6 +181,49 @@ module.exports = function (callee) {
                 OPTIONS.url += '&ServiceKey='+ serviceKey
 
                 //console.log( OPTIONS.url)
+            
+                //async를 위해 request 함수 선언 
+                function doRequest() {
+                    return new Promise(function (resolve, reject) {
+                        request(OPTIONS, (err, res, result) => {
+                            
+                             response =  statusCodeErrorHandlerAsync(res.statusCode, result);
+                             if(response.message  !== 'error'){
+                                 resolve(response)
+                             }
+                             else{
+                                reject(err);
+                             }
+                             //console.log(response)
+                        });
+                    });
+                }
+
+                let res = await doRequest();
+                return res;
+            },
+
+            getAreaRiseSetInfo :  async(location, locDate) => {
+                const request =  require('request')
+                const querystring = require('querystring')
+                OPTIONS.url = HOST + BASE_PATH_RIST_SET;
+                //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
+                //공개 위험
+               let serviceKey = apiConfig.apiKey.datagoApiKey + '&'
+         
+               let propertiesObject = querystring.stringify({
+                    "location" : location,
+                    "locdate" : locDate,
+                    "_type" : 'json'
+                })
+              
+                propertiesObject = querystring.unescape(propertiesObject);
+                OPTIONS.url += propertiesObject 
+                OPTIONS.url = encodeURI(OPTIONS.url); 
+                //console.log(OPTIONS)
+                OPTIONS.url += '&ServiceKey='+ serviceKey
+
+                console.log( OPTIONS.url)
             
                 //async를 위해 request 함수 선언 
                 function doRequest() {

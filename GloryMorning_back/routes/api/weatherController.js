@@ -7,6 +7,7 @@ const weatherDaoNew = require('../../model/mysql/weatherDaoNew')
 const async = require('async');
 const CallSeverApi = require('./CallSeverApi')('weather');
 const CallSeverApiDust = require('./CallSeverApi')('dust');
+const CallSeverApiRiseSet = require('./CallSeverApi')('riseSet');
 const moment = require('moment')
 
 let newtime = 0;
@@ -70,6 +71,24 @@ getNowTime = () => {
     newtime = '2000'
   }
 }
+
+
+
+router.post('/getAreaRiseSetInfo',  async(req, res) => {
+  console.log("getNearbyMsrstnList!")
+  let location = req.body.location
+  let locdate = req.body.locdate
+  //console.log(tmX, tmY)
+  try{
+    const response = await CallSeverApiRiseSet.getAreaRiseSetInfo(location, locdate);
+    if( response.message !== 'error' ){
+        res.json(response);
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+})
+
 
 
 router.post('/getNearbyMsrstnList',  async(req, res) => {

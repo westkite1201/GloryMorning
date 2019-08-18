@@ -16,7 +16,7 @@ class HumidityChart extends Component {
             weatherData
          } = this.props;
 
-            getWeather("HUMIDITY");
+        getWeather("HUMIDITY");
     }
     componentDidUpdate(){
         const { isFetchingHumi } = this.props;
