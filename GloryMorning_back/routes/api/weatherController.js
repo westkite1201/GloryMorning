@@ -74,10 +74,11 @@ getNowTime = () => {
 
 
 
+
 router.post('/getAreaRiseSetInfo',  async(req, res) => {
-  console.log("getNearbyMsrstnList!")
+  console.log("getAreaRiseSetInfo!")
   let location = req.body.location
-  let locdate = req.body.locdate
+  let locdate = moment().format('YYYYMMDD')
   //console.log(tmX, tmY)
   try{
     const response = await CallSeverApiRiseSet.getAreaRiseSetInfo(location, locdate);

@@ -1,6 +1,15 @@
 import axios from 'axios';
 import cilentConfig from '../../configuration/clientConfig'
 
+
+export const getAreaRiseSetInfo = () => {
+  const data ={ 
+    location : '서울'
+  }
+  return (axios.post(cilentConfig.endpoint.api + "/weather/getAreaRiseSetInfo",data))
+}
+
+
 export const getNearbyMsrstnList = (tmX, tmY) =>{
   console.log("getNearbyMsrstnList")
   const data = { 

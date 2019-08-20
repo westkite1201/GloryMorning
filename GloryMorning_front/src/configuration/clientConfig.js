@@ -3,6 +3,12 @@
 *
 */
 module.exports = {
+  apiKeys: {
+   kakaoApiKey : 'KakaoAK 964c43954aeb54d0711aed4e57a588e5',
+   datagoApiKey : '',
+  },
+
+
    adminEmail : 'txtcopy@naver.com',
   //adminEmail : 'april3@sk.com'
   

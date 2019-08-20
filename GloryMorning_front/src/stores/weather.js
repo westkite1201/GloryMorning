@@ -25,7 +25,11 @@ export default class WeatherStore {
     @observable isFetchingHumi = false
 
     @observable dustInfoObject = { 
-      dustMessageInfoPm10 : {},
+      dustMessageInfoPm10 : {
+        InfoHeader : '',
+        infoIcon : '',
+        infoMessage : '',
+      },
       addr: "",
       coGrade: "",
       coValue: "",
@@ -66,6 +70,7 @@ export default class WeatherStore {
       baseTime : '',
       baseDate : '',
       weatherclassNames : '',
+      weatherInfoName : '',
       temperatureNow : '',
       rainNow : '',
       humidityNow : ''
@@ -149,6 +154,22 @@ export default class WeatherStore {
     }
 
   
+
+    @action
+    getAreaRiseSetInfo = async() => { 
+      try{
+        let response =  await weatherApi.getAreaRiseSetInfo();
+        let resData=  response.data.data;
+        return resData.response.body.items;
+      }catch(e){
+        console.log('error' , e)
+      }
+
+    }
+
+
+
+
     //현재 위치 알것  nowGeolocation이용 
     //현재 위치 에서 가장 근처에 있는 측정소를 찾을 것 
     //가장 근처에 있는 측정소 미세먼지 정보 RETURN 
@@ -167,8 +188,10 @@ export default class WeatherStore {
         //console.log("getDustInfo ", response)
         if ( response.status === 200  && response.statusText === "OK"){
           let dustInfoObject = response.data;
-           dustInfoObject.dustMessageInfoPm10 = helpers.getDustIcon("pm10",parseInt(dustInfoObject.pm10Value))
-          this.dustInfoObject = dustInfoObject;
+              dustInfoObject.dustMessageInfoPm10 = helpers.getDustIcon("pm10",parseInt(dustInfoObject.pm10Value))
+          if(dustInfoObject.length > 0){
+            this.dustInfoObject = dustInfoObject;
+          }
         }
       }catch(e){
         console.log("error" , e)
@@ -177,11 +200,32 @@ export default class WeatherStore {
  
 
 
+    
+    // sunrise: "0552"
+    // sunset: "1919"
+      
+    /* 현재 시간 판단  */
+    isDayTime = (sunSet) => {
+      let timeStr = this.timeObj.hour+ this.timeObj.minute;  
+      if ( moment(sunSet) > moment(timeStr) ){
+          return true
+      }
+      else{
+        return false;
+      }
+    }
+
+
     @action
     getWeatherDataShortTerm = async() => {
       await this.nowGeolocation();
+      let riseSetInfo = await this.getAreaRiseSetInfo();
+      console.log("[SEO] RiseSetInfo", riseSetInfo)
+
+      let dayTimeYn = this.isDayTime(riseSetInfo.sunSet)
+      console.log("[SEO] dayTimeYn", dayTimeYn)
       let responsedata = this.convert(this.currentY, this.currentX);
-      console.log("getWeatherDataShortTerm ", responsedata )
+      console.log("[Seo] getWeatherDataShortTerm ", responsedata )
       let nx = responsedata.x;
       let ny = responsedata.y;
       try{
@@ -233,11 +277,12 @@ export default class WeatherStore {
               baseTime = item.baseTime;
           })
           let skyInfoStr = String(sky) + String(pty)
-          let weatherClassName = this.getWeatherClassName(skyInfoStr)
+          let weatherInfoData = this.getWeatherClassName(skyInfoStr, dayTimeYn)
           let weatherInfObject= {
             baseDate : baseDate,
             baseTime : baseTime,
-            weatherClassName : weatherClassName,
+            weatherClassName : weatherInfoData.weatherClassName,
+            weatherInfoName : weatherInfoData.weatherInfoName,
             temperatureNow : temperatureNow,
             rainNow : rainNow,
             humidityNow : humidityNow
@@ -272,11 +317,12 @@ export default class WeatherStore {
           //.temperatureNow = temperatureNow;
           //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
           //this.weatherInfoData = weatherInfo;
-          let weatherClassName = this.getWeatherClassName(skyInfoStr)
+          let weatherInfoData= this.getWeatherClassName(skyInfoStr, dayTimeYn)
           let weatherInfObject= {
             baseDate : baseDate,
             baseTime : baseTime,
-            weatherClassName : weatherClassName,
+            weatherClassName : weatherInfoData.weatherClassName,
+            weatherInfoName : weatherInfoData.weatherInfoName,
             temperatureNow : temperatureNow,
             rainNow : rainNow,
             humidityNow : humidityNow
@@ -287,9 +333,10 @@ export default class WeatherStore {
         console.log(e)
       }
     }
-    
-    getWeatherClassName =(skyInfoStr) =>{
+
+    getWeatherClassName =(skyInfoStr, dayTimeYn) =>{
       let className = ''
+      let weatherInfoName = ''
       // sky 
       // ① 1 : 맑음
       // ② 2 : 구름조금
@@ -305,56 +352,72 @@ export default class WeatherStore {
       switch (skyInfoStr) {
         //맑음 
         case "10" :
-          className = 'wi wi-day-sunny '
+          className = dayTimeYn ? 'wi wi-day-sunny' : 'wi wi-night-clear'
+          weatherInfoName = '맑음'
           break;
 
         case "20" :
-          className = 'wi wi-day-cloudy'
+          className = dayTimeYn ? 'wi wi-day-cloudy' : 'wi wi-night-alt-cloudy'
+          weatherInfoName = '구름 적음'
           break;
         case "21" :
-            className = 'wi wi-day-rain'
+            className = dayTimeYn ? 'wi wi-day-rain' : 'wi wi-night-alt-rain'
+            weatherInfoName = '구름 적고 비'
           break;
         case "22" :
-            className = 'wi wi-day-sleet'
+            className =  dayTimeYn ?  'wi wi-day-sleet' : 'wi wi-night-alt-sleet'
+            weatherInfoName = '구름 적고 비 또는 눈'
           break;
         case "23" :
-            className = 'wi wi-day-sleet'
+            className =  dayTimeYn ?  'wi wi-day-sleet' :  'wi wi-night-alt-sleet'
+            weatherInfoName = '구름 적고 눈 또는 비'
           break;
         case "24" :
-            className = 'wi wi-day-snow'
+            className =  dayTimeYn ?  'wi wi-day-snow' :  'wi wi-night-alt-snow'
+            weatherInfoName = '구름 적고 눈'
           break;
 
 
         case "30" :
-            className = 'wi wi-cloud'
+            className =  dayTimeYn ? 'wi wi-cloud' :  'wi wi-night-alt-cloudy'
+            weatherInfoName = '구름 많음'
             break;
         case "31" :
-            className = 'wi wi-rain'
+            className =  dayTimeYn ? 'wi wi-rain' : 'wi wi-night-alt-rain'
+            weatherInfoName = '구름 많고 비'
             break;
         case "32" :
-            className = 'wi wi-sleet'
+            className =  dayTimeYn ? 'wi wi-sleet' :'wi wi-night-alt-sleet'
+            weatherInfoName = '구름 많고 비 또는 눈'
             break;
         case "33" :
-            className = 'wi wi-sleet'
+            className =  dayTimeYn ? 'wi wi-sleet' : 'wi wi-night-alt-sleet'
+            weatherInfoName = '구름 많고 눈 또는 비'
             break;
         case "34" :
-            className = 'wi wi-snow'
+            className =  dayTimeYn ? 'wi wi-snow' : 'wi wi-night-alt-snow'
+            weatherInfoName = '구름 많고 눈 '
             break;
 
         case "40" :
-            className = 'wi wi-cloudy'
+            className = dayTimeYn ? 'wi wi-cloudy' :   'wi wi-night-alt-cloudy'
+            weatherInfoName = '흐림'
             break;
         case "41" :
-            className = 'wi wi-rain'
+            className = dayTimeYn ?'wi wi-rain' : 'wi wi-night-alt-rain'
+            weatherInfoName = '흐리고 비'
             break;
         case "42" :
-            className = 'wi wi-sleet'
-            break;
+            className = dayTimeYn ? 'wi wi-sleet' : 'wi wi-night-alt-sleet'
+            weatherInfoName = '흐리고 비 또는 눈'
+            break; 
         case "43" :
-            className = 'wi wi-sleet'
+            className = dayTimeYn ? 'wi wi-sleet' : 'wi wi-night-alt-sleet'
+            weatherInfoName = '흐리고 눈 또는 비'
             break;
           case "44" :
-            className = 'wi wi-snow'
+            className = dayTimeYn ? 'wi wi-snow' : 'wi wi-night-alt-snow'
+            weatherInfoName = '흐리고 눈'
             break;
 
         default :
@@ -388,7 +451,8 @@ export default class WeatherStore {
       // 42  흐림 비/눈  wi-sleet
       // 43  흐림 눈/비   wi-sleet
       // 44  흐림 눈  wi-snow
-      return className
+      return { weatherClassName : className,
+                weatherInfoName : weatherInfoName } 
     }
 
     /* gps 좌표를 바탕으로 
@@ -433,7 +497,7 @@ export default class WeatherStore {
     }
     
     @action
-    getLocationName = () => {  //현재 x,y 에 대한 동네 위치 요청 
+    getLocationName = async() => {  //현재 x,y 에 대한 동네 위치 요청 
       //console.log("axiosTest!!")
       _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
       _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
@@ -441,7 +505,7 @@ export default class WeatherStore {
       
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{
-        axios.get('https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?', {
+        const res = await axios.get('https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?', {
           params: { // query string
             // x: '127.10459896729914',
             // y: '37.40269721785548'
@@ -452,9 +516,9 @@ export default class WeatherStore {
             'Authorization': clientConfig.apiKeys.kakaoApiKey
           },
           timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
-        }).then(res => {
-          //카카오톡에 요청 
-          if(res.data.documents) {
+        })
+         //카카오톡에 요청 
+        if(res.data.documents) {
             let resData = res.data.documents[1];
             let LocationA = resData.region_1depth_name
             let LocationB = resData.region_2depth_name
@@ -464,8 +528,7 @@ export default class WeatherStore {
             this.LocationC = LocationC
             console.log("getLocationName", LocationA, LocationB ,LocationC )
             //this.getTmCordinate();
-          }
-        })
+        }
       }catch(e){
         console.log(e)
       }
