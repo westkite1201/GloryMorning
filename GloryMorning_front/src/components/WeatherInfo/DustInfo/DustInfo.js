@@ -19,7 +19,7 @@ class DustInfo extends Component {
     render() {
         const {dustInfoObject} = this.props;
         let str= "😍"
-        console.log(dustInfoObject)
+        console.log("[SEO] dustInfoObject", dustInfoObject)
         return (
             <div className ="dust_info_container">
                 <div className = "station_info" >

@@ -175,23 +175,25 @@ export default class WeatherStore {
     //가장 근처에 있는 측정소 미세먼지 정보 RETURN 
     @action
     getDustInfo = async() => {
-      console.log("getDustInfo1")
-      await this.nowGeolocation()
+      console.log("[SEO] getDustInfo1")
+      let locationInfo = await this.nowGeolocation()
       try{
-        console.log("getDustInfo2")
-        let tmCordinate = await this.getCordinate('TM');
-        console.log("getDustInfo3")
-        console.log(tmCordinate)
+        console.log("[SEO] getDustInfo2 locationInfo", locationInfo)
+        let tmCordinate = await this.getCordinate('TM', locationInfo);
+        console.log("[SEO] getDustInfo3")
+        console.log('[SEO]  tmCordinate ' ,tmCordinate)
         let tmX = tmCordinate.x;
         let tmY = tmCordinate.y;
         const response = await weatherApi.getNearbyMsrstnList(tmX, tmY);
-        //console.log("getDustInfo ", response)
+        console.log("[SEO] getNearbyMsrstnList ", response)
         if ( response.status === 200  && response.statusText === "OK"){
           let dustInfoObject = response.data;
               dustInfoObject.dustMessageInfoPm10 = helpers.getDustIcon("pm10",parseInt(dustInfoObject.pm10Value))
-          if(dustInfoObject.length > 0){
+          
+               console.log("[SEO] dustInfoObject ", dustInfoObject, dustInfoObject.length)
+
             this.dustInfoObject = dustInfoObject;
-          }
+          
         }
       }catch(e){
         console.log("error" , e)
@@ -458,26 +460,36 @@ export default class WeatherStore {
     /* gps 좌표를 바탕으로 
       현재 gps 세팅함 
     */
+
+
+  getPosition =  (options) => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
+    });
+  }
+  
+  
     @action 
     nowGeolocation = async() => {
       console.log("nowGeolocation")
       if (navigator.geolocation) { // GPS를 지원하면
-          navigator.geolocation.getCurrentPosition((position) => {
-            console.log("hello", position.coords.latitude + ' ' + position.coords.longitude);
-            this.currentX = position.coords.longitude
-            this.currentY = position.coords.latitude
-
-            this.getLocationName();
-          }, function(error) {
-            console.error(error);
-          }, {
-            enableHighAccuracy: false,
-            maximumAge: 0,
-            timeout: Infinity
-          });
-        } else {
-          alert('GPS를 지원하지 않습니다');
-        }
+        try{
+          let position = await this.getPosition();
+          console.log("[SEO] nowGeolocation ", position.coords.latitude + ' ' + position.coords.longitude);
+          this.currentX = position.coords.longitude
+          this.currentY = position.coords.latitude
+          let currentX = position.coords.longitude
+          let currentY = position.coords.latitude
+          let locationInfo = await this.getLocationName(currentX, currentY);
+          return locationInfo;
+        }catch(e){
+          console.log("error " , e)
+        } 
+      }else{
+        alert('GPS를 지원하지 않습니다');
+      }
+        
+       
     }
 
     //1. 현재 위치 받아오기
@@ -497,11 +509,11 @@ export default class WeatherStore {
     }
     
     @action
-    getLocationName = async() => {  //현재 x,y 에 대한 동네 위치 요청 
+    getLocationName = async(currentX , currentY) => {  //현재 x,y 에 대한 동네 위치 요청 
       //console.log("axiosTest!!")
-      _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
-      _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
-      console.log( this.currentX ,   this.currentY)
+      // _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
+      // _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
+      console.log( currentX ,   currentY)
       
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{
@@ -509,8 +521,8 @@ export default class WeatherStore {
           params: { // query string
             // x: '127.10459896729914',
             // y: '37.40269721785548'
-            x : this.currentX.toString(),
-            y : this.currentY.toString(),
+            x : currentX.toString(),
+            y : currentY.toString(),
           },
           headers: { // 요청 헤더
             'Authorization': clientConfig.apiKeys.kakaoApiKey
@@ -526,7 +538,14 @@ export default class WeatherStore {
             this.LocationA = LocationA
             this.LocationB = LocationB
             this.LocationC = LocationC
-            console.log("getLocationName", LocationA, LocationB ,LocationC )
+            console.log("[SEO] getLocationName", LocationA, LocationB ,LocationC )
+            return {
+              LocationA : LocationA,
+              LocationB : LocationB,
+              LocationC : LocationC,
+              currentX : currentX,
+              currentY : currentY,
+            }
             //this.getTmCordinate();
         }
       }catch(e){
@@ -537,10 +556,10 @@ export default class WeatherStore {
     /* tm 좌표를 가져옴  */
     /* 미세먼지 좌표를 위한  */
     @action
-    getCordinate= async(outputCoord) => {  //현재 x,y 에 대한 동네 위치 요청 
-      console.log("axiosTest!!")
-      _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
-      _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
+    getCordinate= async(outputCoord, locationInfo) => {  //현재 x,y 에 대한 동네 위치 요청 
+      console.log("[SEO] getCordinate!!", locationInfo)
+      // _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
+      // _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{
         //?x=160710.37729270622&y=-4388.879299157299&input_coord=WTM&output_coord=WGS84" 
@@ -548,8 +567,8 @@ export default class WeatherStore {
           params: { // query string
             // x: '127.10459896729914',
             // y: '37.40269721785548'
-            x : this.currentX.toString(),
-            y : this.currentY.toString(),
+            x : locationInfo.currentX.toString(),
+            y : locationInfo.currentY.toString(),
             input_coord : 'WGS84',
             output_coord : outputCoord
           },
