@@ -1,14 +1,38 @@
 import React, { Component } from 'react'
+import {observer, inject} from 'mobx-react'
 import style from './SideBar.module.css'
 import { Link,NavLink  } from 'react-router-dom';
-import shadows from '@material-ui/core/styles/shadows';
-
+import { Collapse } from 'reactstrap';
 class SideBar extends Component {
+            /*
+        mapToComponent
+        1. pureComponents의 키 값(컴포넌트의 이름)만을 추출해 div로 만드는 함수이다.
+            onClick 이벤트에 props로 전달받은 handleSelect 함수를 연결하여
+            div를 클릭하면 layout에 해당 컴포넌트가 추가될 수 있도록 해준다.
+        */
+       mapToComponent = () => {
+        const { componentList, addSelectedComponent } = this.props;
+            return componentList.map((item, i) => {
+                let name;
+                for(let compName in item){
+                    name = compName;
+                }
+                return (
+                <div className  = {style.EditableList_Component}
+                    onClick    = {addSelectedComponent}
+                    key  		= {i}
+                    id			= {name}>
+                    {name}
+                            
+                        </div>);
+            });
+    };
     render() {
         const { match, 
                 open,
                 routes, 
-                openSideBar } = this.props;
+                openSideBar,
+                EditComponentCollapse } = this.props;
         const activeStyle = {
             color: 'black',
             fontSize: '1rem'
@@ -29,25 +53,6 @@ class SideBar extends Component {
             //fontSize: '2rem'
         };
 
-        const spanOpenStyle = {
-             fontSize: '30px',
-             cursor: 'pointer',
-             position :'absolute', 
-             zIndex: 100, 
-             color: 'black',
-             position: 'fixed'
-        }
-        
-        const spanCloseStyle = {
-            fontSize: '30px',
-            cursor: 'pointer',
-            position :'absolute', 
-            zIndex: 100, 
-            color: '0xffff' 
-       }
-
-
-
         console.log(routes)        
 
         const link = routes.map(( prop, key ) => {
@@ -64,6 +69,8 @@ class SideBar extends Component {
             }
         })
 
+
+
         return (
             
             <div>
@@ -71,7 +78,7 @@ class SideBar extends Component {
                     className={style.sidenav} 
                     style = { open ? sideBarOpenStyle : sideBarCloseStyle}>
                     <div className={style.myBlogName}>
-                        한 방울의 먹물
+                        GLORY MORNING
                     </div>
                 
                     <a href="javascript:void(0)" 
@@ -79,26 +86,22 @@ class SideBar extends Component {
                         //onClick={this.closeNav}>&times;</a>
                         onClick={openSideBar}>&times;</a>
                     {link}
+
+
+                    <Collapse isOpen={EditComponentCollapse}>
+                        { this.mapToComponent() }
+                    </Collapse>
+
                 </div>
 
-                <div id="main" className = {style.main}>
-                {open ? 
-                     (
-                         ''
-                     )
-                     :
-                     ( 
-                            ''
-                    ) 
-                }
-                </div>
+            
             </div>
         )
     }
 }
-//햄버거 메뉴 
-// <span style={spanOpenStyle} 
-// //onClick= {this.openNav}>&#9776;</span>
-// onClick= {openSideBar}
-// >&#9776;</span>
-export default SideBar
+
+export default inject(({ edit }) => ({
+    addSelectedComponent : edit.addSelectedComponent,
+    componentList : edit.componentList,
+    EditComponentCollapse : edit.EditComponentCollapse
+  }))(observer(SideBar));

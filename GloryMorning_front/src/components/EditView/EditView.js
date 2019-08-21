@@ -9,6 +9,9 @@ import {  action } from 'mobx';
 import EditableElement from '../EditableElement';
 import ElementTest from '../ElementTest'
 import classnames from 'classnames';
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const ResponsiveReactGridLayout = WidthProvider(ReactGridLayout);
 
 
@@ -78,6 +81,17 @@ class EditView extends Component {
         //       console.log('layout ' , layout)
         return (
           <div className = {style.rglContainer}>
+          <ToastContainer 
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover/>
+     
             <div className= {style.dropLayout} style ={{width: '100%'}}>
               <ResponsiveReactGridLayout
                 id     = {'rgl'}

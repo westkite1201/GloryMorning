@@ -18,7 +18,8 @@ const styles = (theme) => ({
     flexGrow: 1,
     width: '100%',
     zIndex: 1100,
-    backgroundColor: '0xfffff'
+    backgroundColor: '0xfffff',
+    
   },
   header : {
     backgroundColor:'#fff',

@@ -206,13 +206,13 @@ export default class WeatherStore {
 
     @action
     getWeatherDataShortTerm = async() => {
-      await this.nowGeolocation();
+      let locationInfo = await this.nowGeolocation();
       let riseSetInfo = await this.getAreaRiseSetInfo();
       console.log("[SEO] RiseSetInfo", riseSetInfo)
-
+      console.log("[SEO] locationInfo", locationInfo)
       let dayTimeYn = riseSetInfo.item.isDayTimeYn;
       console.log("[SEO] dayTimeYn", dayTimeYn)
-      let responsedata = this.convert(this.currentY, this.currentX);
+      let responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
       console.log("[Seo] getWeatherDataShortTerm ", responsedata )
       let nx = responsedata.x;
       let ny = responsedata.y;
@@ -474,8 +474,6 @@ export default class WeatherStore {
       }else{
         alert('GPS를 지원하지 않습니다');
       }
-        
-       
     }
 
     //1. 현재 위치 받아오기
@@ -533,6 +531,14 @@ export default class WeatherStore {
               currentY : currentY,
             }
             //this.getTmCordinate();
+        }else{
+          return {
+            LocationA : '',
+            LocationB : '',
+            LocationC : '',
+            currentX : currentX,
+            currentY : currentY,
+          }
         }
       }catch(e){
         console.log(e)
@@ -578,6 +584,9 @@ export default class WeatherStore {
 
 
 
+
+
+ 
     /*
       REH = humi
       POP = rain
@@ -594,9 +603,10 @@ export default class WeatherStore {
     @action
     //X,Y가 거꾸로 되어 있는거 같음 
     getWeatherData = async( category) =>{
+      let locationInfo = await this.nowGeolocation();
       // _.isNil(this.currentY) ? nx = 37 : nx = parseInt(this.currentY)
       // _.isNil(this.currentX) ? ny = 126 : ny = parseInt(this.currentX)
-      let responsedata = this.convert(this.currentY, this.currentX);
+      let responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
       console.log("getWeatherDataShortTerm ", responsedata )
       let nx = responsedata.x;
       let ny = responsedata.y;

@@ -6,15 +6,21 @@ import React, { Component } from 'react'
 import classnames from 'classnames';
 import _ from "lodash";
 import Highcharts from 'highcharts';
+import { toast } from "react-toastify";
 let LayoutTemporaryStorage;
 export default class EditStore {
+
+    /* edit 스토어에 접근하기 위함  */
+      constructor(rootStore) {
+        this.rootStore = rootStore
+    }
     @observable page_number = 'home'
     @observable layout = []
-    @observable editPageFlag = true
+    @observable editPageFlag = false
     @observable savePageFlag = false
     @observable index = 0
     @observable componentList = [] 
-    
+    @observable EditComponentCollapse = false;
 
 
     handleDispatchEventResize =() => {
@@ -293,8 +299,13 @@ x를 클릭한 컴포넌트를 제거하는 함수
   */
  @action
  handlePage =() => {
+   
+   console.log("[SEO] handlePage ")
   this.editPageFlag = !this.editPageFlag
+  this.EditComponentCollapse = !this.EditComponentCollapse
+  this.rootStore.sidebar.open = !this.rootStore.sidebar.open
   this.handleResizable(this.editPageFlag);
+  this.handleDispatchEventResize();
 
 }
 
@@ -311,6 +322,14 @@ x를 클릭한 컴포넌트를 제거하는 함수
     component_list: LayoutTemporaryStorage
   })
   .then(res => {
+    toast.success('🦄 야호 저장에 성공하였습니다!', {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      });
     //console.log(res.data);
   });
 }

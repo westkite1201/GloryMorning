@@ -3,7 +3,7 @@ import style from './DashBoard.module.css'
 import { Switch, Route, Redirect } from "react-router-dom";
 import dashboardRoutes from "../../routes/dashboard.js";
 import SideBar from '../../components/SideBar';
-import SearchAppBar from '../../components/SearchAppBar'
+import TopRow from '../../components/TopRow'
 import { observer, inject, } from 'mobx-react'
 //import SideNav from '../../components/SideNav';
 
@@ -47,7 +47,8 @@ class DashBoard extends Component {
     }
     return (
       <div className = {style.wrapper}>
-       {this.props.location.pathname ==='/login' ? '' : <SearchAppBar/>}
+      <TopRow/>
+       {/*this.props.location.pathname ==='/login' ? '' : <SearchAppBar/>*/}
    
         <SideBar routes = {dashboardRoutes} 
                   openSideBar ={this.openSideBar}

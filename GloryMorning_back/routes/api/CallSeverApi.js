@@ -99,7 +99,8 @@ module.exports = function (callee) {
                 function doRequest() {
                     return new Promise(function (resolve, reject) {
                         request(OPTIONS, (err, res, result) => {
-                             response =  statusCodeErrorHandlerAsync(res.statusCode, result);
+                            let statusCode = res.statusCode ? res.statusCode : 400
+                             response =  statusCodeErrorHandlerAsync(statusCode, result);
                              if(response.message  !== 'error'){
                                  resolve(response)
                              }
@@ -229,7 +230,6 @@ module.exports = function (callee) {
                 function doRequest() {
                     return new Promise(function (resolve, reject) {
                         request(OPTIONS, (err, res, result) => {
-                            
                              response =  statusCodeErrorHandlerAsync(res.statusCode, result);
                              if(response.message  !== 'error'){
                                  resolve(response)

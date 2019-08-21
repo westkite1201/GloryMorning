@@ -37,7 +37,7 @@ getNowTime = () => {
   let hourMinute = parseInt( moment(date).format('HHMM'))
   //console.log( hourMinute )
   if( 0 <= hourMinute && hourMinute < 230){
-     //하루전날 
+     //하루전날 no
     newdate = moment(date).subtract(1, 'days').format('YYYYMMDD')
     newtime = '2300'
   }
