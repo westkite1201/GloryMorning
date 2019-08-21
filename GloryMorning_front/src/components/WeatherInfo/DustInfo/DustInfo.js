@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
+import _ from 'lodash';
 import './DustInfo.scss'
 
 //측정일  :dateTime 
@@ -30,7 +31,7 @@ class DustInfo extends Component {
 
                 <div className = "display_icon_wrapper" >
                     <div className ="info_header"> 
-                        {dustInfoObject.dustMessageInfoPm10.InfoHeader} 
+                        {_.isNil(dustInfoObject.dustMessageInfoPm10.InfoHeader) ? null : (dustInfoObject.dustMessageInfoPm10.InfoHeader) } 
                     </div>
                     <div className ="info_icon"> 
                         {dustInfoObject.dustMessageInfoPm10.infoIcon} 

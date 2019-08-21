@@ -74,22 +74,23 @@ const dustMessageObjectList = [
 
 
 const getDustIcon  = ( category, value ) => {
+    console.log("[SEO] getDustIcon" , category, value)
       //미세먼지
       if( category ==="pm10"){
         //0 15 최고
-        if( 0 <= value & value < 15 ){ return dustMessageObjectList[0]}
+        if( 0 <= value & value <= 15 ){ return dustMessageObjectList[0]}
         //16-30 좋음
-        if( 16 <= value & value < 30 ){return dustMessageObjectList[1]}
+        if( 16 <= value & value <= 30 ){return dustMessageObjectList[1]}
         //31-40 양호
-        if( 31 <= value & value < 40 ){return dustMessageObjectList[2]}
+        if( 31 <= value & value <= 40 ){return dustMessageObjectList[2]}
         // 41-50 보통
-        if( 41 <= value & value < 50 ){return dustMessageObjectList[3]}
+        if( 41 <= value & value <= 50 ){return dustMessageObjectList[3]}
         // 51-75 나쁨
-        if( 51 <= value & value < 75 ){return dustMessageObjectList[4]}
+        if( 51 <= value & value <= 75 ){return dustMessageObjectList[4]}
         //76-100 상당히 나쁨
-        if( 76 <= value & value < 100 ){return dustMessageObjectList[5]}
+        if( 76 <= value & value <= 100 ){return dustMessageObjectList[5]}
         //101-150// 매우 나쁨
-        if( 101 <= value & value < 150 ){return dustMessageObjectList[6]}
+        if( 101 <= value & value <= 150 ){return dustMessageObjectList[6]}
         //151~ 최악
         if( 151 <= value  ){return dustMessageObjectList[7]}
       }

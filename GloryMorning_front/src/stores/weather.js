@@ -203,20 +203,6 @@ export default class WeatherStore {
 
 
     
-    // sunrise: "0552"
-    // sunset: "1919"
-      
-    /* 현재 시간 판단  */
-    isDayTime = (sunSet) => {
-      let timeStr = this.timeObj.hour+ this.timeObj.minute;  
-      if ( moment(sunSet) > moment(timeStr) ){
-          return true
-      }
-      else{
-        return false;
-      }
-    }
-
 
     @action
     getWeatherDataShortTerm = async() => {
@@ -224,7 +210,7 @@ export default class WeatherStore {
       let riseSetInfo = await this.getAreaRiseSetInfo();
       console.log("[SEO] RiseSetInfo", riseSetInfo)
 
-      let dayTimeYn = this.isDayTime(riseSetInfo.sunSet)
+      let dayTimeYn = riseSetInfo.item.isDayTimeYn;
       console.log("[SEO] dayTimeYn", dayTimeYn)
       let responsedata = this.convert(this.currentY, this.currentX);
       console.log("[Seo] getWeatherDataShortTerm ", responsedata )

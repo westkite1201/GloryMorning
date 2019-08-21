@@ -75,13 +75,29 @@ getNowTime = () => {
 
 
 
+isDayTime = (sunSet) => {
+  console.log("moment().format('HHmm') ", moment().format('HHmm'))
+  console.log("sunSet", sunSet.replace(/(\s*)/g, ""))
+  sunSet = sunSet.replace(/(\s*)/g, "");
+  
+  if ( sunSet > moment().format('HHmm') ){
+      return true
+  }
+  else{
+    return false;
+  }
+}
+
+
 router.post('/getAreaRiseSetInfo',  async(req, res) => {
   console.log("getAreaRiseSetInfo!")
   let location = req.body.location
   let locdate = moment().format('YYYYMMDD')
   //console.log(tmX, tmY)
   try{
-    const response = await CallSeverApiRiseSet.getAreaRiseSetInfo(location, locdate);
+    let response = await CallSeverApiRiseSet.getAreaRiseSetInfo(location, locdate);
+    isDayTimeYn = isDayTime( response.data.response.body.items.item.sunset);
+    response.data.response.body.items.item.isDayTimeYn = isDayTimeYn
     if( response.message !== 'error' ){
         res.json(response);
     }
