@@ -36,6 +36,7 @@ class TopRow extends Component {
         return (
             <div className = "top-row">
                 <div className="sideBar-open">
+                
                 {/*
                     !sidebar.open ?  (
                     <IconButton

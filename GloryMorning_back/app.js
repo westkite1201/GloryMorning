@@ -115,7 +115,7 @@ app.use(function(err, req, res, next) {
 //listen server
 var server = app.listen(3031, function () {
   console.log('Example app listening on port 3031');
-  console.log(process.cwd())
+  //console.log(process.cwd())
 });
 
 var listen = require('socket.io');
