@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import _ from "lodash";
 import Highcharts from 'highcharts';
 import { toast } from "react-toastify";
+import * as weatherApi from  '../lib/api/weatherApi'
 let LayoutTemporaryStorage;
 export default class EditStore {
 
@@ -21,6 +22,27 @@ export default class EditStore {
     @observable index = 0
     @observable componentList = [] 
     @observable EditComponentCollapse = false;
+
+
+
+    @observable backgroundUrl = ''
+
+    @action
+    setBackgroundImageUrl = async() => {
+      console.log('[SEO] setBackgroundImageUrl ' )
+      try{
+        let response = await weatherApi.getBackgroundImageUrl();
+        console.log('[SEO] setBackgroundImageUrl ', response )
+        if(response.status === 200){
+          console.log('[SEO] background ' , response.data )
+          this.backgroundUrl = response.data.data;
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
+
+
 
 
     handleDispatchEventResize =() => {

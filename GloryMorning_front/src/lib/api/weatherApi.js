@@ -2,6 +2,11 @@ import axios from 'axios';
 import cilentConfig from '../../configuration/clientConfig'
 
 
+export const getBackgroundImageUrl = () => {
+  return (axios.post(cilentConfig.endpoint.api + "/file/getBackgroundImageUrl"))
+}
+
+
 export const getAreaRiseSetInfo = () => {
   const data ={ 
     location : '서울'

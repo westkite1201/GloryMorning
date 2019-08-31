@@ -108,6 +108,8 @@ export default class WeatherStore {
     @observable LocationB='';
     @observable LocationC='';
 
+
+
     @action
     setHumidityDataListEmpty = () => {
       this.humidityDataList = []

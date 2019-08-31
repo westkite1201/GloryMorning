@@ -33,8 +33,10 @@ class EditView extends Component {
 
       componentDidMount(){
         let { loadPage,
+          setBackgroundImageUrl,
         } = this.props;
         loadPage();
+        setBackgroundImageUrl();
         window.addEventListener("resize", this.updateDimensions);
         //window.onresize = this.handleResizeEnd;
       }
@@ -72,6 +74,7 @@ class EditView extends Component {
               editPageFlag,
               createElement,
               handleResizeChildComponent,
+              backgroundUrl
                } = this.props;
         // let layout = [
         //         {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
@@ -79,18 +82,27 @@ class EditView extends Component {
         //         {i: 'c', x: 4, y: 0, w: 1, h: 2}
         //       ];
         //       console.log('layout ' , layout)
+        console.log('[SEO] backgroundUrl', backgroundUrl)
+        let background = backgroundUrl;
+        let style = {
+          height: '100%',
+          backgroundSize: 'cover',
+          backgroundAttachment: 'fixed',
+          backgroundColor: 'white',
+          backgroundImage: `url(${background})`
+        }
         return (
-          <div className = {style.rglContainer}>
+          <div className = {style.rglContainer} style ={style}>
           <ToastContainer 
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnVisibilityChange
-          draggable
-          pauseOnHover/>
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnVisibilityChange
+            draggable
+            pauseOnHover/>
      
             <div className= {style.dropLayout} style ={{width: '100%'}}>
               <ResponsiveReactGridLayout
@@ -132,5 +144,7 @@ export default inject(({ edit }) => ({
     allChartResizing : edit.allChartResizing,
     handleResizeChildComponent : edit.handleResizeChildComponent,
 
+    setBackgroundImageUrl : edit.setBackgroundImageUrl,
+    backgroundUrl : edit.backgroundUrl,
 
 }))(observer(EditView));
