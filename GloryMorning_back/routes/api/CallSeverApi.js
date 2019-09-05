@@ -19,7 +19,7 @@ module.exports = function (callee) {
         const BASE_PATH_NEAR_STATION = '/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?'
         
         const BASE_PATH_RIST_SET =  '/B090041/openapi/service/RiseSetInfoService/getAreaRiseSetInfo?'
-        
+        const BASE_PATH_PIXABAY = '/api/?'
         var HOST = null;
         (function () {
             switch (callee) {
@@ -34,14 +34,54 @@ module.exports = function (callee) {
                     break;
                 case 'riseSet':
                     HOST = 'http://apis.data.go.kr';
-                    break;
+                    break
+                case 'pixabay': 
+                    HOST =  'https://pixabay.com'
+                    break
                 default:
                     HOST = 'http://localhost';
             }
         })(callee);
         return {
+            pixabay : async (query, imageType) => {
+                const request =  require('request')
+                const querystring = require('querystring')
+                OPTIONS.url = HOST + BASE_PATH_PIXABAY;
+                let serviceKey = apiConfig.apiKey.pixabayApiKey + '&'
+
+                let propertiesObject = querystring.stringify({
+                    "q": query,
+                    "image_type" : imageType,
+                })
+
+                OPTIONS.url += 'key='+ serviceKey
+                OPTIONS.url += propertiesObject 
+                console.log(OPTIONS.url)
+                function doRequest() {
+                    return new Promise(function (resolve, reject) {
+                        request(OPTIONS, (err, res, result) => {
+                          
+                            let statusCode =  res.statusCode ? res.statusCode : 400  
+                             response = statusCodeErrorHandlerAsync(statusCode, result);
+                             if(response.message  !== 'error'){
+                                 resolve(response)
+                             }
+                             else{
+                                reject(err);
+                             }
+                             //console.log(response)
+                        });
+                    });
+                }
+                let res = await doRequest();
+                //console.log("response " , res)
+                return res
+
+                
+            },
             //?base_date=20190619&base_time=0630&nx=60&ny=125&_type=json
             weather : function (base_date, base_time, nx, ny, type, shortTermYn, callback) {
+                console.log("weather! 사용중 ")
                 const request =  require('request')
                 const querystring = require('querystring')
                 if( shortTermYn ){

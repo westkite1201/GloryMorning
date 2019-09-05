@@ -8,6 +8,8 @@ const async = require('async');
 const CallSeverApi = require('./CallSeverApi')('weather');
 const CallSeverApiDust = require('./CallSeverApi')('dust');
 const CallSeverApiRiseSet = require('./CallSeverApi')('riseSet');
+const CallSeverApiPixabay = require('./CallSeverApi')('pixabay');
+
 const moment = require('moment')
 
 let newtime = 0;
@@ -88,6 +90,27 @@ isDayTime = (sunSet) => {
   }
 }
 
+router.post('/getPixabayImages', async(req, res) => {
+    let query =  req.body.query;
+    let imageType =  req.body.imageType;
+  
+  try{
+    let response = await CallSeverApiPixabay.pixabay(query, imageType);
+    console.log("getPixabayImage response " , response );
+    if( response.message !== 'error' ){
+      return res.json(response);
+    }else{
+      return res.json({
+        message: 'error',
+       statusCode : 400 
+      });
+    }
+  }catch(e){
+    console.log('error ' ,e )
+  }
+
+
+})
 
 router.post('/getAreaRiseSetInfo',  async(req, res) => {
   console.log("getAreaRiseSetInfo!")

@@ -5,10 +5,7 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import style from './EditView.module.css';
 import { observer, inject, } from 'mobx-react'
-import {  action } from 'mobx';
-import EditableElement from '../EditableElement';
-import ElementTest from '../ElementTest'
-import classnames from 'classnames';
+
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

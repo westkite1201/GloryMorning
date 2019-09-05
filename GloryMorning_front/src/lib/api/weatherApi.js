@@ -2,6 +2,16 @@ import axios from 'axios';
 import cilentConfig from '../../configuration/clientConfig'
 
 
+export const getPixabayImages = (query, imageType) => {
+  const data = {
+    query : query,
+    imageType : imageType
+  }
+  return (axios.post(cilentConfig.endpoint.api + "/weather/getPixabayImages", data ))
+}
+
+
+
 export const getBackgroundImageUrl = () => {
   return (axios.post(cilentConfig.endpoint.api + "/file/getBackgroundImageUrl"))
 }

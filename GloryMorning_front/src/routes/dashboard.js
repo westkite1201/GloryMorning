@@ -8,7 +8,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 // core components/views
-
+import SettingBackground  from '../components/Setting/SettingBackground'
 import App from '../App'
 
 
@@ -32,7 +32,17 @@ const dashboardRoutes = [
     icon: Dashboard,
     component: App
   },
+  {
+    sideView: true,
+    //exact : true,
+    path: "/setting/",
+    sidebarName: "setting",
+    navbarName: "setting",
+    icon: Dashboard,
+    component: SettingBackground
+  },
  
+
 
 
 

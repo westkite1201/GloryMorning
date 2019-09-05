@@ -12,6 +12,8 @@ import WeatherInfo from '../../WeatherInfo/'
 import Clock from '../../Clock'
 import DustInfo from '../../WeatherInfo/DustInfo'
 
+
+import SettingBackGround from '../../Setting/SettingBackground'
 class EditComponentList extends Component {
 
     componentDidMount(){
@@ -28,6 +30,9 @@ class EditComponentList extends Component {
       putComponentList('weatherInfo' ,WeatherInfo)
       putComponentList('Clock' , Clock)
       putComponentList('DustInfo', DustInfo)
+      putComponentList('SettingBackGround', SettingBackGround )
+
+
       nowGeolocation();
 
     }
