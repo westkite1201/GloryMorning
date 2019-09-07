@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { observer } from 'mobx-react'
 import UseStores from '../UseStores.js'
+import BackgroundItem from './BackgroundItem'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -50,9 +51,8 @@ const SettingBackground = observer(() => {
       console.log("[SEO], setting ",setting.pixabayHits)
       let previewImages = setting.pixabayHits.map((item)=>{
           return(
-            <div>
-                <img src = {item.previewURL}/>
-            </div>
+            <BackgroundItem item = {item}>
+            </BackgroundItem>
           )
       })
       return previewImages;

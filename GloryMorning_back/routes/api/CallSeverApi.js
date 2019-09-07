@@ -139,6 +139,10 @@ module.exports = function (callee) {
                 function doRequest() {
                     return new Promise(function (resolve, reject) {
                         request(OPTIONS, (err, res, result) => {
+                            if(err){
+                                console.log("ERROR" )
+                                reject(err)
+                            }
                             let statusCode = res.statusCode ? res.statusCode : 400
                              response =  statusCodeErrorHandlerAsync(statusCode, result);
                              if(response.message  !== 'error'){
