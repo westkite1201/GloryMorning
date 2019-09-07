@@ -1,8 +1,8 @@
 import React from 'react';
 
-const BackgroundItem = ({item}) => {
+const BackgroundItem = ({item, setBackgroundUrl}) => {
     return (
-        <div>
+        <div onClick = {() => setBackgroundUrl(item.largeImageURL)}>
             <img src = {item.previewURL}/>
         </div>
     );

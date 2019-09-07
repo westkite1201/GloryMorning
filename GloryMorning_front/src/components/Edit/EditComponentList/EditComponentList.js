@@ -18,12 +18,14 @@ class EditComponentList extends Component {
 
     componentDidMount(){
       const { putComponentList,
-              nowGeolocation } = this.props;
+              nowGeolocation,
+              initComponetList } = this.props;
       /*
       putComponentList('온도' , TemperatureChart)
       putComponentList('강수확률' , RainChart);
       putComponentList('습도' , HumidityChart);
       */
+     initComponetList();
       putComponentList('습도NEW', HumidityChart_)
       putComponentList('강수확률NEW', RainChart_)
       putComponentList('온도NEW', TemperatureChart_)
@@ -35,6 +37,10 @@ class EditComponentList extends Component {
 
       nowGeolocation();
 
+    }
+    componentWillUnmount(){
+      const { initComponetList } = this.props;
+      //initComponetList(); 
     }
     
   render() {
@@ -48,5 +54,6 @@ class EditComponentList extends Component {
 }
 export default inject(({ edit, weather }) => ({
   putComponentList : edit.putComponentList,
+  initComponetList : edit.initComponetList,
   nowGeolocation : weather.nowGeolocation,
 }))(observer(EditComponentList));

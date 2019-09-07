@@ -71,7 +71,8 @@ class EditView extends Component {
               editPageFlag,
               createElement,
               handleResizeChildComponent,
-              backgroundUrl
+              backgroundUrl,
+              selectedBackgroundUrl
                } = this.props;
         // let layout = [
         //         {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
@@ -80,7 +81,7 @@ class EditView extends Component {
         //       ];
         //       console.log('layout ' , layout)
         console.log('[SEO] backgroundUrl', backgroundUrl)
-        let background = backgroundUrl;
+        let background = selectedBackgroundUrl ? selectedBackgroundUrl : backgroundUrl;
         let style = {
           height: '100%',
           backgroundSize: 'cover',
@@ -129,7 +130,7 @@ class EditView extends Component {
 
 }
 
-export default inject(({ edit }) => ({
+export default inject(({ edit,setting }) => ({
     index : edit.index,
     layout: edit.layout,
     page_number: edit.page_number,
@@ -143,5 +144,6 @@ export default inject(({ edit }) => ({
 
     setBackgroundImageUrl : edit.setBackgroundImageUrl,
     backgroundUrl : edit.backgroundUrl,
+    selectedBackgroundUrl : setting.selectedBackgroundUrl,
 
 }))(observer(EditView));

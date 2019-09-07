@@ -12,13 +12,25 @@ export default class SettingStore{
    @observable open = false;
    @observable pixabayHits = []
    @observable isPixabayLoading = false;
+   @observable query = ''
+   @observable selectedBackgroundUrl = ''
 
+   @action 
+    onChangeQuery = e => {
+        console.log("[SEO][ONCHAGENAME]", e.target.value)
+        this.query = e.target.value;
+    };
+   
+    @action
+    setBackgroundUrl = (largeImageURL) =>{
+        this.selectedBackgroundUrl = largeImageURL
+    }
   @action
-  getPixabayImages = async(query, imageType) =>{
+  getPixabayImages = async(imageType) =>{
         let response;
         try{
             this.isPixabayLoading = true;
-            response = await weatherApi.getPixabayImages(query, imageType);
+            response = await weatherApi.getPixabayImages(this.query, imageType);
             console.log("[SEO] getPixabayImages", response);
             let pixabayData = response.data.data;
             // pixabayData.hits.map((item) =>{

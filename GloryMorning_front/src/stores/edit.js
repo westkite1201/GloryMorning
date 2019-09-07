@@ -192,6 +192,10 @@ export default class EditStore {
     //  console.log('putComponentList ' ,this.componentList)
     }
     
+    @action
+    initComponetList = () => {
+      this.componentList = [];
+    }
 
     @action loadPage = async() => {
         //console.log('loadpage' );

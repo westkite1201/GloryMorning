@@ -26,16 +26,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-
-
 const SettingBackground = observer(() => {
     const { setting } = UseStores()
    
-  const [name, setName] = useState('');
+  // const [name, setName] = useState('');
   const classes = useStyles();
   //componentDidMount 와 componentDidUpdate 
   useEffect(() => {
-    setting.getPixabayImages('flower', 'image');
+    setting.getPixabayImages('image');
     console.log('render complete!');
     // console.log({
     //   name,
@@ -43,15 +41,17 @@ const SettingBackground = observer(() => {
   },[]);
 
 
-  const onChangeName = e => {
-    setName(e.target.value);
-  };
+  // const onChangeName = e => {
+  //   setName(e.target.value);
+  // };
 
   const makeImageSrc = () => {
       console.log("[SEO], setting ",setting.pixabayHits)
       let previewImages = setting.pixabayHits.map((item)=>{
           return(
-            <BackgroundItem item = {item}>
+            <BackgroundItem item = {item}
+                            setBackgroundUrl = {setting.setBackgroundUrl}>
+
             </BackgroundItem>
           )
       })
@@ -68,12 +68,14 @@ const SettingBackground = observer(() => {
                 id="standard-name"
                 label="value"
                 className={classes.textField}
-                value={name}
-                onChange={onChangeName}
+                value={setting.query}
+                onChange={setting.onChangeQuery}
                 margin="normal"/>        
         </div>
         <div>
-            <Button variant="contained" className={classes.button} onClick = {makeImageSrc} >
+            <Button variant="contained" 
+                    className={classes.button}
+                    onClick = {() => setting.getPixabayImages('image')} >
                 SEARCH
             </Button>
         </div>
