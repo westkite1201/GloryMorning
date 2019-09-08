@@ -1,10 +1,26 @@
 import React from 'react';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
 
-const BackgroundItem = ({item, setBackgroundUrl}) => {
+
+const BackgroundItem = ({item, setBackgroundUrl, classes}) => {
     return (
-        <div onClick = {() => setBackgroundUrl(item.largeImageURL)}>
-            <img src = {item.previewURL}/>
-        </div>
+         <GridListTile key={item.id} className = {classes.tileSpace}>
+            <img src={item.previewURL} alt={item.user} />
+            <GridListTileBar
+                title={item.tags}
+                subtitle={<span>by: {item.user}</span>}
+                actionIcon={
+                <IconButton aria-label={`info about ${item.user}`} className={classes.icon}>
+                 <InfoIcon />
+                </IconButton>
+                }
+            />
+         </GridListTile>
+ 
+
     );
 };
 

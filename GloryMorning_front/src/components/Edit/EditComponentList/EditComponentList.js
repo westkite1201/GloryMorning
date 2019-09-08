@@ -25,7 +25,7 @@ class EditComponentList extends Component {
       putComponentList('강수확률' , RainChart);
       putComponentList('습도' , HumidityChart);
       */
-     initComponetList();
+      initComponetList();
       putComponentList('습도NEW', HumidityChart_)
       putComponentList('강수확률NEW', RainChart_)
       putComponentList('온도NEW', TemperatureChart_)

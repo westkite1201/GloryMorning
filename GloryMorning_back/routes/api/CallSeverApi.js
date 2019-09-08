@@ -1,5 +1,5 @@
 const apiConfig = require('../../config/auth/apiKeys');
-
+const _  = require('lodash')
 
 module.exports = function (callee) {
     function CallSeverApi(callee) {
@@ -60,7 +60,9 @@ module.exports = function (callee) {
                 function doRequest() {
                     return new Promise(function (resolve, reject) {
                         request(OPTIONS, (err, res, result) => {
-                          
+                            if(_.isNil(res)){
+                                reject(err)
+                            }
                             let statusCode =  res.statusCode ? res.statusCode : 400  
                              response = statusCodeErrorHandlerAsync(statusCode, result);
                              if(response.message  !== 'error'){
