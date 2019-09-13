@@ -39,8 +39,8 @@ code {
   box-shadow: 1px 1px 4px rgba(0,0,0,.3);
   z-index: 5;
   font-size: 1rem;
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
   font:black;
   font-size: 0.7rem;
 }

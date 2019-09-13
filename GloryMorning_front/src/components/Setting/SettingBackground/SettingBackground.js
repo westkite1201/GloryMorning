@@ -77,7 +77,8 @@ const SettingBackground = observer(() => {
           return(
                       <BackgroundItem item = {item}
                                       setBackgroundUrl = {setting.setBackgroundUrl}
-                                      classes = {classes} >
+                                      classes = {classes} 
+                                       >
                       </BackgroundItem>
                   )
         

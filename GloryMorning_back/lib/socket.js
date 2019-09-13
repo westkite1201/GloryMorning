@@ -30,10 +30,16 @@ const connection = (io) =>{
         socket.on('time', function(data){
             timeInterval = setInterval(function() {
                 let serverTime = new Date();
+                let year = serverTime.getFullYear(); 
+                let month = serverTime.getMonth() + 1;
+                let day =  serverTime.getDate();
                 let hour = serverTime.getHours();
                 let minute = serverTime.getMinutes();
                 let second = serverTime.getSeconds();
                 let timeObj = {
+                    year : year,
+                    month : month,
+                    day : day,
                     hour : hour,
                     minute : minute,
                     second : second,

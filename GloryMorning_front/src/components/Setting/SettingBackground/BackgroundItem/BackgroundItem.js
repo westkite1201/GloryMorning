@@ -7,7 +7,9 @@ import InfoIcon from '@material-ui/icons/Info';
 
 const BackgroundItem = ({item, setBackgroundUrl, classes}) => {
     return (
-         <GridListTile key={item.id} className = {classes.tileSpace}>
+         <GridListTile key={item.id} 
+                        className = {classes.tileSpace}
+                        onClick = {() => setBackgroundUrl(item.largeImageURL)}>
             <img src={item.previewURL} alt={item.user} />
             <GridListTileBar
                 title={item.tags}

@@ -18,6 +18,10 @@ class Clock extends Component {
     //console.log("timeObj " , timeObj)
     return (
       <div className = "clock-wrapper">
+       {timeObj.year}년 {' '}
+       {timeObj.month}월 {' '}
+       {timeObj.day}일 {' '}
+       
        {timeObj.hour} : 
        {timeObj.minute <= 9 ? "0"+timeObj.minute : timeObj.minute} : 
        {timeObj.second <= 9 ? "0"+timeObj.second : timeObj.second}
