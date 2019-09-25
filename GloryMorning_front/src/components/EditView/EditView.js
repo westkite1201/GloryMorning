@@ -80,7 +80,7 @@ class EditView extends Component {
         //         {i: 'c', x: 4, y: 0, w: 1, h: 2}
         //       ];
         //       console.log('layout ' , layout)
-        console.log('[SEO] backgroundUrl', backgroundUrl)
+        console.log('[SEO] backgroundUrl', backgroundUrl, selectedBackgroundUrl)
         let background = selectedBackgroundUrl ? selectedBackgroundUrl : backgroundUrl;
         let style = {
           height: '100%',

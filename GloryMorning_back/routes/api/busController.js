@@ -2,14 +2,23 @@ var express = require('express');
 var router = express.Router();
 const userRedis = require('../../model/redis/redisDao');
 
-statusCodeErrorHandlerAsync = (statusCode , data)=> {
+statusCodeErrorHandlerAsync = (statusCode , data ,noNeedParse)=> {
   try{
-      switch (statusCode) {
+      if(noNeedParse){
+        switch (statusCode) {
+          case 200:
+              return  { message : 'success',  data : data }
+          default:
+              return  { message : 'error', data : data} 
+        }
+      }else{
+        switch (statusCode) {
           case 200:
               return  { message : 'success',  data : JSON.parse(data) }
           default:
               return  { message : 'error', data : JSON.parse(data) } 
        
+        }
       }
   }catch(e){
       console.log(e)
@@ -18,28 +27,39 @@ statusCodeErrorHandlerAsync = (statusCode , data)=> {
 
 router.post('/setUserBackground', async(req, res)=>{
   try{
-    const userId = req.body.user_id;
-    const pageNumber = req.body.page_number;
+    const userId = req.body.userId;
     const backgroundURL = req.body.backgroundURL;
-    await userRedis.setUserBackGround({
+    await userRedis.setUserBackground({
       userId: userId,
       backgroundURL: backgroundURL,
     });
-    return this.statusCodeErrorHandlerAsync(200,"success");
+    console.log('sssss')
+    return res.json({
+      message: 'success',
+      api: 'setUserComponents',
+      code: 100
+    });
   }catch(error){
-    return this.statusCodeErrorHandlerAsync(400,error);
+    console.log("error" , error)
+    return statusCodeErrorHandlerAsync(400, error, false);
   }
 })
 
 router.post('/getUserBackground', async(req, res)=>{
   try{
-    const userId = req.body.user_id;
-    backgroundURL = await userRedis.getUserBackGround({
+    const userId = req.body.userId;
+    console.log("userId " , userId)
+    let backgroundURL = await userRedis.getUserBackGround({
       userId: userId,
     });
-    return this.statusCodeErrorHandlerAsync(200, backgroundURL);
+    console.log("back " , backgroundURL)
+    return res.json( {
+      message: 'success',
+      backgroundURL: backgroundURL,
+    });
   }catch(error){
-    return this.statusCodeErrorHandlerAsync(400, error);
+    console.log('error ' , error)
+    return  res.json({message:'error'});
   }
 })
 

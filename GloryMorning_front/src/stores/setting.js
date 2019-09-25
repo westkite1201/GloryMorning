@@ -1,6 +1,6 @@
 import { observable, action, computed } from "mobx";
 import _ from "lodash";
-import * as boardApi from "../lib/api/boardApi";
+import * as memberApi from "../lib/api/memberApi";
 import * as weatherApi from "../lib/api/weatherApi";
 import moment from "moment";
 export default class SettingStore {
@@ -46,6 +46,14 @@ export default class SettingStore {
     this.query = e.target.value;
   };
 
+  //redis에 저장 
+  @action 
+  settingBackgroundURLRedis = async() => {
+    await memberApi.setUserBackground('testUser' , this.detailViewitem.largeImageURL );
+    let resData = await memberApi.getUserBackground('testUser');
+    console.log("[SEO]backgroundURL " , resData.data.backgroundURL)
+    this.selectedBackgroundUrl = resData.data.backgroundURL;
+  }
   /* 현재 클릭시 백그라운드 설정 */
   @action
   setBackgroundUrl = largeImageURL => {

@@ -79,7 +79,7 @@ export const login = (mem_email, mem_password) => {
     }
     return (axios.post(cilentConfig.endpoint.api + "/bus/setUserBackground",data));
   }
-  export const getUserBackground = () => {
+  export const getUserBackground = (userId) => {
     const data = {
       userId  :userId,
     }

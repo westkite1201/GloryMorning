@@ -179,7 +179,11 @@ const SettingBackground = observer(() => {
               </p>
                 
             </div>
-            <Button variant="contained">background 선택!</Button>
+            <Button variant="primary"
+                    onClick = {setting.settingBackgroundURLRedis}>
+                background 선택!
+            
+            </Button>
           </div>
         </div>
 

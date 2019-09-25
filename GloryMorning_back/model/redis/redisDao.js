@@ -101,16 +101,17 @@ const getUserInfo = (data) => {
 
 const setUserBackground = (data) => {
   console.log('----- setUserBackground --------');
-  const key = util.format("%s:%s", BACKGROUND, data.user_id);
+  const key = util.format("%s:%s", BACKGROUND, data.userId);
   console.log('key =>', key);
-  return redishelpers.redis.sadd(key, data.backgroundURL);
+  return redishelpers.redis.set(key, data.backgroundURL);
 }
 
-const getUserBackground = (data) => {
+const getUserBackGround = (data) => {
   console.log('----- getUserBackground --------');
-  const key = util.format("%s:%s", BACKGROUND, data.page_number);
+  console.log('userId ' , data.userId)
+  const key = util.format("%s:%s", BACKGROUND, data.userId);
   console.log('key =>', key);
-  return redishelpers.redis.smembers(key);
+  return redishelpers.redis.get(key);
 }
 
 
@@ -242,7 +243,7 @@ module.exports = {
   getComponentLocation: getComponentLocation,
 
   setUserBackground : setUserBackground,
-  getUserBackground : getUserBackground,
+  getUserBackGround : getUserBackGround,
 
 
   // Expire Test
