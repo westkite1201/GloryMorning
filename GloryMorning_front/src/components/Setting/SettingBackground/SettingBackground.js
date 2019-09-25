@@ -86,10 +86,11 @@ const SettingBackground = observer(() => {
 
   // 이미지 cover가 img src로는 해결 안되는 것 같아 이걸로 변경 
   const detailImageView = {
-    width : 400,
-    height : 400,
+    width: '30em',
+    height: '25em',
     backgroundImage: `url(${setting.detailViewitem.largeImageURL})`,
-    backgroundSize: 'cover' 
+    backgroundSize: 'contain',
+    backgroundRepeat : 'noRepeat'
   }
 
   

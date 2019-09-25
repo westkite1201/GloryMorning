@@ -11,7 +11,7 @@ const key_component_location = 'Component_Location_Info';
 const key_route_info = 'RouteInfo';
 const key_component_info = 'ComponentInfo';
 
-
+const BACKGROUND ='background'
 
 
 const setUserStatus = (data) => {
@@ -98,6 +98,23 @@ const getUserInfo = (data) => {
 
 
 ///////////////////////////////
+
+const setUserBackground = (data) => {
+  console.log('----- setUserBackground --------');
+  const key = util.format("%s:%s", BACKGROUND, data.user_id);
+  console.log('key =>', key);
+  return redishelpers.redis.sadd(key, data.backgroundURL);
+}
+
+const getUserBackground = (data) => {
+  console.log('----- getUserBackground --------');
+  const key = util.format("%s:%s", BACKGROUND, data.page_number);
+  console.log('key =>', key);
+  return redishelpers.redis.smembers(key);
+}
+
+
+
 const setUserComponents = (data) => {
   console.log('----- setUserComponents --------');
   console.log(data);
@@ -224,6 +241,8 @@ module.exports = {
   setComponentLocation: setComponentLocation,
   getComponentLocation: getComponentLocation,
 
+  setUserBackground : setUserBackground,
+  getUserBackground : getUserBackground,
 
 
   // Expire Test

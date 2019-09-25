@@ -71,3 +71,17 @@ export const login = (mem_email, mem_password) => {
     return (axios.post("http://localhost:3031/api/auth/setMemberSignUp",data));
     //return (axios.post("http://localhost:3031/api/member/setMemberSignUp",data));
   }
+
+  export const setUserBackground = (userId, backgroundURL) => {
+    const data = {
+      userId  :userId,
+      backgroundURL : backgroundURL,
+    }
+    return (axios.post(cilentConfig.endpoint.api + "/bus/setUserBackground",data));
+  }
+  export const getUserBackground = () => {
+    const data = {
+      userId  :userId,
+    }
+    return (axios.post(cilentConfig.endpoint.api + "/bus/getUserBackground",data));
+  }
