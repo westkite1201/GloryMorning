@@ -35,7 +35,7 @@ export default class EditStore {
         console.log('[SEO] setBackgroundImageUrl ', response )
         if(response.status === 200){
           console.log('[SEO] background ' , response.data )
-          this.backgroundUrl = response.data.data;
+          this.backgroundUrl = response.data.backgroundURL;
         }
       }catch(e){
         console.log(e)
@@ -74,6 +74,7 @@ export default class EditStore {
     foreach 사용이 불가하다고 한다.
   */
   handleResizable = (flag) => {
+    console.log("[SEO] handleResizable!", )
     let childs = document.getElementsByClassName('react-resizable-handle');
     if(!helpers.isEmpty(childs)){
       [...childs].forEach((item) => {

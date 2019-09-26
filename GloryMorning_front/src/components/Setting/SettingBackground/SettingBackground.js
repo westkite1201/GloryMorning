@@ -90,7 +90,7 @@ const SettingBackground = observer(() => {
     height: '25em',
     backgroundImage: `url(${setting.detailViewitem.largeImageURL})`,
     backgroundSize: 'contain',
-    backgroundRepeat : 'noRepeat'
+    backgroundRepeat : 'no-Repeat'
   }
 
   
