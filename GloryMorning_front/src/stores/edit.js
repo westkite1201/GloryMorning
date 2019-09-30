@@ -200,23 +200,33 @@ export default class EditStore {
 
     @action loadPage = async() => {
         //console.log('loadpage' );
-      axios.post(clientConfig.endpoint.api + '/bus/get_user_components', {
-        user_id : 'sampleId',
-        page_number : this.page_number,
-      })
-      .then(async res => {
-          
-          //console.log('res', res.data.component_list);
-        if(helpers.isEmpty(res.data.component_list)){
-          this.initlayout( this.page_number );
-          this.page_number = this.page_number
+        try{
+          axios.post(clientConfig.endpoint.api + '/bus/get_user_components', {
+            user_id : 'sampleId',
+            page_number : this.page_number,
+          })
+          .then(async res => {
+              //console.log('res', res.data.component_list);
+            if(helpers.isEmpty(res.data.component_list)){
+              this.initlayout( this.page_number );
+              this.page_number = this.page_number
+            }
+            else{
+                console.log("[seo][res.data.component_list] ", res.data.component_list)
+                this.page_number =  this.page_number
+                if(res.data.component_list[0] === ""){
+                  this.layout =  [];
+                }else{
+                  this.layout =  JSON.parse(res.data.component_list).layout
+                }
+                
+            }
+            this.handleResizable(false);
+          })
+
+        }catch(e){
+          console.log(e)
         }
-        else{
-            this.page_number =  this.page_number
-            this.layout =  JSON.parse(res.data.component_list).layout
-        }
-        //this.handleResizable(this.props.editPageFlag);
-      })
     }
 
   /*
@@ -326,12 +336,12 @@ x를 클릭한 컴포넌트를 제거하는 함수
   */
  @action
  handlePage =() => {
-   
-   console.log("[SEO] handlePage ")
-  this.editPageFlag = !this.editPageFlag
+  let flag = this.editPageFlag;
+   console.log("[SEO] handlePage ", this.editPageFlag)
+  this.editPageFlag = !flag
   this.EditComponentCollapse = !this.EditComponentCollapse
   this.rootStore.sidebar.open = !this.rootStore.sidebar.open
-  this.handleResizable(this.editPageFlag);
+  this.handleResizable(!flag);
   this.handleDispatchEventResize();
 
 }
