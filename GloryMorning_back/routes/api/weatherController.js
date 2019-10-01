@@ -154,7 +154,7 @@ router.post('/getNearbyMsrstnList',  async(req, res) => {
             dustInfo['stationName'] = stationName
             dustInfo['distance'] = distance
         //console.log( dustInfoResponse.data.list[0])
-
+        console.log("[SEO] " , dustInfo)
             res.json(dustInfo);
         // return
         // { 

@@ -58,39 +58,41 @@ const DustInfo = observer(() => {
     weather.getDustInfo();
   }, []);
 
-  const [value, setValue] = React.useState(0);
-  function handleChange(event, newValue) {
-    setValue(newValue);
-  }
+  //const [value, setValue] = React.useState(0);
+  // function handleChange(event, newValue) {
+  //   setValue(newValue);
+  // }
 
   let dustInfoObject = weather.dustInfoObject
-  let str = "😍";
+
   console.log("[SEO] dustInfoObject", dustInfoObject);
   return (
-      <React.Fragment>
-        <div className={classes.root}>
-            <AppBar position="static" color="default">
-                <Tabs value={value} 
-                        onChange={handleChange} 
-                        aria-label="simple tabs example"
-                        variant="fullWidth"
-                        >
-                <Tab label="pm10" {...a11yProps(0)} />
-                <Tab label="pm25" {...a11yProps(1)} />
-                <Tab label="ozon" {...a11yProps(2)} />
+      <div>
+      {/*
+      <div className={classes.root}>
+        <AppBar position="static" color="default">
+            <Tabs value={value} 
+                    //onChange={handleChange} 
+                    aria-label="simple tabs example"
+                    variant="fullWidth"
+                    >
+            <Tab label="pm10" {...a11yProps(0)} />
+            <Tab label="pm25" {...a11yProps(1)} />
+            <Tab label="ozon" {...a11yProps(2)} />
 
-                </Tabs>
-            </AppBar>
-            <TabPanel value={value} index={0}>
-                Item One
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel>
-        </div>
+            </Tabs>
+        </AppBar>
+        <TabPanel value={value} index={0}>
+            Item One
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+            Item Two
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+            Item Three
+        </TabPanel>
+    </div>
+      */}
 
         <div className="dust_info_container">
         <div className="station_info">
@@ -101,12 +103,10 @@ const DustInfo = observer(() => {
             </div>
             <div> 관측소 이름: {dustInfoObject.addr}</div>
         </div>
-
+      {!_.isNil(dustInfoObject.dustMessageInfoPm10) &&
         <div className="display_icon_wrapper">
             <div className="info_header">
-            {_.isNil(dustInfoObject.dustMessageInfoPm10.InfoHeader)
-                ? null
-                : dustInfoObject.dustMessageInfoPm10.InfoHeader}
+              {dustInfoObject.dustMessageInfoPm10.InfoHeader}
             </div>
             <div className="info_icon">
             {dustInfoObject.dustMessageInfoPm10.infoIcon}
@@ -116,6 +116,7 @@ const DustInfo = observer(() => {
             {dustInfoObject.dustMessageInfoPm10.infoMessage}
             </div>
         </div>
+      }
 
         <div className="sub_dust_info">
             <div> 초미세먼지 {dustInfoObject.pm25Value}</div>
@@ -125,7 +126,7 @@ const DustInfo = observer(() => {
             <div> 아황산가스 {dustInfoObject.so2Value} </div>
         </div>
         </div>
-    </React.Fragment>
+    </div>
   );
 });
 

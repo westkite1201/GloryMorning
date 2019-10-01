@@ -190,6 +190,7 @@ export default class WeatherStore {
         console.log("[SEO] getNearbyMsrstnList ", response)
         if ( response.status === 200  && response.statusText === "OK"){
           let dustInfoObject = response.data;
+
               dustInfoObject.dustMessageInfoPm10 = helpers.getDustIcon("pm10",parseInt(dustInfoObject.pm10Value))
           
                console.log("[SEO] dustInfoObject ", dustInfoObject, dustInfoObject.length)
