@@ -12,6 +12,7 @@ var indexRouter = require('./routes/index');
 let busRouter = require('./routes/api/busController')
 let fileRouter = require('./routes/api/fileController')
 let weatherApi = require('./routes/api/weatherController')
+let quotesRotuer  = require('./routes/api/quotesController')
 
 //var passport = require('./config/passport/localStrategy')
 
@@ -93,6 +94,7 @@ app.post('/api/login', (req, res, next) => {
 app.use('/api/weather', weatherApi);
 app.use('/api/bus', busRouter)
 app.use('/api/file', fileRouter)
+app.use('/api/quotes', quotesRotuer)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

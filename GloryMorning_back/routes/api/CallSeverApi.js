@@ -63,6 +63,9 @@ module.exports = function (callee) {
                             if(_.isNil(res)){
                                 reject(err)
                             }
+                            if(!res){
+                                reject(err)
+                            }
                             let statusCode =  res.statusCode ? res.statusCode : 400  
                              response = statusCodeErrorHandlerAsync(statusCode, result);
                              if(response.message  !== 'error'){

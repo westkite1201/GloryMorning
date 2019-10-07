@@ -9,6 +9,9 @@ import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 // core components/views
 import SettingBackground  from '../components/Setting/SettingBackground'
+import WisdomQuotes  from '../components/Setting/WisdomQuotes'
+
+
 import App from '../App'
 
 
@@ -41,8 +44,17 @@ const dashboardRoutes = [
     icon: Dashboard,
     component: SettingBackground
   },
+  {
+    sideView: true,
+    //exact : true,
+    path: "/WisdomQuotes/",
+    sidebarName: "WisdomQuotes",
+    navbarName: "WisdomQuotes",
+    icon: Dashboard,
+    component: WisdomQuotes
+  },
  
-
+  
 
 
 
