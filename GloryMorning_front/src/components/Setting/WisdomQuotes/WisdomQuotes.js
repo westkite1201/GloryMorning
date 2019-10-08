@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { observer, inject } from "mobx-react";
 import _ from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import UseStores from "../../Setting/UseStores";
 import WisdomQuotesItem from './WisdomQuotesItem'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import './WisdomQuotes.scss'
 
   const useStyles = makeStyles(theme => ({
@@ -31,9 +33,35 @@ const WisdomQuotes = observer(() => {
             })
   console.log("hello")
   return (
-      <div className = "quetosWrapper">
+    <Fragment>
+        <div className = "quetosWrapper">
             {quotesList}
-      </div>
+        </div>
+        <div classNAME = "inputWrapper">
+          <div>
+            명언을 추가 해주세요.
+          </div>
+          <form className = 'form'>
+              <TextField
+                  id="filled-multiline-flexible"
+                  label="Quotes"
+                  multiline
+                  scmargin="normal"
+                  variant="filled"
+              />
+              <TextField
+                  id="filled-name"
+                  label="author"
+                  margin="normal"
+                  variant="filled"
+              />
+              <Button varient = 'contained' color = 'primary' onClick = {this.handleUpload}>
+                  upload
+              </Button>
+          </form>
+        </div>    
+    </Fragment>
+
   );
 });
 

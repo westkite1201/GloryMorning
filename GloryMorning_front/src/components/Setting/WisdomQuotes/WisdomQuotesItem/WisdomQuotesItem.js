@@ -17,7 +17,7 @@ const WisdomQuotesItem = ({item}) => {
   const classes = useStyles();
  console.log("[SEO] ITEM ", item)
   return (
-      <div className = "quotesItem" >
+      <div className = "quotesItem" id ={item.QUOTES_NUM}>
         {item.QUOTES} : {item.AUTHOR}  
       </div>
   );
