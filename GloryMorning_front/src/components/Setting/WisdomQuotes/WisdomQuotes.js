@@ -13,6 +13,12 @@ import './WisdomQuotes.scss'
       flexGrow: 1,
       backgroundColor: theme.palette.background.paper,
     },
+    form : {
+      width: '200px',
+      display: 'flex',
+      flexGrow: '1',
+      flexDirection: 'column'
+    }
   }));
 
 const WisdomQuotes = observer(() => {
@@ -29,33 +35,35 @@ const WisdomQuotes = observer(() => {
 //   }
   let quotesList = quotes.quotesList.map((item , key  ) => {
                 return  <WisdomQuotesItem item = {item}
-                                            key = {key} />
+                                          quotes = {quotes}
+                                          key = {key} />
             })
-  console.log("hello")
   return (
     <Fragment>
         <div className = "quetosWrapper">
             {quotesList}
         </div>
-        <div classNAME = "inputWrapper">
+        <div className = "inputWrapper">
           <div>
             명언을 추가 해주세요.
           </div>
-          <form className = 'form'>
+          <form className = {classes.form}>
               <TextField
                   id="filled-multiline-flexible"
                   label="Quotes"
                   multiline
                   scmargin="normal"
-                  variant="filled"
+                  value = {quotes.quotesStr}
+                  onChange ={quotes.handleQuotes}
               />
               <TextField
                   id="filled-name"
                   label="author"
                   margin="normal"
-                  variant="filled"
+                  value = {quotes.author} 
+                  onChange ={quotes.handleAuthor}
               />
-              <Button varient = 'contained' color = 'primary' onClick = {this.handleUpload}>
+              <Button varient = 'contained' color = 'primary' onClick = {quotes.setWisdomQuotes}>
                   upload
               </Button>
           </form>
