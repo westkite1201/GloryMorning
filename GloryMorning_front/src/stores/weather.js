@@ -464,6 +464,7 @@ export default class WeatherStore {
       if (navigator.geolocation) { // GPS를 지원하면
         try{
           let position = await this.getPosition();
+          console.log("[SEO] POSITION 이거 확인해 " , position)
           console.log("[SEO] nowGeolocation ", position.coords.latitude + ' ' + position.coords.longitude);
           this.currentX = position.coords.longitude
           this.currentY = position.coords.latitude
@@ -472,6 +473,7 @@ export default class WeatherStore {
           let locationInfo = await this.getLocationName(currentX, currentY);
           return locationInfo;
         }catch(e){
+          alert('에러')
           console.log("error " , e)
         } 
       }else{
@@ -495,12 +497,14 @@ export default class WeatherStore {
       }
     }
     
+
+
     @action
     getLocationName = async(currentX , currentY) => {  //현재 x,y 에 대한 동네 위치 요청 
       //console.log("axiosTest!!")
       // _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
       // _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
-      console.log( currentX ,   currentY)
+      console.log("[SEO][getLocationName] currentX ,   currentY", currentX, currentY)
       
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{

@@ -15,6 +15,9 @@ export default class QuotesStore {
   @observable author = ''
   @observable quotesStr = ''
 
+  @observable viewQuotes = '' // roling Quotes 
+  @observable rollingQuotesInterval = ''
+
 
   /* updateModeCheck */
   isUpdate = (quotesNum) => {
@@ -131,5 +134,23 @@ export default class QuotesStore {
     } catch (e) {
       console.log(e);
     }
-  } 
+  }
+  
+  @action 
+  rollingQuotes = () => {
+    console.log("[SEO] rollingQuotes");
+    let index = 0;
+    let len;
+    this.rollingQuotesInterval = setInterval(() => {
+      len = this.quotesList.length;
+      if (index + 1 > len -1 ) {
+        index = 0;
+      } else {
+        index += 1;
+      }
+      this.viewQuotes =  this.quotesList[index];
+  },2000);
 }
+}
+
+
