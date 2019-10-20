@@ -1,1 +1,1 @@
-export {default} from './WisdomQuotes'
+export { default } from "./WisdomQuotes";
