@@ -211,12 +211,12 @@ export default class WeatherStore {
     getWeatherDataShortTerm = async() => {
       let locationInfo = await this.nowGeolocation();
       let riseSetInfo = await this.getAreaRiseSetInfo();
-      console.log("[SEO] RiseSetInfo", riseSetInfo)
-      console.log("[SEO] locationInfo", locationInfo)
+      console.log("[SEO][getWeatherDataShortTerm] RiseSetInfo", riseSetInfo)
+      console.log("[SEO][getWeatherDataShortTerm] locationInfo", locationInfo)
       let dayTimeYn = riseSetInfo.item.isDayTimeYn;
-      console.log("[SEO] dayTimeYn", dayTimeYn)
+      console.log("[SEO][getWeatherDataShortTerm] dayTimeYn", dayTimeYn)
       let responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
-      console.log("[Seo] getWeatherDataShortTerm ", responsedata )
+      console.log("[Seo][getWeatherDataShortTerm] getWeatherDataShortTerm ", responsedata )
       let nx = responsedata.x;
       let ny = responsedata.y;
       try{
@@ -244,7 +244,7 @@ export default class WeatherStore {
         let weatherInfo;
         if( MODE === 'PRIVATE_MODE'){
             let responseData= response.data.data.response.body;
-            console.log("responseData" , responseData)
+            //console.log("responseData" , responseData)
             weatherInfo = responseData.items.item;
 
             weatherInfo.map((item) =>{
@@ -460,12 +460,12 @@ export default class WeatherStore {
   
     @action 
     nowGeolocation = async() => {
-      console.log("nowGeolocation")
+      console.log("[SEO][nowGeolocation]")
       if (navigator.geolocation) { // GPS를 지원하면
         try{
           let position = await this.getPosition();
-          console.log("[SEO] POSITION 이거 확인해 " , position)
-          console.log("[SEO] nowGeolocation ", position.coords.latitude + ' ' + position.coords.longitude);
+          console.log("[SEO][nowGeolocation] POSITION 이거 확인해 " , position)
+          console.log("[SEO][nowGeolocation] ", position.coords.latitude + ' ' + position.coords.longitude);
           this.currentX = position.coords.longitude
           this.currentY = position.coords.latitude
           let currentX = position.coords.longitude
@@ -529,7 +529,7 @@ export default class WeatherStore {
             this.LocationA = LocationA
             this.LocationB = LocationB
             this.LocationC = LocationC
-            console.log("[SEO] getLocationName", LocationA, LocationB ,LocationC )
+            console.log("[SEO][getLocationName] LocationA LocationB, LocationC", LocationA, LocationB ,LocationC )
             return {
               LocationA : LocationA,
               LocationB : LocationB,
@@ -556,7 +556,7 @@ export default class WeatherStore {
     /* 미세먼지 좌표를 위한  */
     @action
     getCordinate= async(outputCoord, locationInfo) => {  //현재 x,y 에 대한 동네 위치 요청 
-      console.log("[SEO] getCordinate!!", locationInfo)
+      console.log("[SEO][getCordinate]!!", locationInfo)
       // _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
       // _.isNil(this.currentY) ? this.currentY = 37.40269721785548 : this.currentY = this.currentY 
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
@@ -578,7 +578,7 @@ export default class WeatherStore {
         });
         if(response.data.documents) {
             let resData = response.data.documents;
-            console.log("resData ", resData[0])
+            //console.log("resData ", resData[0])
             return resData[0]
           }else{
             return false;
@@ -609,12 +609,13 @@ export default class WeatherStore {
     */
     @action
     //X,Y가 거꾸로 되어 있는거 같음 
-    getWeatherData = async( category) =>{
+    getWeatherData = async(category) =>{
       let locationInfo = await this.nowGeolocation();
+      console.log("[SEO][getWeatherData] locationInfo ", locationInfo)
       // _.isNil(this.currentY) ? nx = 37 : nx = parseInt(this.currentY)
       // _.isNil(this.currentX) ? ny = 126 : ny = parseInt(this.currentX)
       let responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
-      console.log("getWeatherDataShortTerm ", responsedata )
+    
       let nx = responsedata.x;
       let ny = responsedata.y;
       let response;
@@ -883,7 +884,7 @@ export default class WeatherStore {
       //습도 
       if( wantApi === "HUMIDITY" ){
         let timeList = resData[0]
-        console.log(timeList);
+        //console.log(timeList);
         let weatherDetailList = resData[1]
         let humidityList= resData[3];
         
@@ -896,12 +897,12 @@ export default class WeatherStore {
       //강수량 
       if( wantApi === "RAIN" ){
         let timeList = resData[0]
-        console.log(timeList);
+        //console.log(timeList);
         let weatherDetailList = resData[1]
         let proPrecipitationList = resData[4];
         let precipitationList = resData[5];
-        console.log(proPrecipitationList.length);
-        console.log(precipitationList.length);
+        // console.log(proPrecipitationList.length);
+        // console.log(precipitationList.length);
         let chartData = [];
         let proTemp = [];
         let preTemp = [];
@@ -916,7 +917,7 @@ export default class WeatherStore {
         }
         chartData.push(proTemp)
         chartData.push(preTemp);
-        console.log('chartData ', chartData)
+        //console.log('chartData ', chartData)
         return chartData;
       }
     }
@@ -926,7 +927,7 @@ export default class WeatherStore {
     @action
     setInterval = (wantApi) => {
       let playAlert = setInterval(async() =>{
-        console.log('hello', wantApi)
+        //console.log('hello', wantApi)
         if(wantApi === "RAIN"){
           this.isFetchingRain = true
           this.rainData = []
@@ -991,7 +992,7 @@ export default class WeatherStore {
       try{
         const response = await axios.post('http://localhost:3031/api/weather/PYTHONTEST',data)
         //const response = await axios.post('http://localhost:3031/api/bus/get_data')
-        console.log(response)
+        //console.log(response)
         this.isFetching = false
         if(wantApi === "RAIN"){
           this.rainData = this.makeTemperature(response.data, wantApi )
