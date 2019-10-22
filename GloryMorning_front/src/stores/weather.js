@@ -548,7 +548,7 @@ export default class WeatherStore {
           }
         }
       }catch(e){
-        console.log(e)
+        console.log("[SEO][getLocationName][ERROR] ", e)
       }
     }
     

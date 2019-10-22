@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import UseStores from "../../Setting/UseStores";
 import WisdomQuotesItem from "./WisdomQuotesItem";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import { Button, Switch } from '@material-ui/core';
 import "./WisdomQuotes.scss";
 
 const useStyles = makeStyles(theme => ({
@@ -38,10 +38,40 @@ const WisdomQuotes = observer(() => {
   });
   return (
     <Fragment>
-      <div className="quetosWrapper">{quotesList}</div>
+      <div>
+        roolingmode
+        <Switch
+          checked={quotes.rollingQuotesMode}
+          onChange={quotes.setQuetosMode}
+          value="checkedA"
+          inputProps={{ 'aria-label': 'secondary checkbox' }}
+        />
+        
+        <div>
+          {quotes.rollingQuotesIntervalTime}
+        </div>
+        <Button
+          varient="contained"
+          color="primary"
+          onClick={() => quotes.setQuetosRollingIntervel(true)}>
+          up
+        </Button>
+        <Button
+          varient="contained"
+          color="primary"
+          onClick={() => quotes.setQuetosRollingIntervel(down)}>
+          down
+        </Button>
+        <div>
+
+        </div>
+      </div>
+      <div className="quetosWrapper">
+        {quotesList}
+      </div>
       <div className="inputWrapper">
         <div>명언을 추가 해주세요.</div>
-        <form className={classes.form}>
+        <div className={classes.form} >
           <TextField
             id="filled-multiline-flexible"
             label="Quotes"
@@ -64,7 +94,7 @@ const WisdomQuotes = observer(() => {
           >
             upload
           </Button>
-        </form>
+        </div>
       </div>
     </Fragment>
   );

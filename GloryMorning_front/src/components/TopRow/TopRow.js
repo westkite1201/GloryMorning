@@ -5,7 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import { observer, inject, } from 'mobx-react'
 import { withStyles } from '@material-ui/core/styles';
-import {Switch, Button } from '@material-ui/core';
+import { Switch, Button } from '@material-ui/core';
 const styles = (theme) => ({
     menuButton: {
       marginRight: theme.spacing(2),

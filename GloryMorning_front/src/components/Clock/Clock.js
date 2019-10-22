@@ -19,7 +19,7 @@ class Clock extends Component {
 
   render() {
     const { timeObj, viewQuotes} = this.props; 
-    console.log("[SEO] viewQuotes" ,viewQuotes.QUOTES)
+    //console.log("[SEO] viewQuotes" ,viewQuotes.QUOTES)
     return (
       <div className = "clock-wrapper">
        {timeObj.year}년 {' '}

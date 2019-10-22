@@ -17,7 +17,9 @@ export default class QuotesStore {
 
   @observable viewQuotes = '' // roling Quotes 
   @observable rollingQuotesInterval = ''
+  @observable rollingQuotesIntervalTime = 2000;
 
+  @observable rollingQuotesMode = true; //default 
 
   /* updateModeCheck */
   isUpdate = (quotesNum) => {
@@ -138,6 +140,7 @@ export default class QuotesStore {
   
   @action 
   rollingQuotes = () => {
+    const { rollingQuotesIntervalTime } = this;
     console.log("[SEO] rollingQuotes");
     let index = 0;
     let len;
@@ -148,9 +151,26 @@ export default class QuotesStore {
       } else {
         index += 1;
       }
-      this.viewQuotes =  this.quotesList[index];
-  },2000);
-}
+        this.viewQuotes =  this.quotesList[index];
+    },rollingQuotesIntervalTime);    
+  }
+
+
+  
+  /* rolling mode , select Mode */
+  @action 
+  setQuetosMode = (rollingYn) => {
+    this.rollingQuotesMode = rollingYn;
+  }
+
+  /* interval 시간 조정  */
+  @action 
+  setQuetosRollingIntervel = (isUp) => {
+    let time = isUp ? 1000 : -1000 
+    this.rollingQuotesIntervalTime  += time;
+  }
+
+  
 }
 
 

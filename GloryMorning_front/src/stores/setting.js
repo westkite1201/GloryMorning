@@ -2,7 +2,9 @@ import { observable, action, computed } from "mobx";
 import _ from "lodash";
 import * as memberApi from "../lib/api/memberApi";
 import * as weatherApi from "../lib/api/weatherApi";
-import moment from "moment";
+
+
+/* setting 이지만 현재 backgroundSetting 이라 보는게 맞다  */
 export default class SettingStore {
   /* edit 스토어에 접근하기 위함  */
   constructor(rootStore) {
@@ -39,6 +41,7 @@ export default class SettingStore {
     "userImageURL": "",
     "previewURL": ""
   }; 
+
 
   @action
   onChangeQuery = e => {
@@ -99,5 +102,10 @@ export default class SettingStore {
       console.log(e);
     }
   };
+
+
+
+  
+
 
 }
