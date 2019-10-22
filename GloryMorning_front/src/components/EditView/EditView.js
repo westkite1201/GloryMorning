@@ -30,10 +30,10 @@ class EditView extends Component {
 
       componentDidMount(){
         let { loadPage,
-          setBackgroundImageUrl,
+          getUserBackground,
         } = this.props;
         loadPage();
-        setBackgroundImageUrl();
+        getUserBackground('testUser');
 
         window.addEventListener("resize", this.updateDimensions);
         //window.onresize = this.handleResizeEnd;
@@ -143,8 +143,10 @@ export default inject(({ edit,setting }) => ({
     allChartResizing : edit.allChartResizing,
     handleResizeChildComponent : edit.handleResizeChildComponent,
 
-    setBackgroundImageUrl : edit.setBackgroundImageUrl,
+    
     backgroundUrl : edit.backgroundUrl,
+
+    getUserBackground : setting.getUserBackground,
     selectedBackgroundUrl : setting.selectedBackgroundUrl,
 
     handleResizable : edit.handleResizable,

@@ -89,8 +89,8 @@ export default class QuotesStore {
       }
       this.quotesList = tempQuetesList
       this.isQuetosLoading = false;
-      this.handleAuthor = ''
-      this.handleQuotes = ''
+      this.author = ''
+      this.quotesStr = ''
     } catch (e) {
       console.log(e);
     }

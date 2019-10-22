@@ -46,6 +46,18 @@ export default class SettingStore {
     this.query = e.target.value;
   };
 
+  //redis에서 백 그라운드 가져오기 
+  @action
+  getUserBackground = async() => {
+    try{
+      let resData = await memberApi.getUserBackground('testUser');
+      this.selectedBackgroundUrl = resData.data.backgroundURL;
+    }catch(e){
+      console.log("error ", e)
+    }
+
+  }
+
   //redis에 저장 
   @action 
   settingBackgroundURLRedis = async() => {
@@ -54,6 +66,8 @@ export default class SettingStore {
     console.log("[SEO]backgroundURL " , resData.data.backgroundURL)
     this.selectedBackgroundUrl = resData.data.backgroundURL;
   }
+
+
   /* 현재 클릭시 백그라운드 설정 */
   @action
   setBackgroundUrl = largeImageURL => {

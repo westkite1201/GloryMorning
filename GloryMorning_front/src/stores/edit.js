@@ -26,21 +26,21 @@ export default class EditStore {
 
 
     @observable backgroundUrl = ''
-
-    @action
-    setBackgroundImageUrl = async() => {
-      console.log('[SEO] setBackgroundImageUrl ' )
-      try{
-        let response = await weatherApi.getBackgroundImageUrl();
-        console.log('[SEO] setBackgroundImageUrl ', response )
-        if(response.status === 200){
-          console.log('[SEO] background ' , response.data )
-          this.backgroundUrl = response.data.backgroundURL;
-        }
-      }catch(e){
-        console.log(e)
-      }
-    }
+    /* setting에 있는 친구랑 겹처서 일단 주석 처리  */
+    // @action
+    // setBackgroundImageUrl = async() => {
+    //   console.log('[SEO] setBackgroundImageUrl ' )
+    //   try{
+    //     let response = await weatherApi.getBackgroundImageUrl();
+    //     console.log('[SEO] setBackgroundImageUrl ', response )
+    //     if(response.status === 200){
+    //       console.log('[SEO] background ' , response.data )
+    //       this.backgroundUrl = response.data.backgroundURL;
+    //     }
+    //   }catch(e){
+    //     console.log(e)
+    //   }
+    // }
 
 
 

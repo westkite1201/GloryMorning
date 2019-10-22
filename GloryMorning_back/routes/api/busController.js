@@ -44,7 +44,7 @@ router.post('/setUserBackground', async(req, res)=>{
     return statusCodeErrorHandlerAsync(400, error, false);
   }
 })
-
+/* 백그라운드 가져오기  */
 router.post('/getUserBackground', async(req, res)=>{
   try{
     const userId = req.body.userId;
