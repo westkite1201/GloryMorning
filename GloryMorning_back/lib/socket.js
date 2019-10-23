@@ -28,6 +28,7 @@ const connection = (io) =>{
         console.log('timerSocketConnection')
         //타이머 테스트
         socket.on('time', function(data){
+            console.log("time!")
             timeInterval = setInterval(function() {
                 let serverTime = new Date();
                 let year = serverTime.getFullYear(); 
@@ -60,6 +61,7 @@ const connection = (io) =>{
         });
 
         socket.on('disconnect', function(data){
+            console.log("socket disconnect")
             clearInterval(timeInterval);
         })
 

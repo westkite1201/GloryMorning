@@ -1,23 +1,27 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import './Clock.scss'
+const MAINSTRING = "🔥고뇌하는자 항상 성취하리라🔥"
 class Clock extends Component {
 
-  componentDidMount= async() => {
+  componentDidMount(){
     const { setSocketConnection, 
-            getQuotes, 
-            rollingQuotes } = this.props; 
-    setSocketConnection();
-    await getQuotes();
-    await rollingQuotes();
+  
+             } = this.props; 
+  console.log("[seo][clock][ComponentDidmOUNT]")
+   setSocketConnection();
+    // getQuotes();
+    // rollingQuotes();
   }
 
   componentWillUnmount(){
-    const { setSocketDisconnect } = this.props; 
+    const { setSocketDisconnect  } = this.props; 
     setSocketDisconnect();
+    //quotesInit();
   }
 
   render() {
+    console.log("[seo][cloksRender]")
     const { timeObj, viewQuotes} = this.props; 
     //console.log("[SEO] viewQuotes" ,viewQuotes.QUOTES)
     return (
@@ -30,9 +34,14 @@ class Clock extends Component {
        {timeObj.minute <= 9 ? "0"+timeObj.minute : timeObj.minute} : 
        {timeObj.second <= 9 ? "0"+timeObj.second : timeObj.second}
        <div className ="header-info">
-        🔥고뇌하는자 항상 성취하리라🔥
-        <div>
-          { viewQuotes.QUOTES }
+        {MAINSTRING}
+        <div className = "quotesWrapper">
+          <div className = "quotes">
+            { /*viewQuotes.QUOTES */}
+          </div>
+          <div className = "author">
+            { /*viewQuotes.AUTHOR */}
+          </div>
         </div>
 
        </div> 
@@ -41,13 +50,14 @@ class Clock extends Component {
     )
   }
 }
-export default inject(({ weather,quotes }) => ({
+export default inject(({ weather }) => ({
   /* time */
   setSocketConnection : weather.setSocketConnection,
   setSocketDisconnect  :weather.setSocketDisconnect,
   timeObj : weather.timeObj,
   /* quotes */
-  getQuotes : quotes.getQuotes,
-  rollingQuotes : quotes.rollingQuotes,
-  viewQuotes : quotes.viewQuotes,
+  // getQuotes : quotes.getQuotes,
+  // rollingQuotes : quotes.rollingQuotes,
+  //viewQuotes : quotes.viewQuotes,
+ // quotesInit : quotes.quotesInit,
 }))(observer(Clock));

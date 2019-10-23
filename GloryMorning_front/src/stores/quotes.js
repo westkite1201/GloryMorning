@@ -1,6 +1,8 @@
 import { observable, action, computed } from "mobx";
 import _ from "lodash";
 import * as quotesApi from "../lib/api/quotesApi.js";
+
+let rollingQuotesInterval = null
 export default class QuotesStore {
   /* edit 스토어에 접근하기 위함  */
   constructor(rootStore) {
@@ -16,7 +18,7 @@ export default class QuotesStore {
   @observable quotesStr = ''
 
   @observable viewQuotes = '' // roling Quotes 
-  @observable rollingQuotesInterval = ''
+  //@observable rollingQuotesInterval = ''
   @observable rollingQuotesIntervalTime = 2000;
 
   @observable rollingQuotesMode = true; //default 
@@ -143,30 +145,62 @@ export default class QuotesStore {
     const { rollingQuotesIntervalTime } = this;
     console.log("[SEO] rollingQuotes");
     let index = 0;
+  //   rollingQuotesInterval = setInterval(() => {
+  //     this.rolling(index);
+  // } ,2000)
+}
+  @action
+  rolling = (index) => {
+    console.log("SEO ROOLING ")
     let len;
-    this.rollingQuotesInterval = setInterval(() => {
-      len = this.quotesList.length;
-      if (index + 1 > len -1 ) {
-        index = 0;
-      } else {
-        index += 1;
-      }
-        this.viewQuotes =  this.quotesList[index];
-    },rollingQuotesIntervalTime);    
+    if(!this.rollingQuotesMode){
+      return;
+    }
+    len = this.quotesList.length;
+    if (index + 1 > len -1 ) {
+      index = 0;
+    } else {
+      index += 1;
+    }
+    console.log("SEO ROOLING[INDEX]" , index, len)
+    this.viewQuotes =  this.quotesList[index]; 
+    return;
+  }
+
+  @action 
+  quotesInit = () => {
+    console.log("[seo]rollingQuotesInterval" , rollingQuotesInterval)
+    //interval 제거 
+    clearInterval(rollingQuotesInterval)
+    rollingQuotesInterval= null
+  }
+
+  //재 세팅 
+  // ?? 왜 스위치 세팅을 하니까 socketConnection 을 겁나타지?
+  @action 
+  setQuotesSetting = () => {
+    //this.quotesInit();
+    //this.rollingQuotes();
   }
 
 
-  
+
+
   /* rolling mode , select Mode */
   @action 
-  setQuetosMode = (rollingYn) => {
-    this.rollingQuotesMode = rollingYn;
+  setQuetosMode = () => {
+    console.log("[SEO][setQuetosMode]")
+    this.rollingQuotesMode = !this.rollingQuotesMode;
+    //this.quotesInit();
   }
 
   /* interval 시간 조정  */
   @action 
   setQuetosRollingIntervel = (isUp) => {
     let time = isUp ? 1000 : -1000 
+    if (this.rollingQuotesIntervalTime + time < 0){
+      return false;
+    }
     this.rollingQuotesIntervalTime  += time;
   }
 

@@ -133,6 +133,7 @@ export default class WeatherStore {
 
     @action
     setSocketConnection = () => {
+      console.log("[SetSocketConnectio]")
       const timeSocket = io('http://localhost:3031/time');
       // console.log(socket)
        timeSocket.on('connection',() =>{ console.log('connected')});
@@ -140,9 +141,8 @@ export default class WeatherStore {
        this.timeSocket = timeSocket;
 
        /* socketIo를 통한 시계 구현  */
-       this.timeSocket.emit("time",'getTimeStart');
-
-       this.timeSocket.on("getTime", (data) => {
+       timeSocket.emit("time",'getTimeStart');
+       timeSocket.on("getTime", (data) => {
         if( !_.isNil(data.serverTime)){
             this.timeObj = data.serverTime
         }

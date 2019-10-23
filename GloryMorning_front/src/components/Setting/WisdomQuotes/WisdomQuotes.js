@@ -40,13 +40,15 @@ const WisdomQuotes = observer(() => {
     <Fragment>
       <div>
         roolingmode
+        <div>
         <Switch
-          checked={quotes.rollingQuotesMode}
-          onChange={quotes.setQuetosMode}
-          value="checkedA"
-          inputProps={{ 'aria-label': 'secondary checkbox' }}
-        />
-        
+        checked={quotes.rollingQuotesMode}
+        onChange={quotes.setQuetosMode}
+        value="checkedA"
+        inputProps={{ 'aria-label': 'secondary checkbox' }}
+      />
+        </div>
+ 
         <div>
           {quotes.rollingQuotesIntervalTime}
         </div>
@@ -59,8 +61,14 @@ const WisdomQuotes = observer(() => {
         <Button
           varient="contained"
           color="primary"
-          onClick={() => quotes.setQuetosRollingIntervel(down)}>
+          onClick={() => quotes.setQuetosRollingIntervel(false)}>
           down
+        </Button>
+        <Button
+          varient="contained"
+          color="primary"
+          onClick={quotes.setQuotesSetting}>
+          적용
         </Button>
         <div>
 
@@ -90,7 +98,7 @@ const WisdomQuotes = observer(() => {
           <Button
             varient="contained"
             color="primary"
-            onClick={quotes.setWisdomQuotes}
+            onClick={quotes.setQuotesSetting}
           >
             upload
           </Button>
