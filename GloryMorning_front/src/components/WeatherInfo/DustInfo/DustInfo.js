@@ -43,7 +43,8 @@ function a11yProps(index) {
   const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
+      //backgroundColor: theme.palette.background.paper,
+      opacity : 0.5,
     },
   }));
 
@@ -58,21 +59,21 @@ const DustInfo = observer(() => {
     weather.getDustInfo();
   }, []);
 
-  //const [value, setValue] = React.useState(0);
-  // function handleChange(event, newValue) {
-  //   setValue(newValue);
-  // }
+  const [value, setValue] = React.useState(0);
+  function handleChange(event, newValue) {
+    setValue(newValue);
+  }
 
   let dustInfoObject = weather.dustInfoObject
 
   console.log("[SEO] dustInfoObject", dustInfoObject);
   return (
       <div>
-      {/*
+      {
       <div className={classes.root}>
         <AppBar position="static" color="default">
             <Tabs value={value} 
-                    //onChange={handleChange} 
+                    onChange={handleChange} 
                     aria-label="simple tabs example"
                     variant="fullWidth"
                     >
@@ -83,7 +84,38 @@ const DustInfo = observer(() => {
             </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-            Item One
+        <div className="dust_info_container">
+        <div className="station_info">
+            <div> 측정일 {dustInfoObject.dataTime} </div>
+            <div>
+            {" "}
+            가장 가까운 관측소와의 거리는 {dustInfoObject.distance} 입니다
+            </div>
+            <div> 관측소 이름: {dustInfoObject.addr}</div>
+        </div>
+      {!_.isNil(dustInfoObject.dustMessageInfoPm10) &&
+        <div className="display_icon_wrapper">
+            <div className="info_header">
+              {dustInfoObject.dustMessageInfoPm10.InfoHeader}
+            </div>
+            <div className="info_icon">
+            {dustInfoObject.dustMessageInfoPm10.infoIcon}
+            </div>
+            <div className="info_value">미세먼지 {dustInfoObject.pm10Value}</div>
+            <div className="infoMessage">
+            {dustInfoObject.dustMessageInfoPm10.infoMessage}
+            </div>
+        </div>
+      }
+
+        <div className="sub_dust_info">
+            <div> 초미세먼지 {dustInfoObject.pm25Value}</div>
+            <div> 오존 {dustInfoObject.o3Value} </div>
+            <div> 일산화탄소{dustInfoObject.coValue} </div>
+            <div> 이산화질소 {dustInfoObject.no2Value}</div>
+            <div> 아황산가스 {dustInfoObject.so2Value} </div>
+        </div>
+        </div>
         </TabPanel>
         <TabPanel value={value} index={1}>
             Item Two
@@ -92,7 +124,7 @@ const DustInfo = observer(() => {
             Item Three
         </TabPanel>
     </div>
-      */}
+      }
 
         <div className="dust_info_container">
         <div className="station_info">

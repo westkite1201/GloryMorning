@@ -25,7 +25,38 @@ export default class WeatherStore {
     @observable isFetchingHumi = false
 
     @observable dustInfoObject = { 
+      //초 미세먼지 
       dustMessageInfoPm10 : {
+        InfoHeader : '',
+        infoIcon : '',
+        infoMessage : '',
+      },
+      //미세먼지 
+      dustMessageInfoPm25 : {
+        InfoHeader : '',
+        infoIcon : '',
+        infoMessage : '',
+      },
+      //오존
+      dustMessageInfoO3 : {
+        InfoHeader : '',
+        infoIcon : '',
+        infoMessage : '',
+      },
+      //일산화탄소
+      dustMessageInfoCo : {
+        InfoHeader : '',
+        infoIcon : '',
+        infoMessage : '',
+      },
+      //이산화
+      dustMessageInfoNo2 : {
+        InfoHeader : '',
+        infoIcon : '',
+        infoMessage : '',
+      },
+      //아황산
+      dustMessageInfoSo2 : {
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
@@ -201,8 +232,12 @@ export default class WeatherStore {
           let dustInfoObject = response.data;
 
               dustInfoObject.dustMessageInfoPm10 = helpers.getDustIcon("pm10",parseInt(dustInfoObject.pm10Value))
-          
-               console.log("[SEO] dustInfoObject ", dustInfoObject, dustInfoObject.length)
+              dustInfoObject.dustMessageInfoPm25 = helpers.getDustIcon("pm25",parseInt(dustInfoObject.pm25Value))
+              dustInfoObject.dustMessageInfoO3 = helpers.getDustIcon("o3",parseInt(dustInfoObject.o3Value))
+              dustInfoObject.dustMessageInfoCo = helpers.getDustIcon("co",parseInt(dustInfoObject.coValue))
+              dustInfoObject.dustMessageInfoNo2 = helpers.getDustIcon("no2",parseInt(dustInfoObject.no2Value))
+              dustInfoObject.dustMessageInfoSo2 = helpers.getDustIcon("so2",parseInt(dustInfoObject.so2Value))
+              console.log("[SEO] dustInfoObject ", dustInfoObject, dustInfoObject.length)
 
             this.dustInfoObject = dustInfoObject;
           
@@ -509,6 +544,7 @@ export default class WeatherStore {
 
 
     @action
+    
     getLocationName = async(currentX , currentY) => {  //현재 x,y 에 대한 동네 위치 요청 
       //console.log("axiosTest!!")
       // _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
@@ -517,6 +553,7 @@ export default class WeatherStore {
       
       //https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=127.10459896729914&y=37.40269721785548
       try{
+        //오류날 경우 반복 요청해야하나?
         const res = await axios.get('https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?', {
           params: { // query string
             // x: '127.10459896729914',
@@ -527,7 +564,7 @@ export default class WeatherStore {
           headers: { // 요청 헤더
             'Authorization': clientConfig.apiKeys.kakaoApiKey
           },
-          timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
+          timeout: 3000 // 1초 이내에 응답이 오지 않으면 에러로 간주
         })
          //카카오톡에 요청 
         if(res.data.documents) {
@@ -558,6 +595,15 @@ export default class WeatherStore {
         }
       }catch(e){
         console.log("[SEO][getLocationName][ERROR] ", e)
+        alert('[에러] 현재 동네 위치를 알수가 없습니다. 인터넷 연결을 확인해주세요 ')
+        return {
+          LocationA : '',
+          LocationB : '',
+          LocationC : '',
+          currentX : currentX,
+          currentY : currentY,
+        }
+      
       }
     }
     
