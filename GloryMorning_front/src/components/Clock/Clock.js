@@ -6,10 +6,11 @@ class Clock extends Component {
 
   componentDidMount(){
     const { setSocketConnection, 
-  
+      getTimeIntervalStart
              } = this.props; 
   console.log("[seo][clock][ComponentDidmOUNT]")
    setSocketConnection();
+   getTimeIntervalStart();
     // getQuotes();
     // rollingQuotes();
   }
@@ -54,6 +55,7 @@ export default inject(({ weather }) => ({
   /* time */
   setSocketConnection : weather.setSocketConnection,
   setSocketDisconnect  :weather.setSocketDisconnect,
+  getTimeIntervalStart : weather.getTimeIntervalStart,
   timeObj : weather.timeObj,
   /* quotes */
   // getQuotes : quotes.getQuotes,

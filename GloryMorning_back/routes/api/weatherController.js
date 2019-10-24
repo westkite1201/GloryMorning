@@ -96,7 +96,7 @@ router.post('/getPixabayImages', async(req, res) => {
   
   try{
     let response = await CallSeverApiPixabay.pixabay(query, imageType);
-    console.log("getPixabayImage response " , response );
+    //console.log("getPixabayImage response " , response );
     if( response.message !== 'error' ){
       return res.json(response);
     }else{

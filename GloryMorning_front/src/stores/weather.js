@@ -5,12 +5,12 @@ import io from 'socket.io-client';
 import * as _ from 'lodash';
 import * as helpers from  '../lib/helpers'
 import * as weatherApi from  '../lib/api/weatherApi'
+import {isEmpty} from 'lodash' 
 import clientConfig from '../configuration/clientConfig'
 const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
 export default class WeatherStore {
     
                               
-    @observable socket = ''
     @observable timeSocket = null
     @observable timeObj = {
       hour : '',
@@ -134,25 +134,34 @@ export default class WeatherStore {
     @action
     setSocketConnection = () => {
       console.log("[SetSocketConnectio]")
-      const timeSocket = io('http://localhost:3031/time');
-      // console.log(socket)
-       timeSocket.on('connection',() =>{ console.log('connected')});
-       this.socket = timeSocket;
-       this.timeSocket = timeSocket;
+      if (isEmpty(this.timeSocket)) {
+        const timeSocket = io('http://localhost:3031/time');
+        // console.log(socket)
+        timeSocket.on('connect',() => { 
+          console.log('[seo] connected')
+        });
+        this.timeSocket = timeSocket;
+        
 
-       /* socketIo를 통한 시계 구현  */
-       timeSocket.emit("time",'getTimeStart');
-       timeSocket.on("getTime", (data) => {
-        if( !_.isNil(data.serverTime)){
-            this.timeObj = data.serverTime
-        }
+        /* socketIo를 통한 시계 구현  */
+        timeSocket.on("getTime", (data) => {   
+          console.log("data!", data.count)
+          if( !_.isNil(data.serverTime)){
+              this.timeObj = data.serverTime
+          }
       })
-
+    }
+    }
+    @action 
+    getTimeIntervalStart = () => {
+      this.timeSocket.emit("time",'getTimeStart');
     }
 
     @action
     setSocketDisconnect =() =>{
+      console.log("[SEO] setSocketDisconnect")
       this.timeSocket.emit('disconnect', 'disconnect')
+      //this.timeSocket = null;
     }
 
   

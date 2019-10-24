@@ -56,7 +56,7 @@ module.exports = function (callee) {
 
                 OPTIONS.url += 'key='+ serviceKey
                 OPTIONS.url += propertiesObject 
-                console.log(OPTIONS.url)
+               // console.log(OPTIONS.url)
                 function doRequest() {
                     return new Promise(function (resolve, reject) {
                         request(OPTIONS, (err, res, result) => {
@@ -108,7 +108,7 @@ module.exports = function (callee) {
                 })
                 OPTIONS.url += 'ServiceKey='+ serviceKey
                 OPTIONS.url += propertiesObject 
-                console.log(OPTIONS)
+                //console.log(OPTIONS)
   
                 request(OPTIONS, function (err, res, result) {
                    statusCodeErrorHandler(res.statusCode, callback, result);

@@ -26,10 +26,18 @@ const connection = (io) =>{
     // namespace /timer 에 접속한다.
     let time = timeNsp.on('connection', function(socket){
         console.log('timerSocketConnection')
+        
+        socket.emit('connect', { 
+            message: 'connection success',
+            status : 200
+        });
         //타이머 테스트
         socket.on('time', function(data){
-            console.log("time!")
+            clearInterval(timeInterval)
+            //console.log("time!", timeInterval)
             timeInterval = setInterval(function() {
+                //console.log("INTERVAL")
+                count += 1;
                 let serverTime = new Date();
                 let year = serverTime.getFullYear(); 
                 let month = serverTime.getMonth() + 1;
@@ -49,20 +57,17 @@ const connection = (io) =>{
                 time.emit('getTime', {
                     message: 'success',
                     status : 200,
-                    serverTime:  timeObj
+                    serverTime:  timeObj,
+                    count : count
                 });
             }, 1000);
-
-        socket.emit('timeConnection', { 
-            message: 'connection success',
-            status : 200
-        });
             //timerStart(timer,room);
         });
 
         socket.on('disconnect', function(data){
             console.log("socket disconnect")
             clearInterval(timeInterval);
+            socket.disconnect();
         })
 
         socket.on('getTime', function(data) {
