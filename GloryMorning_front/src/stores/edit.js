@@ -74,7 +74,7 @@ export default class EditStore {
     foreach 사용이 불가하다고 한다.
   */
   handleResizable = (flag) => {
-    console.log("[SEO] handleResizable!", )
+    console.log("[SEO] handleResizable!", flag )
     let childs = document.getElementsByClassName('react-resizable-handle');
     if(!helpers.isEmpty(childs)){
       [...childs].forEach((item) => {
@@ -221,7 +221,7 @@ export default class EditStore {
                 }
                 
             }
-            this.handleResizable(false);
+            //this.handleResizable(false);
           })
 
         }catch(e){

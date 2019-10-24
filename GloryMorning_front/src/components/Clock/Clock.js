@@ -6,13 +6,14 @@ class Clock extends Component {
 
   componentDidMount(){
     const { setSocketConnection, 
-      getTimeIntervalStart
-             } = this.props; 
+      getTimeIntervalStart,
+      getQuotes,
+      rollingQuotes    } = this.props; 
   console.log("[seo][clock][ComponentDidmOUNT]")
    setSocketConnection();
    getTimeIntervalStart();
-    // getQuotes();
-    // rollingQuotes();
+   getQuotes();
+   rollingQuotes();
   }
 
   componentWillUnmount(){
@@ -38,10 +39,10 @@ class Clock extends Component {
         {MAINSTRING}
         <div className = "quotesWrapper">
           <div className = "quotes">
-            { /*viewQuotes.QUOTES */}
+            { viewQuotes.QUOTES }
           </div>
           <div className = "author">
-            { /*viewQuotes.AUTHOR */}
+            { viewQuotes.AUTHOR }
           </div>
         </div>
 
@@ -51,15 +52,15 @@ class Clock extends Component {
     )
   }
 }
-export default inject(({ weather }) => ({
+export default inject(({ weather, quotes }) => ({
   /* time */
   setSocketConnection : weather.setSocketConnection,
   setSocketDisconnect  :weather.setSocketDisconnect,
   getTimeIntervalStart : weather.getTimeIntervalStart,
   timeObj : weather.timeObj,
   /* quotes */
-  // getQuotes : quotes.getQuotes,
-  // rollingQuotes : quotes.rollingQuotes,
-  //viewQuotes : quotes.viewQuotes,
- // quotesInit : quotes.quotesInit,
+  getQuotes : quotes.getQuotes,
+  rollingQuotes : quotes.rollingQuotes,
+  viewQuotes : quotes.viewQuotes,
+ quotesInit : quotes.quotesInit,
 }))(observer(Clock));

@@ -583,7 +583,7 @@ export default class WeatherStore {
           headers: { // 요청 헤더
             'Authorization': clientConfig.apiKeys.kakaoApiKey
           },
-          timeout: 1000 // 1초 이내에 응답이 오지 않으면 에러로 간주
+          timeout: 3000 // 1초 이내에 응답이 오지 않으면 에러로 간주
         });
         if(response.data.documents) {
             let resData = response.data.documents;

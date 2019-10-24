@@ -1,5 +1,5 @@
 import { observable, action, computed } from "mobx";
-import _ from "lodash";
+import {isNil, isEmpty} from "lodash";
 import * as quotesApi from "../lib/api/quotesApi.js";
 
 let rollingQuotesInterval = null
@@ -145,26 +145,28 @@ export default class QuotesStore {
     const { rollingQuotesIntervalTime } = this;
     console.log("[SEO] rollingQuotes");
     let index = 0;
-  //   rollingQuotesInterval = setInterval(() => {
-  //     this.rolling(index);
-  // } ,2000)
+    if(isNil(rollingQuotesInterval)){
+      rollingQuotesInterval = setInterval(() => {
+        let len;
+        if(!this.rollingQuotesMode){
+          return;
+        }
+        len = this.quotesList.length;
+        if (index + 1 > len -1 ) {
+          index = 0;
+        } else {
+          index += 1;
+        }
+        console.log("SEO ROOLING[INDEX]" , index, len)
+        this.viewQuotes =  this.quotesList[index];
+      } ,this.rollingQuotesIntervalTime)
+    }
+
 }
   @action
   rolling = (index) => {
     console.log("SEO ROOLING ")
-    let len;
-    if(!this.rollingQuotesMode){
-      return;
-    }
-    len = this.quotesList.length;
-    if (index + 1 > len -1 ) {
-      index = 0;
-    } else {
-      index += 1;
-    }
-    console.log("SEO ROOLING[INDEX]" , index, len)
-    this.viewQuotes =  this.quotesList[index]; 
-    return;
+  
   }
 
   @action 
@@ -172,15 +174,14 @@ export default class QuotesStore {
     console.log("[seo]rollingQuotesInterval" , rollingQuotesInterval)
     //interval 제거 
     clearInterval(rollingQuotesInterval)
-    rollingQuotesInterval= null
+    rollingQuotesInterval = null
   }
 
   //재 세팅 
-  // ?? 왜 스위치 세팅을 하니까 socketConnection 을 겁나타지?
   @action 
   setQuotesSetting = () => {
-    //this.quotesInit();
-    //this.rollingQuotes();
+    this.quotesInit();
+    this.rollingQuotes();
   }
 
 
@@ -191,7 +192,7 @@ export default class QuotesStore {
   setQuetosMode = () => {
     console.log("[SEO][setQuetosMode]")
     this.rollingQuotesMode = !this.rollingQuotesMode;
-    //this.quotesInit();
+    this.quotesInit();
   }
 
   /* interval 시간 조정  */
