@@ -32,6 +32,7 @@ export default class WeatherStore {
         infoMessage : '',
         level : '',
         color : '',
+        value : '',
       },
       //미세먼지 
       dustMessageInfoPm25 : {
@@ -40,6 +41,7 @@ export default class WeatherStore {
         infoMessage : '',
         level : '',
         color : '',
+        value : '',
       },
       //오존
       dustMessageInfoO3 : {
@@ -48,6 +50,7 @@ export default class WeatherStore {
         infoMessage : '',
         level : '',
         color : '',
+        value : '',
       },
       //일산화탄소
       dustMessageInfoCo : {
@@ -56,6 +59,7 @@ export default class WeatherStore {
         infoMessage : '',
         level : '',
         color : '',
+        value : '',
       },
       //이산화
       dustMessageInfoNo2 : {
@@ -64,6 +68,7 @@ export default class WeatherStore {
         infoMessage : '',
         level : '',
         color : '',
+        value : '',
       },
       //아황산
       dustMessageInfoSo2 : {
@@ -72,6 +77,7 @@ export default class WeatherStore {
         infoMessage : '',
         level : '',
         color : '',
+        value : '',
       },
       addr: "",
       coGrade: "",
@@ -249,6 +255,15 @@ export default class WeatherStore {
               dustInfoObject.dustMessageInfoCo = helpers.getDustIcon("co",parseInt(dustInfoObject.coValue))
               dustInfoObject.dustMessageInfoNo2 = helpers.getDustIcon("no2",parseInt(dustInfoObject.no2Value))
               dustInfoObject.dustMessageInfoSo2 = helpers.getDustIcon("so2",parseInt(dustInfoObject.so2Value))
+
+              dustInfoObject.dustMessageInfoPm10.value = dustInfoObject.pm10Value;
+              dustInfoObject.dustMessageInfoPm25.value = dustInfoObject.pm25Value;
+              dustInfoObject.dustMessageInfoO3.value = dustInfoObject.o3Value;
+              dustInfoObject.dustMessageInfoCo.value = dustInfoObject.coValue;
+              dustInfoObject.dustMessageInfoNo2.value = dustInfoObject.no2Value;
+              dustInfoObject.dustMessageInfoSo2.value = dustInfoObject.so2Value;
+
+
               console.log("[SEO] dustInfoObject ", dustInfoObject, dustInfoObject.length)
 
             this.dustInfoObject = dustInfoObject;

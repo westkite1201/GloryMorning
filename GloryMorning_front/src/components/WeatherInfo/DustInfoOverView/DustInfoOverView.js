@@ -22,13 +22,15 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
+/* progress 만들기  */
 const makeProgress = (dustMessageInfo) =>{
-  let {color, level} = dustMessageInfo;
+  let {color, level, value} = dustMessageInfo;
   //초기
   color === '' ? color = '#ffffff' : color = color
   return (
     <Progress backgroundColor = {color}
               fcstValue = {level * 12.5} 
+              value = {value}
               height = {15}/>
   )
 } 

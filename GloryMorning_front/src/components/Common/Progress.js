@@ -15,9 +15,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Progress({backgroundColor, fcstValue, height = 10}) {
+/* param 정의할 것  */
+export default function Progress({backgroundColor, fcstValue, value,  height = 10}) {
     const classes = useStyles();
-    
+    console.log("progress")
     const BorderLinearProgress = withStyles({
         root: {
           height: height,
@@ -32,6 +33,7 @@ export default function Progress({backgroundColor, fcstValue, height = 10}) {
       
   return (
     <div className={classes.root}>
+      {value}
       <BorderLinearProgress
         className={classes.margin}
         variant="determinate"
