@@ -7,6 +7,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import DustInfoOverView from '../DustInfoOverView'
 import "./DustInfo.scss";
 import UseStores from "../../Setting/UseStores";
 
@@ -69,7 +70,8 @@ const DustInfo = observer(() => {
   console.log("[SEO] dustInfoObject", dustInfoObject);
   return (
       <div>
-      {
+          <DustInfoOverView dustInfoObject = {dustInfoObject}/>
+      {/*
       <div className={classes.root}>
         <AppBar position="static" color="default">
             <Tabs value={value} 
@@ -124,7 +126,7 @@ const DustInfo = observer(() => {
             Item Three
         </TabPanel>
     </div>
-      }
+    */}
 
         <div className="dust_info_container">
         <div className="station_info">

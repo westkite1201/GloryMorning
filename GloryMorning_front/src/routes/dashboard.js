@@ -12,6 +12,7 @@ import SettingBackground  from '../components/Setting/SettingBackground'
 import WisdomQuotes  from '../components/Setting/WisdomQuotes'
 
 
+import DustInfoOverView from '../components/WeatherInfo/DustInfoOverView'
 import App from '../App'
 
 
@@ -25,6 +26,16 @@ import App from '../App'
 
 
 const dashboardRoutes = [
+  {
+    sideView: true,
+    //exact : true,
+    path: "/DustInfoOverView/",
+    sidebarName: "DustInfoOverView",
+    navbarName: "DustInfoOverView",
+    icon: Dashboard,
+    component: DustInfoOverView
+  },
+
  
   {
     sideView: true,

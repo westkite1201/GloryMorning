@@ -15,11 +15,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Progress({backgroundColor,fcstValue}) {
+export default function Progress({backgroundColor, fcstValue, height = 10}) {
     const classes = useStyles();
+    
     const BorderLinearProgress = withStyles({
         root: {
-          height: 10,
+          height: height,
+          borderRadius: 20,
           backgroundColor: lighten(backgroundColor, 0.5),
         },
         bar: {

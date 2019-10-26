@@ -1,8 +1,28 @@
 
+
 /**
  * Global helper functions - client & server
  */
-
+  //색상 정의 
+  //1 #3b5bdb // 파랑
+  //2 #37b24d // 연파랑 
+  //3 #37b24d // 초록 
+  //4 ffd43b  // 연노랑 
+  //5 #fcc419  // 노랑           
+  //6 #f08c00  // 주황 
+  //7 #e03131  //빨강
+  //8 #212529  //흑 
+ const colorArray = [
+      '#3b5bdb', // 파랑
+      '#3bc9db', // 청록 
+      '#37b24d', // 초록 
+      '#ffd43b',  // 연노랑 
+      '#fcc419',  // 노랑           
+      '#f08c00',  // 주황 
+      '#e03131',  //빨강
+      '#212529',  //흑 '
+    ]
+  
 /* dust IcoMaker */
    // 최고 😍
     // 좋음 :😆 
@@ -27,51 +47,66 @@ const dustMessageObjectList = [
     InfoHeader : "최고야!!",
     infoIcon : "😍",
     infoMessage  : "끝내주는 공기입니다 ><",
+    level : 0,
+    color : colorArray[0]
  },
   dustMessageInfo2 = { 
     category : "",
     InfoHeader : "좋아!",
     infoIcon : "😆",
     infoMessage  : "좋은 공기를 즐기세요!",
+    level : 1,
+    color : colorArray[1]
   },
   dustMessageInfo3 = { 
     category : "",
     InfoHeader : "양호",
     infoIcon : "😊",
     infoMessage  : "괜찮아요 그래도! 버틸만 하네요.",
+    level : 2,
+    color : colorArray[2]
   },
   dustMessageInfo4 = { 
     category : "",
     InfoHeader : "보통이에요",
     infoIcon : "😐",
     infoMessage  : "그럭저럭이네요",
+    level : 3,
+    color : colorArray[3]
   },
   dustMessageInfo5 = { 
     category : "",
     InfoHeader : "나쁨",
     infoIcon : "😭",
     infoMessage  : "마스크를 꼭 챙기세요",
+    level : 4,
+    color : colorArray[4]
   },
   dustMessageInfo6 = { 
     category : "",
     InfoHeader : "상당히 나빠요...",
     infoIcon : "😱",
     infoMessage  : "하...이러지말자.",
+    level : 5,
+    color : colorArray[5]
   },
   dustMessageInfo7 = { 
     category : "",
     InfoHeader : "매우 나빠요..",
     infoIcon : "👿",
     infoMessage  : "당신은 밖에 나갈 생각을 하지 말아야합니다.(단호)",
+    level : 6,
+    color : colorArray[6]
   },  
   dustMessageInfo8 = { 
     category : "",
     InfoHeader : "FUCK",
     infoIcon : "🖕💩🖕",
     infoMessage  : "도망쳐",
+    level : 7,
+    color : colorArray[7]
   },
 ];
-
 
 const getDustIcon  = ( category, value ) => {
     console.log("[SEO] getDustIcon" , category, value)

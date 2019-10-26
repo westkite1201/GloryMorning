@@ -30,36 +30,48 @@ export default class WeatherStore {
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
+        level : '',
+        color : '',
       },
       //미세먼지 
       dustMessageInfoPm25 : {
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
+        level : '',
+        color : '',
       },
       //오존
       dustMessageInfoO3 : {
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
+        level : '',
+        color : '',
       },
       //일산화탄소
       dustMessageInfoCo : {
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
+        level : '',
+        color : '',
       },
       //이산화
       dustMessageInfoNo2 : {
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
+        level : '',
+        color : '',
       },
       //아황산
       dustMessageInfoSo2 : {
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
+        level : '',
+        color : '',
       },
       addr: "",
       coGrade: "",
@@ -541,10 +553,8 @@ export default class WeatherStore {
       }
     }
     
-
-
+  
     @action
-    
     getLocationName = async(currentX , currentY) => {  //현재 x,y 에 대한 동네 위치 요청 
       //console.log("axiosTest!!")
       // _.isNil(this.currentX) ? this.currentX = 127.10459896729914 : this.currentX = this.currentX
@@ -564,7 +574,7 @@ export default class WeatherStore {
           headers: { // 요청 헤더
             'Authorization': clientConfig.apiKeys.kakaoApiKey
           },
-          timeout: 3000 // 1초 이내에 응답이 오지 않으면 에러로 간주
+          timeout: 3000 // 3초 이내에 응답이 오지 않으면 에러로 간주
         })
          //카카오톡에 요청 
         if(res.data.documents) {
