@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Fragment} from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: '100%',
       maxWidth: 360,
-      backgroundColor: 'rgba( 255, 255, 255, 0.5 )',
+      backgroundColor: 'rgba( 255, 255, 255, 0 )',
     },
   }),
 );
@@ -34,72 +34,71 @@ const makeProgress = (dustMessageInfo) =>{
               height = {15}/>
   )
 } 
-export default function DustInfoOverView({dustInfoObject}) {
+export default function DustInfoOverView({weather}) {
 
-  console.log("[SEO][dustInfoObject] ", dustInfoObject)
+  console.log("[SEO][dustInfoObject] ")
   const { dustMessageInfoPm10, 
           dustMessageInfoPm25,
           dustMessageInfoO3,
           dustMessageInfoCo,
           dustMessageInfoNo2,
-          dustMessageInfoSo2 } = dustInfoObject;
+          dustMessageInfoSo2 } = weather.dustInfoObject;
   const classes = useStyles();
-  console.log("[SEO][dustMessageInfoPm10] ", dustInfoObject.dustMessageInfoPm10)
+  console.log("[SEO][dustMessageInfoPm10] ", Object.keys(dustMessageInfoPm10))
+  let dustInfoArr = [
+    { 
+      name : 'pm10',
+      object : dustMessageInfoPm10,
+      objectName  : 'dustMessageInfoPm10'
+    },
+    { 
+      name : 'pm25',
+      object : dustMessageInfoPm25,
+      objectName  : 'dustMessageInfoPm25'
+    },
+    { 
+      name : 'O3',
+      object : dustMessageInfoO3,
+      objectName  : 'dustMessageInfoO3'
+    },
+    { 
+      name : 'co',
+      object : dustMessageInfoCo,
+      objectName  : 'dustMessageInfoCo'
+    },
+    { 
+      name : 'no2',
+      object : dustMessageInfoNo2,
+      objectName  : 'dustMessageInfoNo2'
+    },
+    { 
+      name : 'So2',
+      object : dustMessageInfoSo2,
+      objectName  : 'dustMessageInfoSo2'
+    }
+  ]
+  function makeDustInfoBar(){ 
+    return dustInfoArr.map((item, key) =>{
+        return(
+          <Fragment   key ={key}>
+            <ListItem button onClick = {() => weather.setSelectDustMessageInfo(item.objectName)} 
+                      key ={key} >
+              <ListItemAvatar>
+                <Avatar>
+                  {item.name}
+                </Avatar>
+              </ListItemAvatar>
+            {makeProgress(item.object)}
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </Fragment>
+        )
+    })
+  }
+
   return (
-    <List className={classes.root}>
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            pm10
-          </Avatar>
-        </ListItemAvatar>
-       {makeProgress(dustMessageInfoPm10)}
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            pm25
-          </Avatar>
-        </ListItemAvatar>
-        {makeProgress(dustMessageInfoPm25)}
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            03
-          </Avatar>
-        </ListItemAvatar>
-        {makeProgress(dustMessageInfoO3)}
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            c0
-          </Avatar>
-        </ListItemAvatar>
-        {makeProgress(dustMessageInfoCo)}
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-           no2
-          </Avatar>
-        </ListItemAvatar>
-        {makeProgress(dustMessageInfoNo2)}
-      </ListItem>
-      <Divider variant="inset" component="li" />
-      <ListItem>
-        <ListItemAvatar>
-          <Avatar>
-            so2
-          </Avatar>
-        </ListItemAvatar>
-        {makeProgress(dustMessageInfoSo2)}
-      </ListItem>
+    <List className={classes.root} >
+       {makeDustInfoBar()}
     </List>
   );
 }

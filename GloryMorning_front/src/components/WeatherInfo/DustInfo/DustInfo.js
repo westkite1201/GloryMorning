@@ -66,11 +66,11 @@ const DustInfo = observer(() => {
   }
 
   let dustInfoObject = weather.dustInfoObject
-
+  let selectDustMessageInfo = weather.selectDustMessageInfo;
+  console.log("[SEO] selectDustMessageInfo" ,selectDustMessageInfo)
   console.log("[SEO] dustInfoObject", dustInfoObject);
   return (
       <div>
-          <DustInfoOverView dustInfoObject = {dustInfoObject}/>
       {/*
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -129,35 +129,45 @@ const DustInfo = observer(() => {
     */}
 
         <div className="dust_info_container">
-        <div className="station_info">
-            <div> 측정일 {dustInfoObject.dataTime} </div>
-            <div>
-            {" "}
-            가장 가까운 관측소와의 거리는 {dustInfoObject.distance} 입니다
-            </div>
-            <div> 관측소 이름: {dustInfoObject.addr}</div>
-        </div>
-      {!_.isNil(dustInfoObject.dustMessageInfoPm10) &&
-        <div className="display_icon_wrapper">
-            <div className="info_header">
-              {dustInfoObject.dustMessageInfoPm10.InfoHeader}
-            </div>
-            <div className="info_icon">
-            {dustInfoObject.dustMessageInfoPm10.infoIcon}
-            </div>
-            <div className="info_value">미세먼지 {dustInfoObject.pm10Value}</div>
-            <div className="infoMessage">
-            {dustInfoObject.dustMessageInfoPm10.infoMessage}
-            </div>
-        </div>
-      }
+          <div className="station_info">
+              <div> 측정일 {dustInfoObject.dataTime} </div>
+              <div>
+              {" "}
+              가장 가까운 관측소와의 거리는 {dustInfoObject.distance} 입니다
+              </div>
+              <div> 관측소 이름: {dustInfoObject.addr}</div>
+          </div>
 
+        {!_.isNil(dustInfoObject[selectDustMessageInfo]) &&
+          <div className="display_icon_wrapper">
+              <div className="info_header">
+                {dustInfoObject[selectDustMessageInfo].InfoHeader}
+              </div>
+              <div className="info_icon">
+              {dustInfoObject[selectDustMessageInfo].infoIcon}
+              </div>
+              <div>
+                {dustInfoObject[selectDustMessageInfo].name}
+              </div>
+              <div className="info_value"> 
+                {dustInfoObject[selectDustMessageInfo].value}
+              </div>
+              <div className="infoMessage">
+              {dustInfoObject[selectDustMessageInfo].infoMessage}
+              </div>
+          </div>
+        }
+        {/*
         <div className="sub_dust_info">
             <div> 초미세먼지 {dustInfoObject.pm25Value}</div>
             <div> 오존 {dustInfoObject.o3Value} </div>
             <div> 일산화탄소{dustInfoObject.coValue} </div>
             <div> 이산화질소 {dustInfoObject.no2Value}</div>
             <div> 아황산가스 {dustInfoObject.so2Value} </div>
+        </div>
+        */}
+        <div className="dust_info_overview">
+          <DustInfoOverView weather = {weather}/>
         </div>
         </div>
     </div>

@@ -24,9 +24,11 @@ export default class WeatherStore {
     @observable isFetchingTemp = false
     @observable isFetchingHumi = false
 
+    @observable selectDustMessageInfo = "dustMessageInfoPm10" //default
     @observable dustInfoObject = { 
       //초 미세먼지 
       dustMessageInfoPm10 : {
+        name: '',
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
@@ -36,6 +38,7 @@ export default class WeatherStore {
       },
       //미세먼지 
       dustMessageInfoPm25 : {
+        name: '',
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
@@ -45,6 +48,7 @@ export default class WeatherStore {
       },
       //오존
       dustMessageInfoO3 : {
+        name: '',
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
@@ -54,6 +58,7 @@ export default class WeatherStore {
       },
       //일산화탄소
       dustMessageInfoCo : {
+        name: '',
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
@@ -63,6 +68,7 @@ export default class WeatherStore {
       },
       //이산화
       dustMessageInfoNo2 : {
+        name: '',
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
@@ -72,6 +78,7 @@ export default class WeatherStore {
       },
       //아황산
       dustMessageInfoSo2 : {
+        name: '',
         InfoHeader : '',
         infoIcon : '',
         infoMessage : '',
@@ -157,6 +164,11 @@ export default class WeatherStore {
     @observable LocationB='';
     @observable LocationC='';
 
+    /* dustInfoOverView 에 버튼 클릭시  */
+    @action
+    setSelectDustMessageInfo = (objectName) => {
+      this.selectDustMessageInfo = objectName
+    }
 
 
     @action
@@ -256,12 +268,21 @@ export default class WeatherStore {
               dustInfoObject.dustMessageInfoNo2 = helpers.getDustIcon("no2",parseInt(dustInfoObject.no2Value))
               dustInfoObject.dustMessageInfoSo2 = helpers.getDustIcon("so2",parseInt(dustInfoObject.so2Value))
 
+              /* 왜 겹치지? */
               dustInfoObject.dustMessageInfoPm10.value = dustInfoObject.pm10Value;
               dustInfoObject.dustMessageInfoPm25.value = dustInfoObject.pm25Value;
+
               dustInfoObject.dustMessageInfoO3.value = dustInfoObject.o3Value;
               dustInfoObject.dustMessageInfoCo.value = dustInfoObject.coValue;
               dustInfoObject.dustMessageInfoNo2.value = dustInfoObject.no2Value;
               dustInfoObject.dustMessageInfoSo2.value = dustInfoObject.so2Value;
+              
+              dustInfoObject.dustMessageInfoPm10.name = '미세먼지';
+              dustInfoObject.dustMessageInfoPm25.name = '초미세먼지';
+              dustInfoObject.dustMessageInfoO3.name = '오존';
+              dustInfoObject.dustMessageInfoCo.name = '일산화탄소';
+              dustInfoObject.dustMessageInfoNo2.name = '이산화질소';
+              dustInfoObject.dustMessageInfoSo2.name = '';
 
 
               console.log("[SEO] dustInfoObject ", dustInfoObject, dustInfoObject.length)

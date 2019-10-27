@@ -110,125 +110,124 @@ const dustMessageObjectList = [
 
 const getDustIcon  = ( category, value ) => {
     console.log("[SEO] getDustIcon" , category, value)
+    let index = 0;
       //미세먼지 pm10
       if( category ==="pm10"){
         //0 15 최고
-        if( 0 <= value & value <= 15 ){ return dustMessageObjectList[0]}
+        if( 0 <= value & value <= 15 ) { index = 0; }
         //16-30 좋음
-        if( 16 <= value & value <= 30 ){return dustMessageObjectList[1]}
+        if( 16 <= value & value <= 30 ) { index = 1; }
         //31-40 양호
-        if( 31 <= value & value <= 40 ){return dustMessageObjectList[2]}
+        if( 31 <= value & value <= 40 ) { index = 2; }
         // 41-50 보통
-        if( 41 <= value & value <= 50 ){return dustMessageObjectList[3]}
+        if( 41 <= value & value <= 50 ) { index = 3; }
         // 51-75 나쁨
-        if( 51 <= value & value <= 75 ){return dustMessageObjectList[4]}
+        if( 51 <= value & value <= 75 ) { index = 4; }
         //76-100 상당히 나쁨
-        if( 76 <= value & value <= 100 ){return dustMessageObjectList[5]}
+        if( 76 <= value & value <= 100 ){ index = 5; }
         //101-150// 매우 나쁨
-        if( 101 <= value & value <= 150 ){return dustMessageObjectList[6]}
+        if( 101 <= value & value <= 150 ){ index = 6;}
         //151~ 최악
-        if( 151 <= value  ){return dustMessageObjectList[7]}
+        if( 151 <= value  ){ index = 7; }
+
       }
 
-      if( category ==="pm25"){
+      else if( category ==="pm25"){
         //0 8 최고
-        if( 0 <= value & value <= 8 ){ return dustMessageObjectList[0]}
+        if( 0 <= value & value <= 8 ){ index = 0;}
         //9-15 좋음
-        if( 9 <= value & value <= 15 ){return dustMessageObjectList[1]}
+        if( 9 <= value & value <= 15 ){index = 1;}
         //16~20 양호
-        if( 16 <= value & value <= 20 ){return dustMessageObjectList[2]}
+        if( 16 <= value & value <= 20 ){index = 2;}
         //21-25 보통
-        if( 21 <= value & value <= 25 ){return dustMessageObjectList[3]}
+        if( 21 <= value & value <= 25 ){index = 3;}
         // 26-37 나쁨
-        if( 26 <= value & value <= 37 ){return dustMessageObjectList[4]}
+        if( 26 <= value & value <= 37 ){index = 4;}
         //38-50 상당히 나쁨
-        if( 38 <= value & value <= 50 ){return dustMessageObjectList[5]}
+        if( 38 <= value & value <= 50 ){index = 5;}
         //51-75// 매우 나쁨
-        if( 51 <= value & value <= 75 ){return dustMessageObjectList[6]}
+        if( 51 <= value & value <= 75 ){index = 6;}
         //76~ 최악
-        if( 76 <= value  ){return dustMessageObjectList[7]}
+        if( 76 <= value  ){ index = 7; }
       }
 
-      if( category ==="o3"){
+      else if( category ==="o3"){
         //0 ~0.2 최고
-        if( 0 <= value & value <= 0.02 ){ return dustMessageObjectList[0]}
+        if( 0 <= value & value <= 0.02 ){  index = 0;}
         //0.02-0.03 좋음
-        if( 0.02 <= value & value <= 0.03 ){return dustMessageObjectList[1]}
+        if( 0.02 <= value & value <= 0.03 ){ index = 1; }
         //0.03~0.06 양호
-        if( 0.03 <= value & value <= 0.06 ){return dustMessageObjectList[2]}
+        if( 0.03 <= value & value <= 0.06 ){ index = 2; }
         //0.06-0.09 보통
-        if( 0.06 <= value & value <= 0.09 ){return dustMessageObjectList[3]}
+        if( 0.06 <= value & value <= 0.09 ){ index = 3; }
         // 0.09~0.12 나쁨
-        if( 0.09 <= value & value <= 0.12 ){return dustMessageObjectList[4]}
+        if( 0.09 <= value & value <= 0.12 ){ index = 4; }
         //0.12-0.15 상당히 나쁨
-        if( 0.12 <= value & value <= 0.15 ){return dustMessageObjectList[5]}
+        if( 0.12 <= value & value <= 0.15 ){ index = 5; }
         //0.15-0.38// 매우 나쁨
-        if( 0.15 <= value & value <= 0.38 ){return dustMessageObjectList[6]}
+        if( 0.15 <= value & value <= 0.38 ){ index = 6; }
         //0.38~ 최악
-        if( 0.38 <= value  ){return dustMessageObjectList[7]}
+        if( 0.38 <= value  ){ index = 7; }
       }
        //이산화질소 
-       if( category ==="no2"){
+       else if( category ==="no2"){
         //0 ~0.2 최고
-        if( 0 <= value & value <= 0.02 ){ return dustMessageObjectList[0]}
+        if( 0 <= value & value <= 0.02 ){  index = 0; }
         //0.02-0.03 좋음
-        if( 0.02 <= value & value <= 0.03 ){return dustMessageObjectList[1]}
+        if( 0.02 <= value & value <= 0.03 ){ index = 1; }
         //0.03~0.05 양호
-        if( 0.03 <= value & value <= 0.05 ){return dustMessageObjectList[2]}
+        if( 0.03 <= value & value <= 0.05 ){ index = 2; }
         //0.05-0.09 보통
-        if( 0.05 <= value & value <= 0.06 ){return dustMessageObjectList[3]}
+        if( 0.05 <= value & value <= 0.06 ){ index = 3; }
         // 0.06~0.12 나쁨
-        if( 0.06 <= value & value <= 0.13 ){return dustMessageObjectList[4]}
+        if( 0.06 <= value & value <= 0.13 ){ index = 4; }
         //0.13-0.2 상당히 나쁨
-        if( 0.13 <= value & value <= 0.2 ){return dustMessageObjectList[5]}
+        if( 0.13 <= value & value <= 0.2 ){ index = 5; }
         //0.2 -1.1// 매우 나쁨
-        if( 0.2 <= value & value <= 1.1 ){return dustMessageObjectList[6]}
+        if( 0.2 <= value & value <= 1.1 ){ index = 6; }
         //0.1.1~ 2최악
-        if( 0.38 <= value  ){return dustMessageObjectList[7]}
+        if( 0.38 <= value  ){ index = 7; }
       }
       //일산화탄소 
-      if( category ==="co"){
+      else if( category ==="co"){
         //0 ~ 1최고
-        if( 0 <= value & value <= 1 ){ return dustMessageObjectList[0]}
+        if( 0 <= value & value <= 1 ){ index = 0; }
         //1 ~ 2 좋음
-        if( 1 <= value & value <= 2 ){return dustMessageObjectList[1]}
+        if( 1 <= value & value <= 2 ){ index = 1; }
         //2~5.5 양호
-        if( 2 <= value & value <= 5.5 ){return dustMessageObjectList[2]}
+        if( 2 <= value & value <= 5.5 ){ index = 2; }
         //5.5-9 보통
-        if( 5.5 <= value & value <= 9 ){return dustMessageObjectList[3]}
+        if( 5.5 <= value & value <= 9 ){ index = 3; }
         // 9 ~ 12 나쁨
-        if( 9 <= value & value <= 12 ){return dustMessageObjectList[4]}
+        if( 9 <= value & value <= 12 ){ index = 4; }
         //12-15 상당히 나쁨
-        if( 12 <= value & value <= 15 ){return dustMessageObjectList[5]}
+        if( 12 <= value & value <= 15 ) {index = 5; }
         //15~32// 매우 나쁨
-        if( 15 <= value & value <= 32 ){return dustMessageObjectList[6]}
+        if( 15 <= value & value <= 32 ){ index = 6; }
         //32 ~ 최악
-        if( 32 <= value  ){return dustMessageObjectList[7]}
+        if( 32 <= value  ){ index = 7; }
       }
       //아황산 가스 
-      if( category ==="so2"){
+      else if( category ==="so2"){
         //0 ~ 0.01최고
-        if( 0 <= value & value <= 0.01 ){ return dustMessageObjectList[0]}
+        if( 0 <= value & value <= 0.01 ){  index = 0; }
         //0.01 ~ 0.02 좋음
-        if( 0.01 <= value & value <= 0.02 ){return dustMessageObjectList[1]}
+        if( 0.01 <= value & value <= 0.02 ){ index = 1; }
         //0.02 ~ 0.04 양호
-        if( 0.02 <= value & value <= 0.04 ){return dustMessageObjectList[2]}
+        if( 0.02 <= value & value <= 0.04 ){ index = 2; }
         // 0.04 ~ 0.05 보통
-        if( 0.04 <= value & value <= 0.05 ){return dustMessageObjectList[3]}
+        if( 0.04 <= value & value <= 0.05 ){ index = 3; }
         // 0.05 ~ 0.1 나쁨
-        if( 0.05 <= value & value <= 0.1 ){return dustMessageObjectList[4]}
+        if( 0.05 <= value & value <= 0.1 ){ index = 4; }
         // 0.1 ~ 0.15 상당히 나쁨
-        if( 0.1 <= value & value <= 0.15 ){return dustMessageObjectList[5]}
+        if( 0.1 <= value & value <= 0.15 ){ index = 5; }
         // 0.15 ~ 0.6 // 매우 나쁨
-        if( 0.15 <= value & value <= 0.6 ){return dustMessageObjectList[6]}
+        if( 0.15 <= value & value <= 0.6 ){ index = 6; }
         // 0.6  ~ 최악
-        if( 0.6 <= value  ){return dustMessageObjectList[7]}
+        if( 0.6 <= value  ){ index = 7; }
       }
-
-
-
-
-
+      
+      return Object.assign({}, dustMessageObjectList[index])
     }
 
 
