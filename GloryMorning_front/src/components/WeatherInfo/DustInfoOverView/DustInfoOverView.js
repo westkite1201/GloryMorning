@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: '100%',
       maxWidth: 360,
+      margin : 'auto',
       backgroundColor: 'rgba( 255, 255, 255, 0 )',
     },
   }),

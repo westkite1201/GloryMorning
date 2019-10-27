@@ -282,7 +282,7 @@ export default class WeatherStore {
               dustInfoObject.dustMessageInfoO3.name = '오존';
               dustInfoObject.dustMessageInfoCo.name = '일산화탄소';
               dustInfoObject.dustMessageInfoNo2.name = '이산화질소';
-              dustInfoObject.dustMessageInfoSo2.name = '';
+              dustInfoObject.dustMessageInfoSo2.name = '아황산가스';
 
 
               console.log("[SEO] dustInfoObject ", dustInfoObject, dustInfoObject.length)

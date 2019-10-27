@@ -33,18 +33,18 @@ class Clock extends Component {
        {timeObj.day}일 {' '}
        
        {timeObj.hour} : 
-       {timeObj.minute <= 9 ? "0"+timeObj.minute : timeObj.minute} : 
-       {timeObj.second <= 9 ? "0"+timeObj.second : timeObj.second}
+       {timeObj.minute <= 9 ? "0"+ timeObj.minute : timeObj.minute} : 
+       {timeObj.second <= 9 ? "0"+ timeObj.second : timeObj.second}
        <div className ="header-info">
-        {MAINSTRING}
-        <div className = "quotesWrapper">
-          <div className = "quotes">
-            { viewQuotes.QUOTES }
+          {/* MAINSTRING */}
+          <div className = "quotesWrapper">
+            <div className = "quotes">
+              { viewQuotes.QUOTES }
+            </div>
+            <div className = "author">
+              { viewQuotes.AUTHOR }
+            </div>
           </div>
-          <div className = "author">
-            { viewQuotes.AUTHOR }
-          </div>
-        </div>
 
        </div> 
       </div>

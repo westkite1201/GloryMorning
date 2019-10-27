@@ -1,5 +1,23 @@
+@font-face{font-family:'BlackHanSans-Regular'; src:url('../../Styles/fonts/BlackHanSans-Regular.ttf')}
+@font-face{font-family:'JejuHallasan-Regular'; src:url('../../Styles/fonts/JejuHallasan-Regular.ttf')}
+@font-face{font-family:'JejuMyeongjo-Regular'; src:url('../../Styles/fonts/JejuMyeongjo-Regular.ttf')}
+@font-face{font-family:'NotoSansKR-Medium'; src:url('../../Styles/fonts/NotoSansKR-Medium.otf')}
+@font-face{font-family:'Youth'; src:url('../../Styles/fonts/Youth.ttf')}
+
 .clock-wrapper{
-    font-size: 2rem;
+    font-family: "Youth";
+    font-size: 3rem;
     text-align: center;
     color : white;
+    .header-info{
+        font-size: 2rem;
+        .quotesWrapper{
+            .quotes{
+                font-family: "BlackHanSans-Regular";
+            }
+            .author{
+                font-size: 1.5rem;
+            }
+        }
+    }
 }
