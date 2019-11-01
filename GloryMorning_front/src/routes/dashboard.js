@@ -26,17 +26,7 @@ import App from '../App'
 
 
 const dashboardRoutes = [
-  {
-    sideView: true,
-    //exact : true,
-    path: "/DustInfoOverView/",
-    sidebarName: "DustInfoOverView",
-    navbarName: "DustInfoOverView",
-    icon: Dashboard,
-    component: DustInfoOverView
-  },
 
- 
   {
     sideView: true,
     //exact : true,

@@ -23,6 +23,11 @@ export default class QuotesStore {
 
   @observable rollingQuotesMode = true; //default 
 
+
+
+
+
+
   /* updateModeCheck */
   isUpdate = (quotesNum) => {
     if(this.updateSelectNumMap.get(quotesNum)){

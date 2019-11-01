@@ -66,7 +66,7 @@ module.exports = function (callee) {
                             if(!res){
                                 reject(err)
                             }
-                            if(!res.statusCode){
+                            if(_.isNil(res.statusCode)){
                                 reject(err)
                             }
                             let statusCode =  res.statusCode ? res.statusCode : 400  

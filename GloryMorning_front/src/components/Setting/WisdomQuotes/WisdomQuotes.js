@@ -98,7 +98,7 @@ const WisdomQuotes = observer(() => {
           <Button
             varient="contained"
             color="primary"
-            onClick={quotes.setQuotesSetting}
+            onClick={quotes.setWisdomQuotes}
           >
             upload
           </Button>
