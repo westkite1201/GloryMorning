@@ -8,6 +8,7 @@ router.post('/getWisdomQuotes',  async(req, res) => {
       const data = {
         pageNumber :  req.body.pageNumber,
       } 
+      console.log(data)
       //console.log(data)
       let rows = await QuotesDaoNew.getWisdomQuotes(data); // 
       

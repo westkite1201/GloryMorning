@@ -1,5 +1,5 @@
 import { observable, action, computed } from "mobx";
-import {isNil, isEmpty} from "lodash";
+import {isNil, isEmpty , throttle} from "lodash";
 import * as quotesApi from "../lib/api/quotesApi.js";
 
 let rollingQuotesInterval = null
@@ -10,7 +10,8 @@ export default class QuotesStore {
   }
 
   @observable isQuetosLoading  = false;
-  @observable pageNumber = 1;
+  /* quotes infinity Scroll */
+  @observable pageNumber = 0;
   @observable quotesList = [];
 
   @observable updateSelectNumMap = new Map();
@@ -23,9 +24,28 @@ export default class QuotesStore {
 
   @observable rollingQuotesMode = true; //default 
 
+  quotosWrapperOnScroll = () => {
+      this.getTheScrollPosQuotesWrapper()
+  }
+  isBottom = (el) =>{
+    let scroll = el.scrollTop;
+    let bottom = ( el.scrollHeight -100 )  - el.clientHeight;
+    return (bottom -scroll < 0 )
+  }
 
-
-
+  getTheScrollPosQuotesWrapper = () => {
+    console.log("hello~")
+    let el = document.getElementById('quetosWrapper');
+    if(this.isBottom(el)){ // 하단 부에 도착하면 
+      let pageNumber = this.pageNumber;
+      console.log('isBottom')
+      if(!this.isQuetosLoading){ // 호출 안됬을때만 딱 한번 호출  
+        this.getQuotes(pageNumber + 1); //
+      }
+    
+      //api 호출 
+    } 
+  }
 
 
   /* updateModeCheck */
@@ -63,8 +83,8 @@ export default class QuotesStore {
 
 
   @action
-  getQuotes = async() => {
-    let { pageNumber } = this; 
+  getQuotes = async(pageNumber = 0) => {
+    let { quotesList } = this; 
     let response;
     let tempQuetesList = [];
     try {
@@ -73,9 +93,17 @@ export default class QuotesStore {
       console.log("[SEO] response", response.data)
       if( response.status === 200){
         tempQuetesList = response.data
-      }
-      this.isQuetosLoading = false;
-      this.quotesList = tempQuetesList
+        let tempOriginQuotosList = quotesList.slice(0);
+
+        for(let item of tempQuetesList){
+          tempOriginQuotosList.push(item);
+        }
+       // console.log("[SEO] tempOriginQuotosList" ,tempOriginQuotosList)
+
+        this.isQuetosLoading = false;
+        this.quotesList = tempOriginQuotosList
+        this.pageNumber = pageNumber; //pageNumber update 
+     }
     } catch (e) {
       console.log(e);
     }

@@ -74,7 +74,9 @@ const WisdomQuotes = observer(() => {
 
         </div>
       </div>
-      <div className="quetosWrapper">
+      <div className="quetosWrapper" 
+            id ="quetosWrapper"
+            onScroll = {quotes.quotosWrapperOnScroll}>
         {quotesList}
       </div>
       <div className="inputWrapper">
@@ -102,6 +104,13 @@ const WisdomQuotes = observer(() => {
           >
             upload
           </Button>
+          <Button
+          varient="contained"
+          color="primary"
+          onClick={quotes.quotosWrapperOnScroll}
+        >
+          getTheScrollPosQuotesWrapper
+        </Button>
         </div>
       </div>
     </Fragment>

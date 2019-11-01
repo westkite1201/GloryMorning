@@ -1,20 +1,26 @@
 
 const dbHelpers = require('./mysqlHelpersPromise');
 
+const numberOfItem = 5; // 몇개를 가져와 보여줄것인지 
 /* Step 2. get connection */
-const getWisdomQuotes = async (param1) => {
+const getWisdomQuotes = async (data) => {
+
 	try {
+		const { pageNumber } = data;
+		console.log(pageNumber)
+		let startIndex = pageNumber * numberOfItem;
+		console.log(startIndex)
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			/* Step 3. */
 			//await connection.beginTransaction(); // START TRANSACTION
-			const [rows] = await connection.query('SELECT * FROM wisdom_quotes');
+			const [rows] = await connection.query('SELECT * FROM wisdom_quotes LIMIT ? , ?',[startIndex, numberOfItem]);
 			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
 			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
 			await connection.commit(); // COMMIT
 			connection.release();
             return rows;
-		} catch(err) {
+		} catch(err) {``
 			await connection.rollback(); // ROLLBACK
 			connection.release();
 			console.log('Query Error');
