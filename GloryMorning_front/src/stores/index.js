@@ -4,6 +4,7 @@ import WeatherStore from './weather'
 import sideStore from './sidebar'
 import SettingStore from './setting'
 import QuotesStore from './quotes'
+import SearchStore from './search'
 class RootStore {
     constructor() {
       this.edit = new EditStore(this);
@@ -12,6 +13,7 @@ class RootStore {
       this.sidebar = new sideStore(this);
       this.setting = new SettingStore(this);
       this.quotes = new QuotesStore(this);
+      this.search = new SearchStore(this);
     }
   }
   

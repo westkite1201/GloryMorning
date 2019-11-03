@@ -13,6 +13,8 @@ import WisdomQuotes  from '../components/Setting/WisdomQuotes'
 
 
 import DustInfoOverView from '../components/WeatherInfo/DustInfoOverView'
+
+import SearchAddress from '../components/SearchAddress'
 import App from '../App'
 
 
@@ -26,6 +28,16 @@ import App from '../App'
 
 
 const dashboardRoutes = [
+
+  {
+    sideView: true,
+    //exact : true,
+    path: "/SearchAddress/",
+    sidebarName: "SearchAddress",
+    navbarName: "SearchAddress",
+    icon: SearchAddress,
+    component: SearchAddress
+  },
 
   {
     sideView: true,
