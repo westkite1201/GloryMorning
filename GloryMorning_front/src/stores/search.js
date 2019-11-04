@@ -10,6 +10,10 @@ export default class SearchStore {
   }
   @observable isLoading = false;
   @observable searchAddressList = []
+
+  //선택된 address s
+  @observable selectedAddressList= []
+
   @action 
   searchAddress = async(query) => {
     try{
@@ -23,4 +27,52 @@ export default class SearchStore {
 
     }
   }
+
+  checkSeleted  = (name) => { 
+    let isExist = false;
+    for(let key of this.selectedAddressList) {
+      console.log(key.name  + " " + name)
+      if(key.name === name){
+        isExist = true;
+        break;
+      }
+    }
+    console.log("[SEO] checkSelected " , name, isExist)
+    return isExist;
+  }
+
+  /* 
+    밑에꺼를 동일하게 사용하면 될 줄 알았으나 
+    오류로 인해 함수를 하나 더 만들겠
+  */
+  @action 
+  spliceSelectedList = (name) => { 
+    let index = 0;
+    console.log("name " , name)
+    this.selectedAddressList= this.selectedAddressList.filter((item) =>{
+      return ( item.name !== name )
+    })
+  }
+ 
+
+  @action
+  setSelectItem = (item) => {
+    let index = 0;
+    let isExist = false;
+    for(let key of this.selectedAddressList) {
+      console.log(key.name, " " ,  item.name)
+      if(key.name === item.name){
+        isExist = true;
+        break;
+      }
+      index += 1; 
+    }
+    if(isExist) {
+      this.selectedAddressList.splice(index, 1); // 현재 인덱스만 날림 
+    }else{
+      this.selectedAddressList.push(item)
+    }
+    console.log(this.selectedAddressList)
+  }
+
 }

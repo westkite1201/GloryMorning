@@ -6,6 +6,7 @@ import Fab from "@material-ui/core/Fab";
 import TextField from "@material-ui/core/TextField";
 import UseStores from "../Setting/UseStores";
 import SearchAddressItem from './SearchAddressItem'
+import SearchSelected from './SearchSelected'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -28,18 +29,23 @@ const SearchAddress = observer(() => {
 
   const onChangeAddress = e => {
     setValue(e.target.value);
-    search.searchAddress(e.target.value);
+    if(e.keyCode === 13){
+      search.searchAddress(value)
+    }
+    //search.searchAddress(e.target.value);
   };
 
   let searchItems =  search.searchAddressList.map((item, key)=>{
       return (
-        <SearchAddressItem key ={key}
-                        addressName = { item.address_name}/>
+        <SearchAddressItem search ={search}
+                           key ={key}
+                           value = {key}
+                           item = { item}/>
       )
   })
 
   return (
-    <div className="quotesItem">
+    <div className="addressItem">
         <div>
           <TextField
             id="filled-name"
@@ -50,14 +56,17 @@ const SearchAddress = observer(() => {
               className: classes.textFieldInputColor
             }}
             value={value}
+            onKeyDown={onChangeAddress}
             onChange={onChangeAddress}
           />
         </div>
-        <button onClick = {() => search.searchAddress(value)} >
-            서치 어드레스 테스트
-        </button>
         <div>
             {searchItems}
+        </div>
+
+        <div>
+            <SearchSelected search = {search}/>
+        
         </div>
     </div>
 
