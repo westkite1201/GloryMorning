@@ -18,6 +18,39 @@ let newdate = 0;
 
 let defaultLocationList = [ { nx : 59 , ny : 125, location : "서울특별시 관악구 인헌동" } ]
 
+
+/* settingLocation   */
+router.post('/settingLocation',  async(req, res) => {
+  
+  try{
+    const data = {
+      settingLocationArray :  req.body.settingLocationArray,
+    } 
+    let rows = await weatherDaoNew.settingLocation(data); // LOCATION 정보 XX,YY  
+    if(rows){ //온경우
+        return res.json(rows)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+});
+
+router.post('/getSettingLocation',  async(req, res) => {
+  try{
+    let rows = await weatherDaoNew.getSettingLocation(); // LOCATION 정보 XX,YY  
+    if(rows){ //온경우
+        return res.json(rows)
+    }else{
+      console.log('error')
+    }
+  }catch(e){
+    console.log('error' ,e)
+  }
+});
+
+
 /* shortTerm은 간격이 짧음  */
 getNowTimeForShortTerm = () => {
   let date = new Date();

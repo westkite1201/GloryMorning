@@ -1,12 +1,7 @@
 import React from 'react';
 import { observer } from "mobx-react";
-
 import Checkbox from '@material-ui/core/Checkbox';
 const SearchSelected = observer(({search}) => {
-
-    const handleToggle = (item) => {
-        search.setSelectItem({name : item.name , item : item});
-    };
 
     let selectedList = search.selectedAddressList.map((item, key ) =>{
         const labelId = `checkbox-list-label-${key}`;

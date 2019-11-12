@@ -22,13 +22,7 @@ const switchRoutes = (
     </Switch>
   );
   
-
-
 class DashBoard extends Component {
-  
-
-
-  
   render() {
     const openStyle = {
         //fontSize: '2rem',

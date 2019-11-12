@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { observer } from "mobx-react";
 import _ from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import UseStores from "../Setting/UseStores";
 import SearchAddressItem from './SearchAddressItem'
 import SearchSelected from './SearchSelected'
+import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -27,6 +28,11 @@ const SearchAddress = observer(() => {
 
   const [value, setValue] = useState('');
 
+  useEffect(() => {
+    search.getSettingLocation();
+  },[]);
+
+
   const onChangeAddress = e => {
     setValue(e.target.value);
     if(e.keyCode === 13){
@@ -46,28 +52,30 @@ const SearchAddress = observer(() => {
 
   return (
     <div className="addressItem">
-        <div>
-          <TextField
-            id="filled-name"
-            label="address"
-            margin="normal"
-            name="author"
-            InputProps={{
-              className: classes.textFieldInputColor
-            }}
-            value={value}
-            onKeyDown={onChangeAddress}
-            onChange={onChangeAddress}
-          />
-        </div>
-        <div>
-            {searchItems}
-        </div>
-
-        <div>
-            <SearchSelected search = {search}/>
-        
-        </div>
+      <TextField
+        id="filled-name"
+        label="address"
+        margin="normal"
+        name="author"
+        InputProps={{
+          className: classes.textFieldInputColor
+        }}
+        value={value}
+        onKeyDown={onChangeAddress}
+        onChange={onChangeAddress} />
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <div>
+              {searchItems}
+          </div>
+        </Grid>
+        <Grid item xs={6}>
+          <div>
+              <SearchSelected search = {search}/>
+          </div>
+        </Grid>
+      </Grid>
+      <button onClick = {search.settingLocation} > settingLocation  </button>
     </div>
 
   );

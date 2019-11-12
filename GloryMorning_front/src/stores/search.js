@@ -4,7 +4,7 @@ import _ from "lodash";
 
 /* setting 이지만 현재 backgroundSetting 이라 보는게 맞다  */
 export default class SearchStore {
-  /* edit 스토어에 접근하기 위함  */
+  /* 다른 스토어에 접근하기 위함  */
   constructor(rootStore) {
     this.rootStore = rootStore;
   }
@@ -13,6 +13,45 @@ export default class SearchStore {
 
   //선택된 address s
   @observable selectedAddressList= []
+
+
+  /* 
+    location setting 
+    원하는 주소를 세팅 하기 
+  */
+  @action
+  settingLocation = async() => {
+    console.log("[SEO]  selectedAddressList", this.selectedAddressList) 
+    const res = await searchApi.settingLocation(this.selectedAddressList);
+    if(res.status === 200){
+      console.log("[SEO][settingLocation] = ", res.data);
+      this.selectedAddressList = res.data.map((item) =>{
+        return {
+          name : item.ADDRESS_NAME,
+          addressType : item.ADDRESS_TYPE,
+          x : item.x,
+          y : item.y,
+        }
+      })
+    }
+  
+  }
+
+  /* 저장된 로케이션 가져오기  */
+  @action 
+  getSettingLocation = async() => { 
+    const res = await searchApi.getSettingLocation();
+    if(res.status === 200){
+      this.selectedAddressList = res.data.map((item) =>{
+        return {
+          name : item.ADDRESS_NAME,
+          addressType : item.ADDRESS_TYPE,
+          x : item.x,
+          y : item.y,
+        }
+      })
+    }
+  }
 
   @action 
   searchAddress = async(query) => {

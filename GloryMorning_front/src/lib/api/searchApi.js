@@ -14,4 +14,13 @@ export const searchAddress = (query) => {
   return axios.get('https://dapi.kakao.com/v2/local/search/address.json?',data)
 }
 
+export const getSettingLocation = () => {
+  return (axios.post(cilentConfig.endpoint.api + "/weather/getSettingLocation" ))
+}
 
+export const settingLocation = (settingLocationArray) => {
+  const data = {
+    settingLocationArray : settingLocationArray
+  }
+  return (axios.post(cilentConfig.endpoint.api + "/weather/settingLocation", data ))
+}

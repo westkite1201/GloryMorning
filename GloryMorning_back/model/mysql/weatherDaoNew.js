@@ -29,9 +29,92 @@ const dbTest = async (param1, param2, param3) => {
 		return false;
 	}
 };
+/* 선택된 로케이션 저장  */
+
+/**
+ * 벌크 인서 트 
+ * @param {
+ * var sql = "INSERT INTO Test (name, email, n) VALUES ?";
+var values = [
+    ['demian', 'demian@gmail.com', 1],
+    ['john', 'john@gmail.com', 2],
+    ['mark', 'mark@gmail.com', 3],
+    ['pete', 'pete@gmail.com', 4]} parameter 
+ */
+const settingLocation = async (parameter) => {
+	try {
+		const settingLocationArray = parameter.settingLocationArray;
+		let locationArray = [];
+		for(let data of settingLocationArray){
+			let address_name = data.item.address_name;
+			let address_type = data.item.address_type;
+			/* INT 로 갈지 말지 정하자  */
+			let x = data.item.x;
+			let y = data.item.y;
+			let mem_idx = 1
+			locationArray.push([address_name,address_type,x,y,mem_idx]); 
+		}
+
+		console.log("settingLocationArray " , settingLocationArray)
+		console.log("locationArray " , locationArray)
+		const connection = await dbHelpers.pool.getConnection(async conn => conn);
+		try {
+			await connection.beginTransaction(); // START TRANSACTION
+			// /* Step 3. */
+			let sql = `REPLACE INTO setting_location(ADDRESS_NAME ,ADDRESS_TYPE, X ,Y,MEM_IDX)
+					   VALUES ?`
+			
+			const [insertRow] = await connection.query(sql, [locationArray]);
+			const [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);
+			
+			// //await connection.beginTransaction(); // START TRANSACTION
+			// //const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
+			// //const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			// //const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+			await connection.commit(); // COMMIT
+			connection.release();
+
+            return rows;
+            
+		} catch(err) {
+			await connection.rollback(); // ROLLBACK
+			connection.release();
+			console.log('Query Error');
+			return false;
+        }
+        
+	} catch(err) {
+		console.log('DB Error');
+		return false;
+	}
+};
+
+/*getSettingLocation */
+const getSettingLocation = async() => {
+	try {
+		const connection = await dbHelpers.pool.getConnection(async conn => conn);
+		try {
+			const [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);	
+			console.log("[SEO] ROWS ", rows)
+			await connection.commit(); // COMMIT
+			connection.release();
+
+            return rows;
+            
+		} catch(err) {
+			await connection.rollback(); // ROLLBACK
+			connection.release();
+			console.log('Query Error');
+			return false;
+        }
+        
+	} catch(err) {
+		console.log('DB Error', err);
+		return false;
+	}
+};
 
 
-/* Step 2. get connection */
 const getLocation = async (parameter) => {
 	try {
 		const locationA = parameter.LOCATION_A === '서울' ? parameter.LOCATION_A + '특별시' : ( parameter.LOCATION_A) ;
@@ -246,4 +329,6 @@ module.exports = {
 	getWeatherDataShortTerm : getWeatherDataShortTerm,
 	insertWeatherData : insertWeatherData,
 	insertWeatherDataShortTerm : insertWeatherDataShortTerm,
+	settingLocation : settingLocation,
+	getSettingLocation : getSettingLocation,
   }
