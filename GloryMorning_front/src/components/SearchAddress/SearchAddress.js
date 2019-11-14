@@ -28,6 +28,7 @@ const SearchAddress = observer(() => {
 
   const [value, setValue] = useState('');
 
+  /* 설정된 location 가져오기  */
   useEffect(() => {
     search.getSettingLocation();
   },[]);
@@ -65,11 +66,13 @@ const SearchAddress = observer(() => {
         onChange={onChangeAddress} />
       <Grid container spacing={3}>
         <Grid item xs={6}>
+          <span> [ SEARCH ITEMS ] </span>
           <div>
               {searchItems}
           </div>
         </Grid>
         <Grid item xs={6}>
+          <span> [ SELECTED ADDRESS ] </span>
           <div>
               <SearchSelected search = {search}/>
           </div>

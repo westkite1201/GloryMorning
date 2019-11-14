@@ -15,6 +15,11 @@ const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
       maxWidth: 752,
+      backgroundColor: '#fff',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+      padding: '0.5rem',
+      margin: '1rem',
+      transition: 'transform 300ms ease-in-out',
     },
     title: {
       margin: theme.spacing(4, 0, 2),
@@ -41,7 +46,7 @@ const SearchAddressItem = observer(({item, search, value}) => {
     //   }
     //   setChecked(newChecked);
 
-      search.setSelectItem({name : item.address_name , item : item});
+      search.setSelectItem({addressName : item.address_name , item : item});
       
     };
 

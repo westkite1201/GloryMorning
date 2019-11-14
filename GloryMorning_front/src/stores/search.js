@@ -14,10 +14,24 @@ export default class SearchStore {
   //선택된 address s
   @observable selectedAddressList= []
 
+  @observable selectedAddress = {
+    addressName: '',
+    address: null,
+    addressType: '',
+    memIdx: null,
+    x: '',
+    y: '' 
 
+  };
+  /* 선택된 로케이션으로 .현재 weather  */
+  @action
+  setThisLocation = (item) => {
+    console.log("[SEO] " , item)
+    this.selectedAddress = item;
+  }
   /* 
     location setting 
-    원하는 주소를 세팅 하기 
+    원하는 주소를 DB에세팅 하기 
   */
   @action
   settingLocation = async() => {
@@ -27,7 +41,7 @@ export default class SearchStore {
       console.log("[SEO][settingLocation] = ", res.data);
       this.selectedAddressList = res.data.map((item) =>{
         return {
-          name : item.ADDRESS_NAME,
+          addressName : item.ADDRESS_NAME,
           addressType : item.ADDRESS_TYPE,
           x : item.x,
           y : item.y,
@@ -44,7 +58,7 @@ export default class SearchStore {
     if(res.status === 200){
       this.selectedAddressList = res.data.map((item) =>{
         return {
-          name : item.ADDRESS_NAME,
+          addressName : item.ADDRESS_NAME,
           addressType : item.ADDRESS_TYPE,
           x : item.x,
           y : item.y,
@@ -67,16 +81,16 @@ export default class SearchStore {
     }
   }
 
-  checkSeleted  = (name) => { 
+  checkSeleted  = (addressName) => { 
     let isExist = false;
     for(let key of this.selectedAddressList) {
-      console.log(key.name  + " " + name)
-      if(key.name === name){
+      //console.log(key.name  + " " + name)
+      if(key.addressName === addressName){
         isExist = true;
         break;
       }
     }
-    console.log("[SEO] checkSelected " , name, isExist)
+    //console.log("[SEO] checkSelected " , name, isExist)
     return isExist;
   }
 
@@ -85,11 +99,11 @@ export default class SearchStore {
     오류로 인해 함수를 하나 더 만들겠
   */
   @action 
-  spliceSelectedList = (name) => { 
+  spliceSelectedList = (addressName) => { 
     let index = 0;
-    console.log("name " , name)
+    console.log("name " , addressName)
     this.selectedAddressList= this.selectedAddressList.filter((item) =>{
-      return ( item.name !== name )
+      return ( item.addressName !== addressName )
     })
   }
  
@@ -99,8 +113,8 @@ export default class SearchStore {
     let index = 0;
     let isExist = false;
     for(let key of this.selectedAddressList) {
-      console.log(key.name, " " ,  item.name)
-      if(key.name === item.name){
+      console.log(key.addressName, " " ,  item.addressName)
+      if(key.addressName === item.addressName){
         isExist = true;
         break;
       }
