@@ -21,13 +21,15 @@ export default class SearchStore {
     memIdx: null,
     x: '',
     y: '' 
-
   };
+
+
   /* 선택된 로케이션으로 .현재 weather  */
   @action
   setThisLocation = (item) => {
     console.log("[SEO] " , item)
     this.selectedAddress = item;
+    this.rootStore.weather.getWeatherDataShortTerm(false, item);
   }
   /* 
     location setting 
@@ -60,8 +62,8 @@ export default class SearchStore {
         return {
           addressName : item.ADDRESS_NAME,
           addressType : item.ADDRESS_TYPE,
-          x : item.x,
-          y : item.y,
+          x : item.X,
+          y : item.Y,
         }
       })
     }

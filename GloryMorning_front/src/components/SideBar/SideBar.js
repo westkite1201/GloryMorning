@@ -81,13 +81,9 @@ class SideBar extends Component {
                         GLORY MORNING
                     </div>
                 
-                    <a href="javascript:void(0)" 
-                        className= {style.closebtn}
-                        //onClick={this.closeNav}>&times;</a>
-                        onClick={openSideBar}>&times;</a>
+    
                     {link}
-
-
+                    
                     <Collapse isOpen={EditComponentCollapse}>
                         { this.mapToComponent() }
                     </Collapse>

@@ -23,10 +23,6 @@ class EditableElement extends Component {
         top: 0,
         cursor: "pointer"
       };
-
-      console.log(editPageFlag)
-
-      console.log('el ', el.i)
       let Tag = helpers.isEmpty(el.TagName) ? 'div' : searchComponentByName(this.state, el.TagName);
       //let Tag = 'div'
         return (     
@@ -34,26 +30,7 @@ class EditableElement extends Component {
              key       = {el.i}>
             <div className  = {'componentContainer'}
                 id         = {el.i}>
-            <Tag data = {el.i}
-                wrapperid = {el.i}
-                editPageFlag  = { editPageFlag }
-                />
-            </div>
-            {
-            editPageFlag  === true ?
-            (
-                <span
-                className = "remove"
-                style     = {removeStyle}
-                //onClick   = {onRemoveItem(this, el.i)}
-                >
-                x
-                </span>
-                ) :
-                (
-                <span></span>
-                )
-            }
+           </div>
         </div>
 
         );

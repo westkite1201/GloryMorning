@@ -300,17 +300,37 @@ export default class WeatherStore {
     
 
     @action
-    getWeatherDataShortTerm = async() => {
-      let locationInfo = await this.nowGeolocation();
+    getWeatherDataShortTerm = async(isDefault, item) => {
+      console.log("[SEO][getWeatherDataShortTerm][item] ", item ) 
+      let locationInfo;
       let riseSetInfo = await this.getAreaRiseSetInfo();
+      let dayTimeYn;
+      let responsedata;
+      let nx;
+      let ny;
+      /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
+      if (!isDefault && !_.isNil(item)) {
+        console.log("[SEO][getWeatherDataShortTerm] isDefault , item  ", isDefault, parseFloat(item.x) , item.y)
+        dayTimeYn = riseSetInfo.item.isDayTimeYn;
+        responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
+        nx = responsedata.x;
+        ny = responsedata.y;
+        console.log("[SEO][getWeatherDataShortTerm] nx, ny ", nx, ny )
+      } else {
+        locationInfo = await this.nowGeolocation();
+        dayTimeYn = riseSetInfo.item.isDayTimeYn;
+        console.log("[SEO][getWeatherDataShortTerm] locationInfo ", locationInfo)
+        responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
+        nx = responsedata.x;
+        ny = responsedata.y;
+      }
+ 
+      
+
       console.log("[SEO][getWeatherDataShortTerm] RiseSetInfo", riseSetInfo)
       console.log("[SEO][getWeatherDataShortTerm] locationInfo", locationInfo)
-      let dayTimeYn = riseSetInfo.item.isDayTimeYn;
-      console.log("[SEO][getWeatherDataShortTerm] dayTimeYn", dayTimeYn)
-      let responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
       console.log("[Seo][getWeatherDataShortTerm] getWeatherDataShortTerm ", responsedata )
-      let nx = responsedata.x;
-      let ny = responsedata.y;
+
       try{
         let response;
         if( MODE ==='MEMBER_MODE'){
@@ -1119,6 +1139,7 @@ export default class WeatherStore {
 
 
     convert = (xx , yy) =>{
+      console.log("[SEO] [CONVERT] " ,xx , yy )
       var RE = 6371.00877; // 지구 반경(km)
       var GRID = 5.0; // 격자 간격(km)
       var SLAT1 = 30.0; // 투영 위도1(degree)

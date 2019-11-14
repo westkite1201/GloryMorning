@@ -35,6 +35,7 @@ class EditComponentList extends Component {
       putComponentList('SettingBackGround', SettingBackGround )
 
 
+
       nowGeolocation();
 
     }

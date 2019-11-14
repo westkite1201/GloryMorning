@@ -18,7 +18,8 @@ export default class EditStore {
     @observable page_number = 'home'
     @observable layout = []
     @observable editPageFlag = false
-    @observable savePageFlag = false
+    @observable locationViewFlag = false
+
     @observable index = 0
     @observable componentList = [] 
     @observable EditComponentCollapse = false;
@@ -43,7 +44,12 @@ export default class EditStore {
     // }
 
 
-
+    @action
+    setLocationFlagView = () => {
+      console.log("[seo] setLocationFlagView ", this.locationViewFlag )
+      let flag = !this.locationViewFlag;
+      this.locationViewFlag = flag 
+    }
 
     handleDispatchEventResize =() => {
     //if ( typeof window.CustomEvent === "function" ) return false;
@@ -78,6 +84,7 @@ export default class EditStore {
     let childs = document.getElementsByClassName('react-resizable-handle');
     if(!helpers.isEmpty(childs)){
       [...childs].forEach((item) => {
+        console.log("[SEO][resizeable] " , item)
         item.style.display= flag ? 'initial' : 'none';
       })
     }
@@ -177,7 +184,7 @@ export default class EditStore {
             i: 'n' + timeStamp,
             x: (this.layout.length * 2) % (18|| 12),
             y: Infinity, // puts it at the bottom
-            w: 2,
+            w: 3,
             h: 2,
             item: Tag,
             TagName: selectedId
@@ -198,7 +205,8 @@ export default class EditStore {
       this.componentList = [];
     }
 
-    @action loadPage = async() => {
+    @action 
+    loadPage = async() => {
         //console.log('loadpage' );
         try{
           axios.post(clientConfig.endpoint.api + '/bus/get_user_components', {
@@ -221,7 +229,7 @@ export default class EditStore {
                 }
                 
             }
-            //this.handleResizable(false);
+            this.handleResizable(this.editPageFlag);
           })
 
         }catch(e){
@@ -276,13 +284,13 @@ createElement = (el,key) => {
   //let Tag = 'div'
     return (       
     <div className = {classnames({dragHandle: this.editPageFlag})}
-        key       = {el.i}>
+        key       = {el.i}
+        style ={{ zIndex : '99' }} >
         <div className  = {'componentContainer'}
             id         = {el.i}>
-        <Tag data = {el.i}
-            wrapperid = {el.i}
-            editPageFlag  = { this.editPageFlag }
-            />
+          <Tag data = {el.i}
+              wrapperid = {el.i}
+              editPageFlag  = { this.editPageFlag }/>
         </div>
         {
         this.editPageFlag  === true ?
@@ -330,7 +338,7 @@ x를 클릭한 컴포넌트를 제거하는 함수
 
   /*
   handlePage
-    EditablePages에서 수정 또는 저장 버튼을 클릭하면 트리거되는 함수로
+    사이드바 스위치를 클릭하면 트리거되는 함수로
     버튼의 플래그 값에 따라 저장을 할 지 editable 가능하게 할 지를 결정한다.
     (미완성, 제일 하단에 값에 해당 함수가 추가 될 것이다.)
   */
@@ -361,8 +369,8 @@ x를 클릭한 컴포넌트를 제거하는 함수
   .then(res => {
     toast.success('🦄 야호 저장에 성공하였습니다!', {
       position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
+      autoClose: 1500,
+      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,

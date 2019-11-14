@@ -14,7 +14,7 @@ import WisdomQuotes  from '../components/Setting/WisdomQuotes'
 
 import DustInfoOverView from '../components/WeatherInfo/DustInfoOverView'
 
-import SearchAddress from '../components/SearchAddress'
+import SearchAddress from '../components/Setting/SearchAddress'
 import App from '../App'
 
 
