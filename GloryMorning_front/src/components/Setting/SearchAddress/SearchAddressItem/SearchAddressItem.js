@@ -39,7 +39,11 @@ const SearchAddressItem = observer(({item, search, value}) => {
     //   }
     //   setChecked(newChecked);
 
-      search.setSelectItem({addressName : item.address_name , item : item});
+      search.setSelectItem({addressName : item.address_name,
+                            x : item.x, 
+                            y: item.y, 
+                            address: item.address, 
+                            addressType : item.addressType});
       
     };
 

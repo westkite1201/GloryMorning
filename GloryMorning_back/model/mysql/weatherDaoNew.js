@@ -46,13 +46,13 @@ const settingLocation = async (parameter) => {
 		const settingLocationArray = parameter.settingLocationArray;
 		let locationArray = [];
 		for(let data of settingLocationArray){
-			let address_name = data.item.address_name;
-			let address_type = data.item.address_type;
+			let address_name = data.addressName;
+			let address_type = data.addressType;
 			/* INT 로 갈지 말지 정하자  */
-			let x = data.item.x;
-			let y = data.item.y;
+			let x = data.x;
+			let y = data.y;
 			let mem_idx = 1
-			locationArray.push([address_name,address_type,x,y,mem_idx]); 
+			locationArray.push([address_name, address_type, x, y, mem_idx]); 
 		}
 
 		console.log("settingLocationArray " , settingLocationArray)
