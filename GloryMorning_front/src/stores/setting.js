@@ -52,6 +52,7 @@ export default class SettingStore {
   //redis에서 백 그라운드 가져오기 
   @action
   getUserBackground = async() => {
+    console.log("[SEO] getUserBackground")
     try{
       let resData = await memberApi.getUserBackground('testUser');
       this.selectedBackgroundUrl = resData.data.backgroundURL;
@@ -86,7 +87,7 @@ export default class SettingStore {
   }
 
   @action
-  getPixabayImages = async imageType => {
+  getPixabayImages = async(imageType) => {
     let response;
     try {
       this.isPixabayLoading = true;
@@ -96,8 +97,8 @@ export default class SettingStore {
       // pixabayData.hits.map((item) =>{
       //     console.log("[SEO] item", item)
       // });
-      this.pixabayHits = pixabayData.hits;
       this.isPixabayLoading = false;
+      this.pixabayHits = pixabayData.hits;
     } catch (e) {
       console.log(e);
     }

@@ -30,6 +30,7 @@ export default class SearchStore {
     console.log("[SEO] " , item)
     this.selectedAddress = item;
     this.rootStore.weather.getWeatherDataShortTerm(false, item);
+    this.rootStore.weather.getWeatherData('ALL', false, item);
   }
   /* 
     location setting 

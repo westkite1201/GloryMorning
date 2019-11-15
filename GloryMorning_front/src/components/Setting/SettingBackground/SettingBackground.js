@@ -75,9 +75,6 @@ const SettingBackground = observer(() => {
   useEffect(() => {
     setting.getPixabayImages('image');
     console.log('render complete!');
-    // console.log({
-    //   name,
-    // });
   },[]);
 
   // const onChangeName = e => {
@@ -99,6 +96,7 @@ const SettingBackground = observer(() => {
       let previewImages = setting.pixabayHits.map((item, key)=>{
           return(
                       <BackgroundItem key = {key}
+                                      index ={key}
                                       item = {item}
                                       setBackgroundUrl = {setting.setBackgroundUrl}
                                       setdetailViewItem = {setting.setdetailViewItem}
@@ -108,6 +106,7 @@ const SettingBackground = observer(() => {
                   )
         
       })
+      console.log("[SEO] previewImages ", previewImages)
       return previewImages;
   }
 
@@ -135,12 +134,10 @@ const SettingBackground = observer(() => {
         </div>
 
         <div className={classes.root}>
-
           <GridList cellHeight={180} className={classes.gridList}>
             <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
               <ListSubheader component="div">SERACH RESULT</ListSubheader>
             </GridListTile>
-
               {  
                 setting.isPixabayLoading ?
                 <PacmanLoader
@@ -154,6 +151,7 @@ const SettingBackground = observer(() => {
                 makeImageSrc() 
               }
           </GridList>
+        
           {/*background item을 클릭시에 detial 한 view를 보여주는 친구  */}
           <div>
           {
@@ -171,20 +169,17 @@ const SettingBackground = observer(() => {
           }
             <div style = {detailImageView}> 
               <p>
-                {setting.detailViewitem.tags.split(",").map((item)=>{
+                {setting.detailViewitem.tags.split(",").map((item, key)=>{
                   return (
-                    <TagItem item = {item}/>
+                    <TagItem item = {item} key = {key}/>
                   )
                 })}
               </p>
-                
             </div>
-            <Button variant="primary"
-                    onClick = {setting.settingBackgroundURLRedis}>
+            <Button onClick = {setting.settingBackgroundURLRedis}>
                 background 선택!
-            
             </Button>
-          </div>
+        </div>
         </div>
 
     </div>

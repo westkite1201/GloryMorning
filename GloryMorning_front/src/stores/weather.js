@@ -7,6 +7,8 @@ import * as helpers from  '../lib/helpers'
 import * as weatherApi from  '../lib/api/weatherApi'
 import {isEmpty} from 'lodash' 
 import clientConfig from '../configuration/clientConfig'
+// PRIVATE -> API 키 이용해서 직접 호출 
+// MEMBER -> 내 DB에서 조회 호출 
 const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
 export default class WeatherStore {
     
@@ -316,7 +318,7 @@ export default class WeatherStore {
         nx = responsedata.x;
         ny = responsedata.y;
         console.log("[SEO][getWeatherDataShortTerm] nx, ny ", nx, ny )
-      } else {
+      } else { //기본 default
         locationInfo = await this.nowGeolocation();
         dayTimeYn = riseSetInfo.item.isDayTimeYn;
         console.log("[SEO][getWeatherDataShortTerm] locationInfo ", locationInfo)
@@ -730,28 +732,46 @@ export default class WeatherStore {
     */
     @action
     //X,Y가 거꾸로 되어 있는거 같음 
-    getWeatherData = async(category) =>{
-      let locationInfo = await this.nowGeolocation();
-      console.log("[SEO][getWeatherData] locationInfo ", locationInfo)
-      // _.isNil(this.currentY) ? nx = 37 : nx = parseInt(this.currentY)
-      // _.isNil(this.currentX) ? ny = 126 : ny = parseInt(this.currentX)
-      let responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
-    
-      let nx = responsedata.x;
-      let ny = responsedata.y;
+    getWeatherData = async(category, isDefault, item) =>{
       let response;
+      let locationInfo;
+      let responsedata;
+      let nx;
+      let ny;
+      /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
+      if (!isDefault && !_.isNil(item)) {
+        responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
+        nx = responsedata.x;
+        ny = responsedata.y;
+        console.log("[SEO][getWeatherDataShortTerm] nx, ny ", nx, ny )
+      } else { //기본 default
+        locationInfo = await this.nowGeolocation();
+        responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
+        nx = responsedata.x;
+        ny = responsedata.y;
+      }
       try{
         if( category ==='REH'){ this.isFetchingHumi = true }
         if( category ==='POP'){ this.isFetchingRain = true }
         if( category ==='R06'){ this.isFetchingRainmm = true }
         if( category ==='SKY'){ this.isFetchingSky = true }
         if( category ==='T3H'){ this.isFetchingTemp = true }
+        
+        /* 추가 */
+        if( category === 'ALL'){
+          this.isFetchingHumi = true 
+          this.isFetchingRain = true 
+          this.isFetchingRainmm = true 
+          this.isFetchingSky = true 
+          this.isFetchingTemp = true 
+        }
+
         if( MODE ==='MEMBER_MODE'){
-        response = await weatherApi.getWeatherData( 
-            nx, 
-            ny,
-            category
-        );
+          response = await weatherApi.getWeatherData( 
+              nx, 
+              ny,
+              category
+          );
         }
         else if ( MODE ==='PRIVATE_MODE') {
           response = await weatherApi.getWeatherDataPrivateMode( 
@@ -781,7 +801,6 @@ export default class WeatherStore {
               this.humidityDataList = weatherArray.map((item) => {
                // console.log(item)
                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-      
                 return ([
                   ((momentobj._d).valueOf() ) ,
                   parseInt( item.FCST_VALUE) ,
@@ -836,67 +855,194 @@ export default class WeatherStore {
             }
           }
           else if ( MODE ==='PRIVATE_MODE') {
-            weatherArray =  weatherArray.filter((item) =>{
-              if (item.category === category){
-                return item;
+            let humidityDataList = [];
+            let rainfallDataList = [];
+            let rainfallmmDataList = [];
+            let skyDataList = [];
+            let temperatureDataList = [];
+
+            console.log("[SEO] weatherArray ", weatherArray)
+            /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
+            if (!isDefault && !_.isNil(item)) {
+              for(let item of weatherArray){
+                console.log(item)
+                let momentobj;
+                switch(item.category){
+                  case "REH" :
+                      momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      //console.log(momentobj)
+                      humidityDataList.push(
+                      [
+                        ((momentobj._d).valueOf()),
+                        parseInt( item.fcstValue),
+                      ]
+                      )
+                  break;
+
+                  case "POP" :
+                      momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      //console.log(momentobj)
+                      rainfallDataList.push(
+                      [
+                        ((momentobj._d).valueOf()),
+                        parseInt( item.fcstValue),
+                      ]
+                      )
+                  break;
+                  case "R06" :
+                      momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      //console.log(momentobj)
+                      rainfallmmDataList.push(
+                      [
+                        ((momentobj._d).valueOf()),
+                        parseInt( item.fcstValue),
+                      ]
+                      )
+                  break;  
+                  case "SKY" :
+                      momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      //console.log(momentobj)
+                      skyDataList.push(
+                      [
+                        ((momentobj._d).valueOf()),
+                        parseInt( item.fcstValue),
+                      ]
+                      )
+                  break;
+                  case "T3H" :
+                      momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      //console.log(momentobj)
+                      temperatureDataList.push(
+                      [
+                        ((momentobj._d).valueOf()),
+                        parseInt( item.fcstValue),
+                      ]
+                      )
+                  break;
+                }
               }
-            })
-            switch (category) {
-              case "REH" :
-                this.humidityDataList = weatherArray.map((item) => {
-                  let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
-                  //console.log(momentobj)
-                  return ([
-                    ((momentobj._d).valueOf() ) ,
+              this.humidityDataList = humidityDataList
+              this.rainfallDataList = rainfallDataList
+              this.rainfallmmDataList = rainfallmmDataList 
+              this.skyDataList = skyDataList
+              this.temperatureDataList = temperatureDataList
+              this.isFetchingHumi = false 
+              this.isFetchingRain = false 
+              this.isFetchingRainmm = false 
+              this.isFetchingSky = false 
+              this.isFetchingTemp = false 
+
+            } else { /* 일반 컴포넌트 호출 시  현재 카테고리에 따라서 한개씩 업뎃하는데 3번 호출되는 안좋은 상황 발생 한번에 받아오는게 좋을듯  */
+              weatherArray =  weatherArray.filter((item) =>{
+                if (item.category === category){
+                  return item;
+                }
+              })
+              switch (category) {
+                case "REH" :
+                  this.humidityDataList = weatherArray.map((item) => {
+                    let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                    //console.log(momentobj)
+                    return ([
+                      ((momentobj._d).valueOf() ) ,
+                        parseInt( item.fcstValue) ,
+                    ])
+                  })
+                  this.isFetchingHumi = false;
+                  break;
+                case 'POP' :
+                  this.rainfallDataList = weatherArray.map((item) => {
+                    let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                    return ([
+                      ((momentobj._d).valueOf()  ),
                       parseInt( item.fcstValue) ,
-                  ])
-                })
-                this.isFetchingHumi = false;
-                break;
-              case 'POP' :
-                this.rainfallDataList = weatherArray.map((item) => {
-                  let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
-                  return ([
-                    ((momentobj._d).valueOf()  ),
-                    parseInt( item.fcstValue) ,
-                  ])
-                })
-                this.isFetchingRain = false
-                break;
-              case 'R06' :
-                this.rainfallmmDataList = weatherArray.map((item) => {
-                 // console.log("R06!!!", item)
-                  let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
-                  return ([
-                    ((momentobj._d).valueOf() ) ,
-                    parseInt( item.fcstValue) ,
-                  ])
-                })
-                this.isFetchingRainmm = false
-                break;
-              case 'SKY' :
-                this.skyDataList = weatherArray.map((item) => {
-                  let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
-                  return ([
-                    ((momentobj._d).valueOf())  ,
-                    parseInt( item.fcstValue) ,
-                  ])
-                })
-                this.isFetchingSky = false
-                break;
-              case 'T3H' :
-                this.temperatureDataList = weatherArray.map((item) => {
-                  let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
-                  return ([
-                    ((momentobj._d).valueOf()  ),
-                    parseInt( item.fcstValue) ,
-                  ])
-                })
-                this.isFetchingTemp = false
-                break;
-              default :
-                alert('선택한 값이 없습니다.');
-                break;
+                    ])
+                  })
+                  this.isFetchingRain = false
+                  break;
+                case 'R06' :
+                  this.rainfallmmDataList = weatherArray.map((item) => {
+                  // console.log("R06!!!", item)
+                    let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                    return ([
+                      ((momentobj._d).valueOf() ) ,
+                      parseInt( item.fcstValue) ,
+                    ])
+                  })
+                  this.isFetchingRainmm = false
+                  break;
+                case 'SKY' :
+                  this.skyDataList = weatherArray.map((item) => {
+                    let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                    return ([
+                      ((momentobj._d).valueOf())  ,
+                      parseInt( item.fcstValue) ,
+                    ])
+                  })
+                  this.isFetchingSky = false
+                  break;
+                case 'T3H' :
+                  this.temperatureDataList = weatherArray.map((item) => {
+                    let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                    return ([
+                      ((momentobj._d).valueOf()  ),
+                      parseInt( item.fcstValue) ,
+                    ])
+                  })
+                  this.isFetchingTemp = false
+                  break;
+
+                case 'ALL' :
+                    this.humidityDataList = weatherArray.map((item) => {
+                      let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      //console.log(momentobj)
+                      return ([
+                        ((momentobj._d).valueOf() ) ,
+                          parseInt( item.fcstValue) ,
+                      ])
+                    })
+                    this.isFetchingHumi = false;
+
+                    this.rainfallDataList = weatherArray.map((item) => {
+                      let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      return ([
+                        ((momentobj._d).valueOf()  ),
+                        parseInt( item.fcstValue) ,
+                      ])
+                    })
+                    this.isFetchingRain = false
+
+                    this.rainfallmmDataList = weatherArray.map((item) => {
+                      // console.log("R06!!!", item)
+                      let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      return ([
+                        ((momentobj._d).valueOf() ) ,
+                        parseInt( item.fcstValue) ,
+                      ])
+                    })
+                    this.isFetchingRainmm = false
+
+                    this.skyDataList = weatherArray.map((item) => {
+                      let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      return ([
+                        ((momentobj._d).valueOf())  ,
+                        parseInt( item.fcstValue) ,
+                      ])
+                    })
+                    this.isFetchingSky = false
+
+                    this.temperatureDataList = weatherArray.map((item) => {
+                      let momentobj = moment(String(item.fcstDate) + String(item.fcstTime), 'YYYYMMDDHHmm') 
+                      return ([
+                        ((momentobj._d).valueOf()  ),
+                        parseInt( item.fcstValue) ,
+                      ])
+                    })
+                    this.isFetchingTemp = false
+                default :
+                  alert('선택한 값이 없습니다.');
+                  break;
+              }
             }
           }
         } 

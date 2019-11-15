@@ -58,7 +58,7 @@ class SideBar extends Component {
         const link = routes.map(( prop, key ) => {
             if( prop.sideView ){
                 return (
-                    <div className ={style.styleNavigation}>
+                    <div className ={style.styleNavigation} key ={key}>
                         <NavLink to={prop.path} 
                                 activeStyle = {activeStyle}
                                 key = {key} >
