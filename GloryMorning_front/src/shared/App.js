@@ -19,7 +19,7 @@ class App extends Component {
         document.body.appendChild(script);
        
         return (
-            <div>
+            <div style ={{height: '100%'}}>
                 {/*<div id ='background'>dsdsad</div>*/}
                 {/*<Route exact path="/login" component={Login}/>*/}
                 {/*<Route path="/board" component={SideNav}/>*/}

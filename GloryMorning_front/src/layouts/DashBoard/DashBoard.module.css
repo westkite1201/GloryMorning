@@ -6,29 +6,24 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, .05);
 }
 .container{
+  height: 100%;
   background: #f8f9fa;
 }
 .wrapper {
-    position: "relative";
-    top: "0";
-    height: "100vh";
+    position: relative;
+    top: 0;
+    height: 100%;
   }
 .mainPanel {
-    /* margin-top: 68px; */
-    /* [theme.breakpoints.up("md")]: {
-      width: `calc(100% - ${drawerWidth}px)`
-    }, */
-    overflow: "auto";
-    position: "relative";
-    float: "right";
-    maxHeight: "100%";
-    width: "100%";
-    overflowScrolling: "touch";
+    overflow: auto;
+    position: relative;
+    float: right;
+    height : 100%;;
+    width: 100%;
+    overflow: touch;
 }
   .content {
-    marginTop: "70px";
-    padding: "30px 15px";
-    minHeight: "calc(100vh - 123px)";
+    height: 100%;
   };
   .map {
     marginTop: "70px";
