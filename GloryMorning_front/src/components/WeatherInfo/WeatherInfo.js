@@ -18,8 +18,7 @@ class WeatherInfo extends Component {
 
    
     render() {
-        let  { weatherClassName,
-            temperatureNow,
+        let  {
             weatherInfObject,
             LocationA,
             LocationB,
@@ -39,7 +38,7 @@ class WeatherInfo extends Component {
                  </div>
                  <div className = "weather_icon_wrapper">
                     <i className={weatherClassNames}></i>
-                    <div>
+                    <div className ="weather-info-name">
                         {weatherInfoName}
                     </div>
                  </div>

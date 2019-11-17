@@ -249,9 +249,9 @@ export default class WeatherStore {
     //가장 근처에 있는 측정소 미세먼지 정보 RETURN 
     @action
     getDustInfo = async() => {
-      console.log("[SEO] getDustInfo1")
-      let locationInfo = await this.nowGeolocation()
       try{
+        console.log("[SEO] getDustInfo1")
+        let locationInfo = await this.nowGeolocation()
         console.log("[SEO] getDustInfo2 locationInfo", locationInfo)
         let tmCordinate = await this.getCordinate('TM', locationInfo);
         console.log("[SEO] getDustInfo3")
@@ -314,6 +314,7 @@ export default class WeatherStore {
       if (!isDefault && !_.isNil(item)) {
         console.log("[SEO][getWeatherDataShortTerm] isDefault , item  ", isDefault, parseFloat(item.x) , item.y)
         dayTimeYn = riseSetInfo.item.isDayTimeYn;
+        this.getLocationName(parseFloat(item.x), parseFloat(item.y));
         responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
         nx = responsedata.x;
         ny = responsedata.y;
@@ -743,7 +744,7 @@ export default class WeatherStore {
         responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
         nx = responsedata.x;
         ny = responsedata.y;
-        console.log("[SEO][getWeatherDataShortTerm] nx, ny ", nx, ny )
+        console.log("[SEO][getWeatherData] nx, ny ", nx, ny )
       } else { //기본 default
         locationInfo = await this.nowGeolocation();
         responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);

@@ -23,7 +23,7 @@
     overflow: touch;
 }
   .content {
-    height: 100%;
+    height: auto;
   };
   .map {
     marginTop: "70px";
