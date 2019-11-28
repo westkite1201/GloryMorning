@@ -100,7 +100,7 @@ module.exports = function (callee) {
                
                 //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
                 //공개 위험
-              let serviceKey = apiConfig.apiKey.datagoApiKey + '&'
+               let serviceKey = apiConfig.apiKey.datagoApiKey + '&'
                let propertiesObject = querystring.stringify({
                     "base_date": base_date,
                     "base_time": base_time,

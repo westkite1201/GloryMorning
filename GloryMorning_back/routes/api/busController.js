@@ -52,7 +52,7 @@ router.post('/getUserBackground', async(req, res)=>{
     let backgroundURL = await userRedis.getUserBackGround({
       userId: userId,
     });
-    console.log("back " , backgroundURL)
+    console.log("[getUserBackGround] back " , backgroundURL)
     return res.json( {
       message: 'success',
       backgroundURL: backgroundURL,
