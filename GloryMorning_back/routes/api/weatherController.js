@@ -18,7 +18,91 @@ let newdate = 0;
 
 let defaultLocationList = [ { nx : 59 , ny : 125, location : "서울특별시 관악구 인헌동" } ]
 
+convert = (xx , yy) =>{
+  //console.log("[SEO] [CONVERT] " ,xx , yy )
+  var RE = 6371.00877; // 지구 반경(km)
+  var GRID = 5.0; // 격자 간격(km)
+  var SLAT1 = 30.0; // 투영 위도1(degree)
 
+  var SLAT2 = 60.0; // 투영 위도2(degree)
+  var OLON = 126.0; // 기준점 경도(degree)
+  var OLAT = 38.0; // 기준점 위도(degree)
+  var XO = 43; // 기준점 X좌표(GRID)
+  var YO = 136; // 기1준점 Y좌표(GRID)
+
+// LCC DFS 좌표변환 ( code : 
+//          "toXY"(위경도->좌표, v1:위도, v2:경도), 
+//          "toLL"(좌표->위경도,v1:x, v2:y) )
+//
+  function dfs_xy_conv(code, v1, v2) {
+    
+      var DEGRAD = Math.PI / 180.0;
+      var RADDEG = 180.0 / Math.PI;
+      
+      var re = RE / GRID;
+      var slat1 = SLAT1 * DEGRAD;
+      var slat2 = SLAT2 * DEGRAD;
+      var olon = OLON * DEGRAD;
+      var olat = OLAT * DEGRAD;
+      
+      var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+      sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+      var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+      sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+      var ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+      ro = re * sf / Math.pow(ro, sn);
+      var rs = {};
+      if (code == "toXY") {
+          rs['lat'] = v1;
+          rs['lng'] = v2;
+          var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+          ra = re * sf / Math.pow(ra, sn);
+          var theta = v2 * DEGRAD - olon;
+          if (theta > Math.PI) theta -= 2.0 * Math.PI;
+          if (theta < -Math.PI) theta += 2.0 * Math.PI;
+          theta *= sn;
+          rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+          rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+      }
+      else {
+          rs['x'] = v1;
+          rs['y'] = v2;
+          var xn = v1 - XO;
+          var yn = ro - v2 + YO;
+          ra = Math.sqrt(xn * xn + yn * yn);
+          if (sn < 0.0) {
+            ra = -ra;
+          }
+          var alat = Math.pow((re * sf / ra), (1.0 / sn));
+          alat = 2.0 * Math.atan(alat) - Math.PI * 0.5;
+          
+          if (Math.abs(xn) <= 0.0) {
+              theta = 0.0;
+          }
+          else {
+              if (Math.abs(yn) <= 0.0) {
+                  theta = Math.PI * 0.5;
+                  if (xn < 0.0){
+                    theta = -theta;
+                  } 
+              }
+              else theta = Math.atan2(xn, yn);
+          }
+          var alon = theta / sn + olon;
+          rs['lat'] = alat * RADDEG;
+          rs['lng'] = alon * RADDEG;
+      }
+      return new Promise((resolve, reject)=>{
+        resolve(rs)
+      });
+  }
+
+
+  var rs = dfs_xy_conv("toXY", xx, yy);
+  //console.log(rs)
+
+  return rs;
+}
 /* settingLocation   */
 router.post('/settingLocation',  async(req, res) => {
   
@@ -70,7 +154,7 @@ getNowTimeForShortTerm = () => {
 getNowTime = () => {
   let date = new Date();
   let hourMinute = parseInt( moment(date).format('HHMM'))
-  //console.log( hourMinute )
+  console.log("hourMinute ",   hourMinute )
   if( 0 <= hourMinute && hourMinute < 230){
      //하루전날 no
     newdate = moment(date).subtract(1, 'days').format('YYYYMMDD')
@@ -105,6 +189,8 @@ getNowTime = () => {
     newdate = moment(date).format('YYYYMMDD')
     newtime = '2000'
   }
+
+  console.log(newdate, newtime)
 }
 
 
@@ -299,6 +385,7 @@ router.post('/getWeatherData',  async(req, res) => {
 /* api에서 조회  */
 router.post('/getWeatherDataPrivateMode',  async(req, res) => {
   try{
+    console.log("newdate" , newdate, " newTime" , newtime)
     getNowTime();
     //nx, ny는 디비에서 가져오기 
     //base_date오늘 날짜 
@@ -325,6 +412,7 @@ router.post('/getWeatherDataPrivateMode',  async(req, res) => {
 
 
 insertWeatherData = async(nx, ny) => {
+  console.log("hello insertWeatherData")
     getNowTime();
       //nx, ny는 디비에서 가져오기 
       //base_date오늘 날짜 
@@ -333,31 +421,36 @@ insertWeatherData = async(nx, ny) => {
       base_date = newdate
       base_time = newtime
       type = 'json'
+      shortTermYn = false; 
 
-      CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
-        if (!err) {
-          //console.log(result);
-          console.log( result.response.body.items.item ) 
-          let list = result.response.body.items.item.map((item) =>{
-            return (
-              [
-                item.fcstDate,
-                item.fcstTime,
-                item.category,
-                item.fcstValue,
-                item.nx,
-                item.ny,
-                item.baseDate,
-                item.baseTime,
-              ]
+      try{
+        let result = await CallSeverApi.weatherAsync(base_date, base_time, nx, ny, type, shortTermYn);
+        //console.log("result", result.data.response.body.items.item ) 
+        let list = result.data.response.body.items.item.map((item) =>{
+          return (
+            [
+              item.fcstDate,
+              item.fcstTime,
+              item.category,
+              item.fcstValue,
+              item.nx,
+              item.ny,
+              item.baseDate,
+              item.baseTime,
+            ]
             )
-          });
-          weatherDaoNew.insertWeatherData(list)
-          console.log("success")
-        } else {
-          console.log("error!")
-        }
-      })
+        });
+        console.log('list', list[0])
+        await weatherDaoNew.insertWeatherData(list)
+        console.log('weatherDaoNew insertWeatherData ')
+        return new Promise((resolve, reject)=>{
+          resolve()
+        })
+      
+      }catch(e){
+        console.log("error ",e )
+      }
+      
 }
 
 insertWeatherDataShortTerm = (nx, ny) => {
@@ -399,11 +492,8 @@ insertWeatherDataShortTerm = (nx, ny) => {
   })
 }
 
-
-
-
 /* 이거를 crontab으로 할지   */
-settingWeatherData = () => {
+settingWeatherData = async() => {
   //그냥 매 정시 마다 실행 시키도록 함 
   let d = new Date();
   // d.getTime()	
@@ -411,117 +501,36 @@ settingWeatherData = () => {
   let Minutes = d.getMinutes()
   let second = d.getSeconds()	
   //console.log(Minutes + " " + second)
-  if( Minutes === 0 && second === 0 ){ // 매 정시 
-    defaultLocationList.map((item)=>{
-        insertWeatherDataShortTerm(item.nx, item.ny);
-        insertWeatherData(item.nx, item.ny);
-    })
+  try{
+    let rows = await weatherDaoNew.getSettingLocation(); // LOCATION 정보 XX,YY  
+    if(rows){ //온경우
+      const convertList= await Promise.all(
+        rows.map((item, key )=>{
+          if(key == 0 || key == 1 || key ==2 ){
+            console.log("convert before  ") 
+            return convertXY = convert(item.Y, item.X);
+            console.log("convert after  " ,convertXY);
+            //insertWeatherData(parseFloat(convertXY.y), parseFloat(convertXY.x));
+            //console.log("insertWeatherData complete")
+          }
+        }))
+        console.log("convertList ", convertList)
+      
+    }else{
+      console.log('error')
+    }
+    if( Minutes === 0 && second === 0 ){ // 매 정시 
+      // defaultLocationList.map((item)=>{
+      //     insertWeatherDataShortTerm(item.nx, item.ny);
+      //     insertWeatherData(item.nx, item.ny);
+      // })
+      
+    }
+  }catch{
+
   }
 }
-
-// setInterval(()=>{
-//   settingWeatherData();
-// },1000)
-
-/*DB 에서 일정기간 마다 조회  */
-// defaultLocationList.map((item)=>{
-//   console.log(item)
-//     // insertWeatherDataShortTerm(item.nx, item.ny);
-//     // insertWeatherData(item.nx, item.ny);
-// })
-// /* 이건 일정하게 요청할 것! */
-// router.post('/insertWeatherData',  (req, res) => {
-
-
-//     console.log("insertWeatherData!")
-//       getNowTime();
-//       //nx, ny는 디비에서 가져오기 
-//       //base_date오늘 날짜 
-//       //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
-//       let base_date, base_time, nx, ny, type, shortTermYn;
-//       base_date = newdate
-//       base_time = newtime
-//       nx = req.body.currentX;
-//       ny = req.body.currentY;
-//       type = 'json'
-
-
-//       CallSeverApi.weather(base_date, base_time, nx, ny, type, false,  function( err, result ){
-//         if (!err) {
-//           //console.log(result);
-//           //console.log( result.response.body.items.item ) 
-//           let list = result.response.body.items.item.map((item) =>{
-//             return (
-//               [
-//                 item.fcstDate,
-//                 item.fcstTime,
-//                 item.category,
-//                 item.fcstValue,
-//                 item.nx,
-//                 item.ny,
-//                 item.baseDate,
-//                 item.baseTime,
-//               ]
-//             )
-//           });
-//           weatherDaoNew.insertWeatherData(list)
-//           //console.log(list)
-//           res.json(result);
-//         } else {
-//          // console.log(err);
-//             res.json(err);
-//         }
-//       })
-// });
-
-
-// /* 합칠것  */
-// /* 일단 현행 유지  */
-// /* 일정하게 계속 호출할 것  이거 사용여부 프론트에서 확인해바  */
-// router.post('/insertWeatherDataShortTerm',  (req, res) => {
-//   console.log("insertWeatherDataShortTerm!")
-//     getNowTimeForShortTerm();
-//     //nx, ny는 디비에서 가져오기 
-//     //base_date오늘 날짜 
-//     //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
-//     let base_date, base_time, nx, ny, type, shortTermYn;
-//     base_date = newdate
-//     base_time = newtime
-//     nx = 60,
-//     ny = 127,
-//     type = 'json'
-
-
-//     CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
-//       if (!err) {
-//         //console.log(result);
-//        // console.log( result.response.body.items.item ) 
-//         let list = result.response.body.items.item.map((item) =>{
-//           return (
-//             [
-//               item.fcstDate,
-//               item.fcstTime,
-//               item.category,
-//               item.fcstValue,
-//               item.nx,
-//               item.ny,
-//               item.baseDate,
-//               item.baseTime,
-//             ]
-//           )
-//         });
-//         weatherDaoNew.insertWeatherDataShortTerm(list)
-//         //console.log(list)
-//         res.json(result);
-//       } else {
-//        // console.log(err);
-//           res.json(err);
-//       }
-//     })
-// });
-
-
-
+settingWeatherData();
 
 
 

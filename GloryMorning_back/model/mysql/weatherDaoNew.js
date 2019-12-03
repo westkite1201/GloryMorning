@@ -95,7 +95,7 @@ const getSettingLocation = async() => {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			const [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);	
-			console.log("[SEO] ROWS ", rows)
+			//console.log("[SEO] ROWS ", rows)
 			await connection.commit(); // COMMIT
 			connection.release();
 
@@ -248,6 +248,7 @@ const getWeatherDataShortTerm = async (parameter) => {
 /* 현재 성공 함 */
 /* WEATHER DATA REPLACE  */
 const insertWeatherData = async (parameter) => {
+	console.log("dao insertWeatherData start ")
 	let list = parameter;
 	try {
 
@@ -266,14 +267,18 @@ const insertWeatherData = async (parameter) => {
 			//const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
 			await connection.commit(); // COMMIT
 			connection.release();
-			console.log('success Query Inserting ')
-            return rows;
+			return new Promise((resolve, reject)=>{
+				console.log("return promise")
+				resolve(rows)
+			  })
             
 		} catch(err) {
 			await connection.rollback(); // ROLLBACK
 			connection.release();
 			console.log('Query Error');
-			return false;
+			return new Promise((resolve, reject)=>{
+				reject({message: err})
+			})
         }
         
 	} catch(err) {

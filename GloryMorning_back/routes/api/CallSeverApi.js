@@ -120,9 +120,9 @@ module.exports = function (callee) {
             weatherAsync :  async(base_date, base_time, nx, ny, type, shortTermYn, callback) => {
                 const request =  require('request')
                 const querystring = require('querystring')
-                console.log("shortTermYn " , (shortTermYn) )
+                //console.log("shortTermYn " , (shortTermYn) )
                 if( shortTermYn ==='true' || shortTermYn ){
-                    console.log("tq")
+                   // console.log("tq")
                     OPTIONS.url = HOST + BASE_PATH_SHORT_TERM;
                 }else{
                     OPTIONS.url = HOST + BASE_PATH;
@@ -139,9 +139,10 @@ module.exports = function (callee) {
                     "numOfRows" : 175,
                     "_type" : type
                 })
+                //console.log("base_date ", base_date , " base_time", base_time)
                 OPTIONS.url += 'ServiceKey='+ serviceKey
                 OPTIONS.url += propertiesObject 
-                console.log(OPTIONS)
+                //console.log(OPTIONS)
   
                            //async를 위해 request 함수 선언 
                 function doRequest() {
