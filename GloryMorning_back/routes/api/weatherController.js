@@ -441,8 +441,8 @@ insertWeatherData = async(nx, ny) => {
             )
         });
         console.log('list', list[0])
-        await weatherDaoNew.insertWeatherData(list)
-        console.log('weatherDaoNew insertWeatherData ')
+        let rows = await weatherDaoNew.insertWeatherData(list)
+        console.log('weatherDaoNew insertWeatherData ', rows)
         return new Promise((resolve, reject)=>{
           resolve()
         })
@@ -506,15 +506,17 @@ settingWeatherData = async() => {
     if(rows){ //온경우
       const convertList= await Promise.all(
         rows.map((item, key )=>{
-          if(key == 0 || key == 1 || key ==2 ){
-            console.log("convert before  ") 
+          //if(key == 0 || key == 1 || key ==2 ){
             return convertXY = convert(item.Y, item.X);
-            console.log("convert after  " ,convertXY);
-            //insertWeatherData(parseFloat(convertXY.y), parseFloat(convertXY.x));
-            //console.log("insertWeatherData complete")
-          }
+          //}
         }))
-        console.log("convertList ", convertList)
+
+        for (const item of convertList) { 
+          await insertWeatherData(item.y, item.x); 
+        }
+
+
+        //console.log("convertList ", convertList)
       
     }else{
       console.log('error')
