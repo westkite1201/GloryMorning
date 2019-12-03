@@ -248,14 +248,26 @@ export default class WeatherStore {
     //현재 위치 에서 가장 근처에 있는 측정소를 찾을 것 
     //가장 근처에 있는 측정소 미세먼지 정보 RETURN 
     @action
-    getDustInfo = async() => {
+    getDustInfo = async(isDefault, item) => {
       try{
-        console.log("[SEO] getDustInfo1")
-        let locationInfo = await this.nowGeolocation()
-        console.log("[SEO] getDustInfo2 locationInfo", locationInfo)
-        let tmCordinate = await this.getCordinate('TM', locationInfo);
-        console.log("[SEO] getDustInfo3")
-        console.log('[SEO]  tmCordinate ' ,tmCordinate)
+        let locationInfo;
+        let tmCordinate 
+        if (isDefault) { 
+          console.log("[SEO] getDustInfo1")
+          locationInfo = await this.nowGeolocation()
+          console.log("[SEO] getDustInfo2 locationInfo", locationInfo)
+          tmCordinate = await this.getCordinate('TM', locationInfo);
+          console.log("[SEO] getDustInfo3")
+          console.log('[SEO]  tmCordinate ' ,tmCordinate)
+        } else { //selected에서 클릭이벤트 
+          console.log("[SEO] getDustInfo ", item)
+          locationInfo ={
+            currentX : item.x,
+            currentY : item.y
+          }
+          tmCordinate = await this.getCordinate('TM', locationInfo);
+        }
+
         let tmX = tmCordinate.x;
         let tmY = tmCordinate.y;
         const response = await weatherApi.getNearbyMsrstnList(tmX, tmY);

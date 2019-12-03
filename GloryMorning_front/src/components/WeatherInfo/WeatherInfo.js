@@ -13,7 +13,6 @@ class WeatherInfo extends Component {
     }
     componentDidUpdate(){
         const {weatherClassName} = this.props; 
-
     }
 
    
@@ -74,7 +73,7 @@ class WeatherInfo extends Component {
         )
     }
 }
-export default inject(({ weather, edit }) => ({
+export default inject(({ weather }) => ({
     LocationA: weather.LocationA,
     LocationB: weather.LocationB,
     LocationC: weather.LocationC,

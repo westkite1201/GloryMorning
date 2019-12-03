@@ -29,7 +29,7 @@ const DustInfo = observer(() => {
 
 
   useEffect(() => {
-    weather.getDustInfo();
+    weather.getDustInfo(true);
   }, []);
 
   let dustInfoObject = weather.dustInfoObject
@@ -66,7 +66,7 @@ const DustInfo = observer(() => {
                 {dustInfoObject[selectDustMessageInfo].InfoHeader}
               </div>
               <div className="info_icon">
-              {dustInfoObject[selectDustMessageInfo].infoIcon}
+                {dustInfoObject[selectDustMessageInfo].infoIcon}
               </div>
               <div className= "info_name" >
                 {dustInfoObject[selectDustMessageInfo].name}
