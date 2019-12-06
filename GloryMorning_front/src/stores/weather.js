@@ -7,9 +7,11 @@ import * as helpers from  '../lib/helpers'
 import * as weatherApi from  '../lib/api/weatherApi'
 import {isEmpty} from 'lodash' 
 import clientConfig from '../configuration/clientConfig'
+import { templates } from 'handlebars';
 // PRIVATE -> API 키 이용해서 직접 호출 
 // MEMBER -> 내 DB에서 조회 호출 
-const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
+//const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
+const MODE = "MEMBER_MODE"
 export default class WeatherStore {
     
                               
@@ -228,6 +230,37 @@ export default class WeatherStore {
     }
 
   
+
+    @action
+    getJustFitClothes = (temperature) => {
+      if(temperature >= 28){
+        //반팔 반바지
+      }
+      if( 27 >= temperature  && temperature >= 23){
+        //반팔, 얇은 셔츠, 반바지, 면바지
+      }
+      if( 22 >= temperature  && temperature >= 20){
+        //얇은 가디건, 긴판, 반바지, 면바지
+      }
+      if( 19 >= temperature  && temperature >= 17){
+        //얇은 니트 , 맨투맨 , 가디건, 청바지
+      }
+      if( 16 >= temperature  && temperature >= 12){
+        //자켓, 가디건, 야상, 청바지, 면바지
+      }
+      if( 11 >= temperature  && temperature >= 9){
+        //자켓, 트렌치코트 ,야상 , 니트 , 
+      }
+      if( 8 >= temperature  && temperature >= 5){
+        //코트 ,가죽자켓 , 히트텍 ,니트
+      }
+      if( 4 >= temperature){
+        //패딩, 두꺼운 코트 ,목도리 ,기모 
+      }
+      if(-5 >= temperature){
+        //방한용품 착용하세요...
+      }
+    }
 
     @action
     getAreaRiseSetInfo = async() => { 
@@ -785,6 +818,8 @@ export default class WeatherStore {
               ny,
               category
           );
+          console.log("[SEO] WEATHER NX  NY ", nx, ny)
+          console.log("[SEO] WEATHER RES ",response )
         }
         else if ( MODE ==='PRIVATE_MODE') {
           response = await weatherApi.getWeatherDataPrivateMode( 

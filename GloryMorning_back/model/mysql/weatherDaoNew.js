@@ -165,6 +165,7 @@ const getWeatherData = async (parameter) => {
 		const nx = parameter.nx;
 		const ny = parameter.ny;
 		const category = parameter.category;		
+		console.log("#################" ,nx, ny  ,category )
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 

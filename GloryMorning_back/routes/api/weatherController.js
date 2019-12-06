@@ -373,6 +373,7 @@ router.post('/getWeatherData',  async(req, res) => {
 
     let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY  
     if(rows){ //온경우
+        console.log("return data " , rows)
         return res.json(rows)
     }else{
       console.log('error')
@@ -422,7 +423,8 @@ insertWeatherData = async(nx, ny) => {
       base_time = newtime
       type = 'json'
       shortTermYn = false; 
-
+      console.log("nx ", nx, " ny ", ny)
+      nx =60, ny =125
       try{
         let result = await CallSeverApi.weatherAsync(base_date, base_time, nx, ny, type, shortTermYn);
         //console.log("result", result.data.response.body.items.item ) 
@@ -440,7 +442,7 @@ insertWeatherData = async(nx, ny) => {
             ]
             )
         });
-        console.log('list', list[0])
+        console.log('list', list)
         let rows = await weatherDaoNew.insertWeatherData(list)
         console.log('weatherDaoNew insertWeatherData ', rows)
         return new Promise((resolve, reject)=>{
@@ -512,7 +514,7 @@ settingWeatherData = async() => {
         }))
 
         for (const item of convertList) { 
-          await insertWeatherData(item.y, item.x); 
+          await insertWeatherData(item.x, item.y); 
         }
 
 
