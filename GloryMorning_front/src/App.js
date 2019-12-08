@@ -4,7 +4,7 @@ import EditComponentList from './components/Edit/EditComponentList'
 //import DevTools from 'mobx-react-devtools';
 import ReactHighcharts from 'react-highcharts'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import moment from 'moment'
 ReactHighcharts.Highcharts.setOptions({
   time: {
       useUTC: false

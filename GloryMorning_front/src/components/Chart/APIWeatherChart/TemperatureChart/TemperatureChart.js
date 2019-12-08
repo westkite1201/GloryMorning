@@ -27,7 +27,7 @@ class TemperatureChart extends Component {
 
   render() {
     console.log('render')
-    const { wrapperid, temperatureDataList } = this.props;
+    const { wrapperid, temperatureDataList, temperatureDataListYesterday} = this.props;
     console.log('temperatureData ' , temperatureDataList)
 
 
@@ -49,11 +49,19 @@ class TemperatureChart extends Component {
     },
     tooltip: {
         formatter : function() {
-      
-            // logs an object with properties: points, x, y
-            return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
-                  '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
-                   '' + this.series.name + ' : ' + this.point.y + 'ºC<br/>'
+            if(this.series.name === '전일 온도'){
+                let momomtObj = moment(this.point.x).valueOf() - 24 * 3600 * 1000
+                 // logs an object with properties: points, x, y
+                return '<b>' +moment(momomtObj).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
+                    '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
+                    '' + this.series.name + ' : ' + this.point.y + 'ºC<br/>'
+            } else {
+                // logs an object with properties: points, x, y
+                return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
+                    '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
+                    '' + this.series.name + ' : ' + this.point.y + 'ºC<br/>'
+            }
+
           }
       },
     id : wrapperid +'_c',
@@ -64,7 +72,7 @@ class TemperatureChart extends Component {
     subtitle: {
         //text: 'Source: thesolarfoundation.com'
     },
-    xAxis: {
+    xAxis: [{
         type: 'datetime',
         dateTimeLabelFormats: { // don't display the dummy year
             month: '%H:%M:%S',
@@ -72,8 +80,15 @@ class TemperatureChart extends Component {
 
         labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
 
-    }
-  },
+    }},{
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%H:%M:%S',
+        },
+
+        labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
+        }
+  }],
     yAxis: {
         title: {
             text: '섭씨'
@@ -98,7 +113,7 @@ class TemperatureChart extends Component {
         enabled: false
     },
     series: [{
-        type: 'spline',
+        type: 'area',
         marker: {
             fillColor: 'white',
             lineWidth: 2,
@@ -123,6 +138,33 @@ class TemperatureChart extends Component {
             color: '#f03e3e'
         }
     ]
+    },
+    {
+        type: 'spline',
+        marker: {
+            fillColor: 'white',
+            lineWidth: 2,
+            lineColor: "#d9480f"
+        },
+        color: 'grey',       
+        //dashStyle : 'shortdot',
+
+        name: '전일 온도',
+        data: temperatureDataListYesterday,
+        // zones: [{
+        //     value: 0,
+        //     color: 'grey'
+        // }, {
+        //     value: 15,
+        //     color: '#f59f00'
+        // }, {
+        //     value: 20,
+        //     color: '#d9480f'
+        // },{
+        //     value: 30,
+        //     color: '#f03e3e'
+        // }
+        //]
     }],
 
     }
@@ -140,6 +182,7 @@ export default inject(({ weather, edit }) => ({
     isFetchingTemp : weather.isFetchingTemp,
     getWeatherData : weather.getWeatherData,
     temperatureDataList : weather.temperatureDataList,
+    temperatureDataListYesterday : weather.temperatureDataListYesterday,
     allChartResizing : edit.allChartResizing
     
   }))(observer(TemperatureChart));

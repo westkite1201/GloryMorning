@@ -171,12 +171,13 @@ const getWeatherData = async (parameter) => {
 
 		
 			/* Step 3. */
-			let sql = ` SELECT *
+			let sql = `SELECT *
 						FROM WEATHER
 						WHERE NX = ? AND NY = ?
 							AND CATEGORY = ?
-							AND FCST_DATE >= ( SELECT date_format( now(), '%Y%m%d') ) `
-			
+							AND FCST_DATE >= ( SELECT date_format( now() - INTERVAL 1 DAY, '%Y%m%d') )
+							AND FCST_DATE <= ( SELECT date_format( now() + INTERVAL 1 DAY, '%Y%m%d') )`
+
 			
 			const [rows] = await connection.query(sql, [ nx, ny, category ]);
 			
