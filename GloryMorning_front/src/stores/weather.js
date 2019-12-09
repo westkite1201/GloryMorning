@@ -842,9 +842,11 @@ export default class WeatherStore {
           let weatherArray;
           let yesterdayArray;
           if( MODE ==='MEMBER_MODE'){
+ 
             weatherArray = response.data
+            console.log("[seo] weatherArray! ", weatherArray)
             //어제 부터 오늘 
-            console.log("[SEO] ",  moment().subtract(1,'days').format('YYYYMMDD'))
+            console.log("[SEO] yesterdayPlus",  moment().subtract(2,'days').format('YYYYMMDD'))
 
             let yesterdayPlus = moment().subtract(2,'days').format('YYYYMMDD');
             let yesterday = moment().subtract(1,'days').format('YYYYMMDD');
@@ -965,7 +967,8 @@ export default class WeatherStore {
                 // console.log(item)
                  let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
                  return ([
-                   ((momentobj._d).valueOf() +  24 * 3600 * 1000) , //하루 더해주기 
+                   //((momentobj._d).valueOf() +  24 * 3600 * 1000) , //하루 더해주기
+                   ((momentobj._d).valueOf()) , 
                    parseInt( item.FCST_VALUE) ,
                  ])
                })

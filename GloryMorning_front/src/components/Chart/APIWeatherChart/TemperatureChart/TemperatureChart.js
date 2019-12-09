@@ -49,18 +49,18 @@ class TemperatureChart extends Component {
     },
     tooltip: {
         formatter : function() {
-            if(this.series.name === '전일 온도'){
-                let momomtObj = moment(this.point.x).valueOf() - 24 * 3600 * 1000
-                 // logs an object with properties: points, x, y
-                return '<b>' +moment(momomtObj).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
-                    '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
-                    '' + this.series.name + ' : ' + this.point.y + 'ºC<br/>'
-            } else {
+            // if(this.series.name === '전일 온도'){
+            //     let momomtObj = moment(this.point.x).valueOf() - 24 * 3600 * 1000
+            //      // logs an object with properties: points, x, y
+            //     return '<b>' +moment(momomtObj).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
+            //         '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
+            //         '' + this.series.name + ' : ' + this.point.y + 'ºC<br/>'
+            // } else {
                 // logs an object with properties: points, x, y
                 return '<b>' + moment(this.point.x).format('YYYY-MM-DD-dddd-HH:mm') + '</b><br/>' +
                     '<br/><span style="color:' + this.point.color + '">\u25CF</span> '   +
                     '' + this.series.name + ' : ' + this.point.y + 'ºC<br/>'
-            }
+            //}
 
           }
       },
@@ -72,48 +72,58 @@ class TemperatureChart extends Component {
     subtitle: {
         //text: 'Source: thesolarfoundation.com'
     },
-    xAxis: [{
-        type: 'datetime',
-        dateTimeLabelFormats: { // don't display the dummy year
-            month: '%H:%M:%S',
+    xAxis: [
+        {
+            type: 'datetime',
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%H:%M:%S',
+            },
+            labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'}
+        },{
+            type: 'datetime',
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%H:%M:%S',
+            },
+
+            labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}',
+            opposite: true
         },
-
-        labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
-
-    }},{
-        type: 'datetime',
-        dateTimeLabelFormats: { // don't display the dummy year
-            month: '%H:%M:%S',
-        },
-
-        labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
-        }
   }],
-    yAxis: {
+    yAxis: [{
         title: {
             text: '섭씨'
-        }
+        },
+        
     },
+    {
+        title: {
+            text: '섭씨'
+        },
+        
+    },
+
+    ],
     legend: {
         layout: 'vertical',
         align: 'right',
         verticalAlign: 'middle'
     },
 
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            },
-            color: 'blue',
-            //pointStart: 2010
-        }
-    },
+    // plotOptions: {
+    //     series: {
+    //         label: {
+    //             connectorAllowed: false
+    //         },
+    //         color: 'blue',
+    //         //pointStart: 2010
+    //     }
+    // },
     exporting: {
         enabled: false
     },
     series: [{
         type: 'area',
+        xAxis :0,
         marker: {
             fillColor: 'white',
             lineWidth: 2,
@@ -137,10 +147,12 @@ class TemperatureChart extends Component {
             value: 30,
             color: '#f03e3e'
         }
+
     ]
     },
     {
         type: 'spline',
+        xAxis :1,
         marker: {
             fillColor: 'white',
             lineWidth: 2,
@@ -165,7 +177,8 @@ class TemperatureChart extends Component {
         //     color: '#f03e3e'
         // }
         //]
-    }],
+    }
+],
 
     }
     
