@@ -60,10 +60,14 @@ const settingLocation = async (parameter) => {
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);
 		try {
 			await connection.beginTransaction(); // START TRANSACTION
+		
+			await connection.query('DELETE FROM setting_location', [locationArray]);
+			
 			// /* Step 3. */
 			let sql = `REPLACE INTO setting_location(ADDRESS_NAME ,ADDRESS_TYPE, X ,Y,MEM_IDX)
 					   VALUES ?`
-			
+
+	
 			const [insertRow] = await connection.query(sql, [locationArray]);
 			const [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);
 			

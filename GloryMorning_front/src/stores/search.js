@@ -29,9 +29,21 @@ export default class SearchStore {
   setThisLocation = (item) => {
     console.log("[SEO] " , item)
     this.selectedAddress = item;
-    this.rootStore.weather.getWeatherDataShortTerm(false, item);
-    this.rootStore.weather.getWeatherData('ALL', false, item);
-    this.rootStore.weather.getDustInfo(false, item)
+    /* private 모드일때만 */
+    // this.rootStore.weather.getWeatherDataShortTerm(false, item);
+    // this.rootStore.weather.getWeatherData('ALL', false, item);
+    // this.rootStore.weather.getDustInfo(false, item)
+
+
+    //member 모드일떄 
+    this.rootStore.weather.initChart()
+     this.rootStore.weather.getWeatherData('REH', false, item);
+     this.rootStore.weather.getWeatherData('POP', false, item);
+     this.rootStore.weather.getWeatherData('R06', false, item);
+     this.rootStore.weather.getWeatherData('SKY', false, item);
+     this.rootStore.weather.getWeatherData('T3H', false, item);
+
+
   }
   /* 
     location setting 
@@ -124,9 +136,9 @@ export default class SearchStore {
       }
       index += 1; 
     }
-    if(isExist) {
+    if (isExist) {
       this.selectedAddressList.splice(index, 1); // 현재 인덱스만 날림 
-    }else{
+    } else {
       this.selectedAddressList.push(item)
     }
     console.log(this.selectedAddressList)

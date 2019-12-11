@@ -424,7 +424,7 @@ insertWeatherData = async(nx, ny) => {
       type = 'json'
       shortTermYn = false; 
       console.log("nx ", nx, " ny ", ny)
-      nx =60, ny =125
+      //nx =60, ny =125
       try{
         let result = await CallSeverApi.weatherAsync(base_date, base_time, nx, ny, type, shortTermYn);
         //console.log("result", result.data.response.body.items.item ) 
