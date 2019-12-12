@@ -111,8 +111,11 @@ router.post('/settingLocation',  async(req, res) => {
       settingLocationArray :  req.body.settingLocationArray,
     } 
     let rows = await weatherDaoNew.settingLocation(data); // LOCATION 정보 XX,YY  
+    
+    
+    
     if(rows){ //온경우
-        return res.json(rows)
+      return res.json(rows)
     }else{
       console.log('error')
     }

@@ -36,7 +36,7 @@ export default class SearchStore {
 
 
     //member 모드일떄 
-    this.rootStore.weather.initChart()
+     this.rootStore.weather.initChart()
      this.rootStore.weather.getWeatherData('REH', false, item);
      this.rootStore.weather.getWeatherData('POP', false, item);
      this.rootStore.weather.getWeatherData('R06', false, item);
@@ -73,6 +73,7 @@ export default class SearchStore {
     const res = await searchApi.getSettingLocation();
     if(res.status === 200){
       this.selectedAddressList = res.data.map((item) =>{
+        console.log("[SEO] getSettingLocation item",item )
         return {
           addressName : item.ADDRESS_NAME,
           addressType : item.ADDRESS_TYPE,
