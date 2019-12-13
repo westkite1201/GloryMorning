@@ -111,10 +111,8 @@ router.post('/settingLocation',  async(req, res) => {
       settingLocationArray :  req.body.settingLocationArray,
     } 
     let rows = await weatherDaoNew.settingLocation(data); // LOCATION 정보 XX,YY  
-    
-    
-    
     if(rows){ //온경우
+      settingWeatherData();
       return res.json(rows)
     }else{
       console.log('error')
@@ -373,7 +371,7 @@ router.post('/getWeatherData',  async(req, res) => {
       ny :  req.body.ny,
       category :  req.body.category,
     } 
-
+    console.log("[getWeatherData] ", data)
     let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY  
     if(rows){ //온경우
         console.log("return data " , rows)
@@ -507,7 +505,8 @@ settingWeatherData = async() => {
   let second = d.getSeconds()	
   //console.log(Minutes + " " + second)
   try{
-    let rows = await weatherDaoNew.getSettingLocation(); // LOCATION 정보 XX,YY  
+    let rows = await weatherDaoNew.getSettingLocation(); // LOCATION 정보 XX,YY
+    console.log("settingWeatherData !")  
     if(rows){ //온경우
       const convertList= await Promise.all(
         rows.map((item, key )=>{

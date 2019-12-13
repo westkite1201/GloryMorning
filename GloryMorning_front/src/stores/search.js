@@ -59,11 +59,13 @@ export default class SearchStore {
         return {
           addressName : item.ADDRESS_NAME,
           addressType : item.ADDRESS_TYPE,
-          x : item.x,
-          y : item.y,
+          x : item.X,
+          y : item.Y,
         }
       })
+      console.log("[SEO][settingLocation] this.selectedAddressList ", this.selectedAddressList )
     }
+    
   
   }
 
@@ -101,7 +103,7 @@ export default class SearchStore {
   checkSeleted  = (addressName) => { 
     let isExist = false;
     for(let key of this.selectedAddressList) {
-      //console.log(key.name  + " " + name)
+ 
       if(key.addressName === addressName){
         isExist = true;
         break;
@@ -122,6 +124,7 @@ export default class SearchStore {
     this.selectedAddressList= this.selectedAddressList.filter((item) =>{
       return ( item.addressName !== addressName )
     })
+    console.log("[SEO][spliceSelectedList] this.selectedAddressList", this.selectedAddressList)
   }
  
 
@@ -142,7 +145,7 @@ export default class SearchStore {
     } else {
       this.selectedAddressList.push(item)
     }
-    console.log(this.selectedAddressList)
+    console.log("[SEO][setSelectItem] this.selectedAddressList", this.selectedAddressList)
   }
 
 }
