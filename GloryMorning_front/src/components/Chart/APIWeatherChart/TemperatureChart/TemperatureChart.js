@@ -26,6 +26,7 @@ class TemperatureChart extends Component {
     }
 
   render() {
+ 
     console.log('render')
     const { wrapperid, temperatureDataList, temperatureDataListYesterday} = this.props;
     console.log('temperatureData ' , temperatureDataList)
@@ -78,29 +79,41 @@ class TemperatureChart extends Component {
             dateTimeLabelFormats: { // don't display the dummy year
                 month: '%H:%M:%S',
             },
-            labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'}
-        },{
+            labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'},
+        
+
+            plotLines: [{
+                color: 'red', // Color value
+                dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                value: moment()._d.valueOf(), // Value of where the line will appear
+                width: 2 // Width of the line    
+            }],
+            plotBands: [{
+                color: 'rgba(255,0,0,0.5)', // Color value
+                from:    moment()._d.valueOf() -  (3600 * 1000) * 2, // Start of the plot band
+                to:    moment()._d.valueOf() +  (3600 * 1000) * 2// End of the plot band
+            }],
+        
+        }
+        ,{
             type: 'datetime',
             dateTimeLabelFormats: { // don't display the dummy year
                 month: '%H:%M:%S',
             },
-
-            labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}',
+            labels: {
+                enabled: false
+            },
+            //labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}',
             opposite: true
-        },
-  }],
+        }
+    ],
     yAxis: [{
         title: {
             text: '섭씨'
         },
         
     },
-    {
-        title: {
-            text: '섭씨'
-        },
-        
-    },
+
 
     ],
     legend: {
@@ -156,7 +169,7 @@ class TemperatureChart extends Component {
         marker: {
             fillColor: 'white',
             lineWidth: 2,
-            lineColor: "#d9480f"
+            lineColor: "grey"
         },
         color: 'grey',       
         //dashStyle : 'shortdot',

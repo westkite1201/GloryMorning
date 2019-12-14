@@ -295,6 +295,7 @@ const insertWeatherData = async (parameter) => {
 
 const insertWeatherDataShortTerm = async (parameter) => {
 	let list = parameter;
+	console.log("list ", list )
 	try {
 
 		const connection = await dbHelpers.pool.getConnection(async conn => conn);

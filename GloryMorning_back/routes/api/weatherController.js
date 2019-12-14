@@ -140,15 +140,23 @@ router.post('/getSettingLocation',  async(req, res) => {
 getNowTimeForShortTerm = () => {
   let date = new Date();
   let hourMinute = parseInt( moment(date).format('HHMM'))
- // console.log( hourMinute )
+  console.log( hourMinute )
   if( 0 <= hourMinute && hourMinute < 230) {
      //하루전날 
     newdate = moment(date).subtract(1, 'days').format('YYYYMMDD')
     newtime = '2300'
   }
   else{
-    newdate = moment(date).format('YYYYMMDD')
-    newtime =  moment(date).format('HH') + '00'
+    //현재 시간이 30분전이면
+    if (moment(date).format('MM') <= 30) {
+      newdate = moment(date).format('YYYYMMDD')
+      newtime =  moment(date).subtract(1,'hour').format('HH') + '30'
+      console.log("30 분전이면 ",newtime)
+    } else { //크면
+      newdate = moment(date).format('YYYYMMDD')
+      newtime =  moment(date).format('HH') + '00'       
+      console.log("30 분 후면 ",newtime)
+    }
   }
 }
 
@@ -342,14 +350,13 @@ getWeatherData = async(res, nx, ny) => {
 
 /* db에서 weather shortTerm data 조회  */
 router.post('/getWeatherDataShortTerm',  async(req, res) => {
-  
   try{
     const data = {
       nx :  req.body.nx,
       ny :  req.body.ny,
       category :  req.body.category,
     } 
-    //console.log(data)
+    console.log("getWeatherDataShortTerm" , data)
     let rows = await weatherDaoNew.getWeatherDataShortTerm(data); // LOCATION 정보 XX,YY  
     if(rows){ //온경우
         return res.json(rows)
@@ -394,7 +401,7 @@ router.post('/getWeatherDataPrivateMode',  async(req, res) => {
     //이 정보는 디비에서 글고 여기 함수에서 계산되는거임 
     let base_date, base_time, type,nx,ny, shortTermYn;
     base_date = newdate
-    base_time = newtime
+    base_time = newtimegetWeatherData
     type = 'json'
     shortTermYn = req.body.shortTermYn;
     nx = req.body.nx;
@@ -456,7 +463,7 @@ insertWeatherData = async(nx, ny) => {
       
 }
 
-insertWeatherDataShortTerm = (nx, ny) => {
+insertWeatherDataShortTerm = async(nx, ny) => {
   console.log("insertWeatherDataShortTerm!")
   getNowTimeForShortTerm();
   //nx, ny는 디비에서 가져오기 
@@ -466,33 +473,35 @@ insertWeatherDataShortTerm = (nx, ny) => {
   base_date = newdate
   base_time = newtime
   type = 'json'
-
+  shortTermYn = true
   console.log(nx, ny)
-  CallSeverApi.weather(base_date, base_time, nx, ny, type, true,  function( err, result ){
-    if (!err) {
-      console.log(result);
-      //console.log( result.response.body.items.item ) 
-      let list = result.response.body.items.item.map((item) =>{
-        return (
-          [
-            item.fcstDate,
-            item.fcstTime,
-            item.category,
-            item.fcstValue,
-            item.nx,
-            item.ny,
-            item.baseDate,
-            item.baseTime,
-          ]
-        )
-      });
-      weatherDaoNew.insertWeatherDataShortTerm(list)
-      console.log("success")
+  try {
+    let result = await CallSeverApi.weatherAsync(base_date, base_time, nx, ny, type, shortTermYn);
+    //console.log("result " , result.data.response.body.items)
+    let list = result.data.response.body.items.item.map((item) =>{
+      return (
+        [
+          item.fcstDate,
+          item.fcstTime,
+          item.category,
+          item.fcstValue,
+          item.nx,
+          item.ny,
+          item.baseDate,
+          item.baseTime,
+        ]
+      )
+    });
 
-    } else {
-      console.log(err);
-    }
-  })
+    let rows = await weatherDaoNew.insertWeatherDataShortTerm(list)
+    console.log("success", rows)
+    return new Promise((resolve, reject)=>{
+      resolve()
+    })
+  }
+  catch(e){
+    console.log("error ",e )
+  }
 }
 
 /* 이거를 crontab으로 할지   */
@@ -510,19 +519,14 @@ settingWeatherData = async() => {
     if(rows){ //온경우
       const convertList= await Promise.all(
         rows.map((item, key )=>{
-          //if(key == 0 || key == 1 || key ==2 ){
-            return convertXY = convert(item.Y, item.X);
-          //}
+          return convertXY = convert(item.Y, item.X);
         }))
 
-        for (const item of convertList) { 
-          await insertWeatherData(item.x, item.y); 
-        }
-
-
-        //console.log("convertList ", convertList)
-      
-    }else{
+      for (const item of convertList) { 
+          //await insertWeatherData(item.x, item.y); 
+          await insertWeatherDataShortTerm(item.x, item.y);
+      }
+    } else {
       console.log('error')
     }
     if( Minutes === 0 && second === 0 ){ // 매 정시 
@@ -530,12 +534,12 @@ settingWeatherData = async() => {
       //     insertWeatherDataShortTerm(item.nx, item.ny);
       //     insertWeatherData(item.nx, item.ny);
       // })
-      
     }
-  }catch{
-
+  }catch(e){
+    console.log('error', e)
   }
 }
+
 settingWeatherData();
 
 

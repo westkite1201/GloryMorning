@@ -122,7 +122,7 @@ module.exports = function (callee) {
                 const querystring = require('querystring')
                 //console.log("shortTermYn " , (shortTermYn) )
                 if( shortTermYn ==='true' || shortTermYn ){
-                   // console.log("tq")
+                    console.log("tq")
                     OPTIONS.url = HOST + BASE_PATH_SHORT_TERM;
                 }else{
                     OPTIONS.url = HOST + BASE_PATH;
@@ -140,7 +140,7 @@ module.exports = function (callee) {
                     "numOfRows" : 175,
                     "_type" : type
                 })
-                //console.log("base_date ", base_date , " base_time", base_time)
+                console.log("base_date ", base_date , " base_time", base_time)
                 OPTIONS.url += 'ServiceKey='+ serviceKey
                 OPTIONS.url += propertiesObject 
                 //console.log(OPTIONS)
@@ -152,6 +152,9 @@ module.exports = function (callee) {
                             if(err){
                                 console.log("ERROR" )
                                 reject(err)
+                            }
+                            if(!res){
+                                reject(err);
                             }
                             let statusCode = res.statusCode ? res.statusCode : 400
                              response =  statusCodeErrorHandlerAsync(statusCode, result);
@@ -167,7 +170,7 @@ module.exports = function (callee) {
                 }
 
                 let res = await doRequest();
-                //console.log("response " , res)
+                console.log("response " , res)
                 return res
             },
             getDustNearStation :  async(tmX, tmY) =>{

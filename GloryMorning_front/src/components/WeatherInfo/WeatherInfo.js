@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import Progress from '../Common/Progress'
+import OpacityIcon from '@material-ui/icons/Opacity';
 import 'weather-icons/css/weather-icons.css';
 import './WeatherInfo.scss'
 
@@ -56,9 +57,10 @@ class WeatherInfo extends Component {
                         <Progress backgroundColor ="#1864ab"
                                   fcstValue ={weatherInfObject.rainNow}/>
                     </div>
-                     <div className ="huminity">
-                        <span style ={{ marginLeft: '10px',marginRight : '15px'}}>
-                            <i className = "wi wi-humidity humidity_icon"></i>
+                     <div className ="humidity">
+                        <span style ={{marginRight : '15px'}}>
+                            <OpacityIcon style ={{fontSize: '50px'}}/>
+                            {/*<i className = "wi wi-humidity humidity_icon"></i>*/}
                         </span>
                         {weatherInfObject.humidityNow} %
                         <Progress backgroundColor ="#748ffc"

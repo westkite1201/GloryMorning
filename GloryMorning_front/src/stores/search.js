@@ -43,6 +43,7 @@ export default class SearchStore {
      this.rootStore.weather.getWeatherData('SKY', false, item);
      this.rootStore.weather.getWeatherData('T3H', false, item);
 
+     this.rootStore.weather.getWeatherDataShortTerm(false, item);
 
   }
   /* 

@@ -409,19 +409,20 @@ export default class WeatherStore {
 
       try{
         let response;
-        if( MODE ==='MEMBER_MODE'){
+        if (MODE ==='MEMBER_MODE') {
             response = await weatherApi.getWeatherDataShortTerm( 
             nx, 
             ny,
           );
-          }
-          else if ( MODE ==='PRIVATE_MODE') {
+        }
+        else if (MODE ==='PRIVATE_MODE') {
             response = await weatherApi.getWeatherDataPrivateMode( 
               nx, 
               ny,
               true
-              );
-          }
+            );
+        }
+        console.log("[seo][getWeatherDataShortTerm] response ", response)
         let sky;  //날씨  
         let pty;  //강수형태 
         let temperatureNow;
@@ -470,7 +471,7 @@ export default class WeatherStore {
         }
         if( MODE ==='MEMBER_MODE'){
           weatherInfo = response.data
-          //console.log(weatherInfo)
+          console.log("[SEO][getWeatherDataShortTerm] WEATHER INFO ", weatherInfo)
           weatherInfo.map((item) =>{
               //console.log('item', item.CATEGORY)
               if( item.CATEGORY === 'SKY'){
@@ -790,6 +791,15 @@ export default class WeatherStore {
 
 
 
+    makeWeatherArray= (weatherArray) => {
+      return weatherArray.map((item) => {
+        let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
+        return ([
+          ((momentobj._d).valueOf() ) ,
+          parseInt( item.FCST_VALUE) ,
+        ])
+      })
+    }
 
 
  
@@ -819,7 +829,7 @@ export default class WeatherStore {
         responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
         nx = responsedata.x;
         ny = responsedata.y;
-        console.log("[SEO][getWeatherData] nx, ny ", nx, ny )
+        //console.log("[SEO][getWeatherData] nx, ny ", nx, ny )
       } else { //기본 default
         locationInfo = await this.nowGeolocation();
         responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
@@ -848,8 +858,8 @@ export default class WeatherStore {
               ny,
               category
           );
-          console.log("[SEO] WEATHER NX  NY ", nx, ny)
-          console.log("[SEO] WEATHER RES ",response )
+          // console.log("[SEO] WEATHER NX  NY ", nx, ny)
+          // console.log("[SEO] WEATHER RES ",response )
         }
         else if ( MODE ==='PRIVATE_MODE') {
           response = await weatherApi.getWeatherDataPrivateMode( 
@@ -893,217 +903,58 @@ export default class WeatherStore {
             weatherArray = responseData.items.item;
           }
         
-
-          //console.log(weatherArray)
           if( MODE === 'MEMBER_MODE'){
-          switch (category) {
-            case "REH" :
-              this.humidityDataList = weatherArray.map((item) => {
-               // console.log(item)
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf() ) ,
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-              this.humidityDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
+            switch (category) {
+              case "REH" :
+                this.humidityDataList = this.makeWeatherArray(weatherArray)
+                this.humidityDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                this.isFetchingHumi = false;
+                break;
+              case 'POP' :
+                this.rainfallDataList = this.makeWeatherArray(weatherArray)
+                this.rainfallDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                this.isFetchingRain = false
+                break;
+              case 'R06' :
+                this.rainfallmmDataList = this.makeWeatherArray(weatherArray)
+                this.rainfallmmDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                this.isFetchingRainmm = false
+                break;
+              case 'SKY' :
+                this.skyDataList = this.makeWeatherArray(weatherArray)
+                this.skyDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                this.isFetchingSky = false
+                break;
+              case 'T3H' :
+                this.temperatureDataList = this.makeWeatherArray(weatherArray)
+                this.temperatureDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                this.isFetchingTemp = false
+                break;
+              /* 사용 여부 확인  */
+              case 'ALL' :
+                  this.humidityDataList = this.makeWeatherArray(weatherArray)
+                  this.humidityDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                  this.isFetchingHumi = false;
 
-              this.isFetchingHumi = false;
-              break;
-            case 'POP' :
-              this.rainfallDataList = weatherArray.map((item) => {
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf()  ),
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-              this.rainfallDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
-              this.isFetchingRain = false
-              break;
-            case 'R06' :
-              this.rainfallmmDataList = weatherArray.map((item) => {
-                //console.log("R06!!!", item)
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf() ) ,
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-              
-              this.rainfallmmDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
+                  this.rainfallDataList = this.makeWeatherArray(weatherArray)
+                  this.rainfallDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                  this.isFetchingRain = false
 
-              this.isFetchingRainmm = false
-              break;
-            case 'SKY' :
-              this.skyDataList = weatherArray.map((item) => {
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf())  ,
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
+                  this.rainfallmmDataList = this.makeWeatherArray(weatherArray)
+                  this.rainfallmmDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                  this.isFetchingRainmm = false
 
-              this.skyDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
+                  this.skyDataList = this.makeWeatherArray(weatherArray)
+                  this.skyDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                  this.isFetchingSky = false
 
-              this.isFetchingSky = false
-              break;
-            case 'T3H' :
-              this.temperatureDataList = weatherArray.map((item) => {
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf()),
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-
-              this.temperatureDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   //((momentobj._d).valueOf() +  24 * 3600 * 1000) , //하루 더해주기
-                   ((momentobj._d).valueOf()) , 
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
-
-              this.isFetchingTemp = false
-              break;
-            case 'ALL' :
-              this.humidityDataList = weatherArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
-               this.humidityDataListYesterday = yesterdayArray.map((item) => {
-                 // console.log(item)
-                  let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                  return ([
-                    ((momentobj._d).valueOf() ) ,
-                    parseInt( item.FCST_VALUE) ,
-                  ])
-                })
- 
-               this.isFetchingHumi = false;
-
-
-              this.rainfallDataList = weatherArray.map((item) => {
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf()  ),
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-              this.rainfallDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
-              this.isFetchingRain = false
-
-
-              this.rainfallmmDataList = weatherArray.map((item) => {
-                //console.log("R06!!!", item)
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf() ) ,
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-              
-              this.rainfallmmDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
-
-              this.isFetchingRainmm = false
-
-
-
-
-
-              this.skyDataList = weatherArray.map((item) => {
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf())  ,
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-
-              this.skyDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   ((momentobj._d).valueOf() ) ,
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
-
-              this.isFetchingSky = false
-
-
-              this.temperatureDataList = weatherArray.map((item) => {
-                let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                return ([
-                  ((momentobj._d).valueOf()),
-                  parseInt( item.FCST_VALUE) ,
-                ])
-              })
-
-              this.temperatureDataListYesterday = yesterdayArray.map((item) => {
-                // console.log(item)
-                 let momentobj = moment(item.FCST_DATE + item.FCST_TIME, 'YYYYMMDDHHmm') 
-                 return ([
-                   //((momentobj._d).valueOf() +  24 * 3600 * 1000) , //하루 더해주기
-                   ((momentobj._d).valueOf()) , 
-                   parseInt( item.FCST_VALUE) ,
-                 ])
-               })
-               break;
-
-
-
-            default :
-              alert('선택한 값이 없습니다.');
-              break;
+                  this.temperatureDataList = this.makeWeatherArray(weatherArray)
+                  this.temperatureDataListYesterday = this.makeWeatherArray(yesterdayArray)
+                  this.isFetchingTemp = false
+                break;
+              default :
+                alert('선택한 값이 없습니다.');
+                break;
             }
           }
           else if ( MODE ==='PRIVATE_MODE') {
