@@ -39,7 +39,7 @@ class HumidityChart extends Component {
 
   render() {
     console.log('render')
-    const { wrapperid, humidityDataList } = this.props;
+    const { wrapperid, humidityDataList, humidityDataListYesterday } = this.props;
     console.log("humidityDataList ", humidityDataList) 
     const config = {
       chart : {
@@ -77,7 +77,8 @@ class HumidityChart extends Component {
         //text: 'Source: thesolarfoundation.com'
     },
 
-    xAxis: {
+    xAxis: [
+    {
         type: 'datetime',
         dateTimeLabelFormats: { // don't display the dummy year
             month: '%H:%M:%S',
@@ -85,14 +86,38 @@ class HumidityChart extends Component {
 
         labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}'
 
+        },
+        plotLines: [{
+            color: 'red', // Color value
+            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+            value: moment()._d.valueOf(), // Value of where the line will appear
+            width: 2 // Width of the line    
+        }],
+        plotBands: [{
+            color: 'rgba(255,0,0,0.5)', // Color value
+            from:    moment()._d.valueOf() -  (3600 * 1000) * 2, // Start of the plot band
+            to:    moment()._d.valueOf() +  (3600 * 1000) * 2// End of the plot band
+        }],
+
     }
-  },
-    yAxis: {
+    ,{
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%H:%M:%S',
+        },
+        labels: {
+            enabled: false
+        },
+        //labels:  { style: { fontSize: 12,  }, format: '{value:%m월 %e일 %H-%M}',
+        opposite: true
+    }
+    ],
+    yAxis: [{
         min: 0,
         title: {
             text: '%'
         }
-    },
+    }],
     legend: {
         layout: 'vertical',
         align: 'right',
@@ -112,7 +137,8 @@ class HumidityChart extends Component {
         enabled: false
     },
     series: [{
-        type: 'spline',
+        type: 'area',
+        xAxis :0,
         name: '습도',
         data: humidityDataList,
         marker: {
@@ -135,6 +161,34 @@ class HumidityChart extends Component {
             color: '#f03e3e'
         }
     ]
+    },
+    {
+        type: 'spline',
+        xAxis :1,
+        marker: {
+            fillColor: 'white',
+            lineWidth: 2,
+            lineColor: "grey"
+        },
+        color: 'grey',       
+        //dashStyle : 'shortdot',
+
+        name: '전일 습도',
+        data: humidityDataListYesterday,
+        // zones: [{
+        //     value: 0,
+        //     color: 'grey'
+        // }, {
+        //     value: 15,
+        //     color: '#f59f00'
+        // }, {
+        //     value: 20,
+        //     color: '#d9480f'
+        // },{
+        //     value: 30,
+        //     color: '#f03e3e'
+        // }
+        //]
     }],
 
     }
@@ -152,6 +206,7 @@ export default inject(({ weather, edit }) => ({
     // getWeather : weather.getWeather,
     // humidityData : weather.humidityData,
     humidityDataList : weather.humidityDataList,
+    humidityDataListYesterday : weather.humidityDataListYesterday,
     allChartResizing : edit.allChartResizing,
     getWeatherData : weather.getWeatherData,
     setHumidityDataListEmpty : weather.setHumidityDataListEmpty

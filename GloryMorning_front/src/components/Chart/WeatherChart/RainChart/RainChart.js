@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import ReactHighcharts from  'react-highcharts'
+import moment from 'moment'
 import _  from 'lodash'
 
 /* 레인 차트는 강수확률이랑 강우량 두개를 가져가도록 함  */
@@ -65,7 +66,18 @@ class RainChart extends Component {
         labels: {
             enabled: true,
             //formatter: function() { return rainData[this.value][0][0];},
-        }
+        },
+        plotLines: [{
+            color: 'red', // Color value
+            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+            value: moment()._d.valueOf(), // Value of where the line will appear
+            width: 2 // Width of the line    
+        }],
+        plotBands: [{
+            color: 'rgba(255,0,0,0.5)', // Color value
+            from:    moment()._d.valueOf() -  (3600 * 1000) * 2, // Start of the plot band
+            to:    moment()._d.valueOf() +  (3600 * 1000) * 2// End of the plot band
+        }],
         //type: 'datetime',
         //tickPixelInterval: 150
     },
