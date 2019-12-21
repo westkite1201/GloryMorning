@@ -44,7 +44,7 @@ export default class SearchStore {
      this.rootStore.weather.getWeatherData('T3H', false, item);
 
      this.rootStore.weather.getWeatherDataShortTerm(false, item);
-
+     this.rootStore.weather.getDustInfo(false, item);
   }
   /* 
     location setting 

@@ -2,7 +2,7 @@ import { observable, action, computed } from "mobx";
 import _ from "lodash";
 import * as memberApi from "../lib/api/memberApi";
 import * as weatherApi from "../lib/api/weatherApi";
-
+import { toast } from "react-toastify";
 
 /* setting 이지만 현재 backgroundSetting 이라 보는게 맞다  */
 export default class SettingStore {
@@ -65,10 +65,27 @@ export default class SettingStore {
   //redis에 저장 
   @action 
   settingBackgroundURLRedis = async() => {
-    await memberApi.setUserBackground('testUser' , this.detailViewitem.largeImageURL );
-    let resData = await memberApi.getUserBackground('testUser');
-    console.log("[SEO]backgroundURL " , resData.data.backgroundURL)
-    this.selectedBackgroundUrl = resData.data.backgroundURL;
+    try{
+      let response = await memberApi.setUserBackground('testUser' , this.detailViewitem.largeImageURL );
+      console.log("[seo][settingBackgroundURLRedis] response", response)
+      if(response.data.message === 'success'){
+        console.log('h???')
+        toast.success('🦄 야호 저장에 성공하였습니다!', {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          });
+      }
+      let resData = await memberApi.getUserBackground('testUser');
+      console.log("[SEO]backgroundURL " , resData.data.backgroundURL)
+      this.selectedBackgroundUrl = resData.data.backgroundURL;
+    }catch(e){
+      console.log('error ', e )
+    }
+
   }
 
 

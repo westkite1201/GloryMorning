@@ -37,7 +37,7 @@ router.post('/setUserBackground', async(req, res)=>{
     return res.json({
       message: 'success',
       api: 'setUserComponents',
-      code: 100
+      code: 200
     });
   }catch(error){
     console.log("error" , error)

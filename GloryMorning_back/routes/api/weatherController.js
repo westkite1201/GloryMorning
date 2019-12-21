@@ -523,7 +523,7 @@ settingWeatherData = async() => {
         }))
 
       for (const item of convertList) { 
-          //await insertWeatherData(item.x, item.y); 
+          await insertWeatherData(item.x, item.y); 
           await insertWeatherDataShortTerm(item.x, item.y);
       }
     } else {

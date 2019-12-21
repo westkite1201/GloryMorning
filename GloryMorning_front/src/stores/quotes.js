@@ -20,7 +20,7 @@ export default class QuotesStore {
 
   @observable viewQuotes = '' // roling Quotes 
   //@observable rollingQuotesInterval = ''
-  @observable rollingQuotesIntervalTime = 2000;
+  @observable rollingQuotesIntervalTime = 5000;
 
   @observable rollingQuotesMode = true; //default 
 

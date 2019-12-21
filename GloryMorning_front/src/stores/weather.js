@@ -174,6 +174,11 @@ export default class WeatherStore {
     @observable LocationB='';
     @observable LocationC='';
 
+
+    @observable justFitClothes = {
+      top : "",
+      bottom :"",
+    }
     /* dustInfoOverView 에 버튼 클릭시  */
     @action
     setSelectDustMessageInfo = (objectName) => {
@@ -259,31 +264,68 @@ export default class WeatherStore {
 
     @action
     getJustFitClothes = (temperature) => {
+      temperature = parseInt(temperature)
       if(temperature >= 28){
+        this.justFitClothes ={
+          top :  '반팔',
+          bottom : '반바지'
+        }
         //반팔 반바지
       }
       if( 27 >= temperature  && temperature >= 23){
+        this.justFitClothes ={
+          top :  '반팔, 얇은 셔츠',
+          bottom : '반바지, 면바지'
+        }
         //반팔, 얇은 셔츠, 반바지, 면바지
       }
       if( 22 >= temperature  && temperature >= 20){
+        this.justFitClothes ={
+          top :  '얇은 가디건, 긴팔',
+          bottom : '반바지, 면바지'
+        }
         //얇은 가디건, 긴판, 반바지, 면바지
       }
       if( 19 >= temperature  && temperature >= 17){
+        this.justFitClothes ={
+          top :  '얇은 니트, 맨투맨, 가디건',
+          bottom : '청바지'
+        }
         //얇은 니트 , 맨투맨 , 가디건, 청바지
       }
       if( 16 >= temperature  && temperature >= 12){
+        this.justFitClothes ={
+          top :  '자켓, 가디건, 야상 ',
+          bottom : '청바지, 면바지'
+        }
         //자켓, 가디건, 야상, 청바지, 면바지
       }
       if( 11 >= temperature  && temperature >= 9){
+        this.justFitClothes ={
+          top :  '자켓, 트렌치, 코트, 니트',
+          bottom : '청바지, 면바지'
+        }
         //자켓, 트렌치코트 ,야상 , 니트 , 
       }
       if( 8 >= temperature  && temperature >= 5){
+        this.justFitClothes ={
+          top :  '자켓, 트렌치, 코트, 니트',
+          bottom : '청바지, 면바지'
+        }
         //코트 ,가죽자켓 , 히트텍 ,니트
       }
       if( 4 >= temperature){
+        this.justFitClothes ={
+          top :  '패딩, 얼,죽,코, 목도리.',
+          bottom : '기모'
+        }
         //패딩, 두꺼운 코트 ,목도리 ,기모 
       }
       if(-5 >= temperature){
+        this.justFitClothes ={
+          top :  '방한용품 착용하세요...',
+          bottom : '히트텍 입으셈...'
+        }
         //방한용품 착용하세요...
       }
     }
@@ -507,6 +549,7 @@ export default class WeatherStore {
             rainNow : rainNow,
             humidityNow : humidityNow
           }
+          this.getJustFitClothes(weatherInfObject.temperatureNow);
           this.weatherInfObject = weatherInfObject;
       }
       }catch(e){

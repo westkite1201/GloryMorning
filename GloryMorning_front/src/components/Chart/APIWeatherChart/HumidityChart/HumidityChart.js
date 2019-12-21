@@ -160,7 +160,7 @@ class HumidityChart extends Component {
             value: 30,
             color: '#f03e3e'
         }
-    ]
+        ]
     },
     {
         type: 'spline',

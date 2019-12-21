@@ -22,7 +22,8 @@ class WeatherInfo extends Component {
             weatherInfObject,
             LocationA,
             LocationB,
-            LocationC }  =this.props;
+            LocationC,
+            justFitClothes }  =this.props;
         let weatherClassNames = weatherInfObject.weatherClassName + " weather_icon"
         let weatherInfoName = weatherInfObject.weatherInfoName
         console.log("weatherClassNames!!!!" , weatherClassNames)
@@ -69,7 +70,15 @@ class WeatherInfo extends Component {
                  </div>
 
                  <div className = "weather_list">
-                    
+                    <div>
+                        <span>이걸 입어보세요! </span>
+                        <div>                                  
+                            {justFitClothes.bottom}
+                        </div>
+                        <div>
+                            {justFitClothes.top}
+                        </div>
+                    </div>
                  </div>
             </div>
         )
@@ -84,5 +93,7 @@ export default inject(({ weather }) => ({
     temperatureNow : weather.temperatureNow,
     weatherClassName: weather.weatherClassName,
     weatherInfoData : weather.weatherInfoData,
-    getWeatherDataShortTerm  : weather.getWeatherDataShortTerm
+    getWeatherDataShortTerm  : weather.getWeatherDataShortTerm,
+
+    justFitClothes : weather.justFitClothes,
 }))(observer(WeatherInfo))

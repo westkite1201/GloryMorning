@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Dashboard from "../layouts/DashBoard";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 class App extends Component {
     state ={
         
@@ -20,6 +21,16 @@ class App extends Component {
        
         return (
             <div style ={{height: '100%'}}>
+                <ToastContainer 
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnVisibilityChange
+                    draggable
+                    pauseOnHover/>
                 {/*<div id ='background'>dsdsad</div>*/}
                 {/*<Route exact path="/login" component={Login}/>*/}
                 {/*<Route path="/board" component={SideNav}/>*/}

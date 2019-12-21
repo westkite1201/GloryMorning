@@ -3,12 +3,7 @@ import _ from "lodash";
 import ReactGridLayout,{ WidthProvider} from "react-grid-layout";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import style from './EditView.module.css';
 import { observer, inject, } from 'mobx-react'
-
-
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 const ResponsiveReactGridLayout = WidthProvider(ReactGridLayout);
 
 
@@ -92,17 +87,6 @@ class EditView extends Component {
         }
         return (
           <div className = {style.rglContainer} style ={style}>
-          <ToastContainer 
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnVisibilityChange
-            draggable
-            pauseOnHover/>
-     
             <div className= {style.dropLayout} style ={{width: '100%'}}>
               <ResponsiveReactGridLayout
                 id     = {'rgl'}

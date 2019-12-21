@@ -1,9 +1,5 @@
-import { observable, action, computed } from 'mobx';
-import ReactDOM from 'react-dom';
+import { observable, action } from 'mobx';
 import _ from 'lodash'
-import * as boardApi from '../lib/api/boardApi'
-import moment from 'moment'
-import history from '../history'
 export default class sidebarStore{
 
 
