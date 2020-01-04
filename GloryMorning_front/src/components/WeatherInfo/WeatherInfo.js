@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {observer, inject} from 'mobx-react'
 import Progress from '../Common/Progress'
 import OpacityIcon from '@material-ui/icons/Opacity';
+import moment from 'moment'
 import 'weather-icons/css/weather-icons.css';
 import './WeatherInfo.scss'
 
@@ -34,8 +35,9 @@ class WeatherInfo extends Component {
                  <div className = "location_info">
                     {LocationA} {LocationB} {LocationC} 
                  </div>
-                 <div>
-                 {weatherInfObject.baseDate} {weatherInfObject.baseTime}
+                 <div className ="location-info-time">
+                 {moment(weatherInfObject.baseDate).format("YYYY월 MM월 DD일 ")} 
+                 {weatherInfObject.baseTime}
                  </div>
                  <div className = "weather_icon_wrapper">
                     <i className={weatherClassNames}></i>

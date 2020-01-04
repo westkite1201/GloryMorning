@@ -118,7 +118,7 @@ class RainChart extends Component {
     },
      { // Secondary yAxis
         title: {
-            text: 'Rainfall',
+            text: '',
         },
         labels: {
             format: '{value} mm',

@@ -938,7 +938,10 @@ export default class WeatherStore {
               return (yesterday <= item.FCST_DATE  &&  item.FCST_DATE <= tommorow)
             });
 
-
+            /* yesterdayArray가 커서 보여지는게 헷갈려서 아예 날려버림  */
+            if (yesterdayArray.length < weatherArray.length) {
+              yesterdayArray = [];
+            }
 
           }
           else if ( MODE ==='PRIVATE_MODE') {
