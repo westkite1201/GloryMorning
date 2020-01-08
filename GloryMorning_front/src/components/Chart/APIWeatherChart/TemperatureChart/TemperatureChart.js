@@ -147,21 +147,62 @@ class TemperatureChart extends Component {
 
         name: '온도',
         data: temperatureDataList,
-        zones: [{
-            value: 0,
-            color: '#1864ab'
-        }, {
-            value: 15,
-            color: '#f59f00'
-        }, {
-            value: 20,
-            color: '#d9480f'
-        },{
-            value: 30,
-            color: '#f03e3e'
-        }
-
-    ]
+        zones: [
+            {
+                value: -10,
+                color: '#4c6ef5'
+            }, 
+            {
+                value: -7.5,
+                color: '#5c7cfa'
+            }, 
+            {
+                value: -5,
+                color: '#748ffc'
+            }, 
+            {
+                value: -2.5,
+                color: '#91a7ff'
+            }, 
+            {
+                value: 0,
+                color: '#bac8ff'
+            }, 
+            {
+                value: 2.5,
+                color: '#fff4e6'
+            }, 
+            {
+                value: 5,
+                color: '#ffe8cc'
+            },
+            {
+                value: 7.5,
+                color: '#ffd8a8'
+            },
+            {
+                value: 10,
+                color: '#ffc078'
+            }, 
+            {
+                value: 12.5,
+                color: '#ffa94d'
+            }, 
+            {
+                value: 15,
+                color: '#ff922b'
+            }, 
+            {
+                value: 20,
+                color: '#fd7e14'
+            },{
+                value: 25,
+                color: '#f76707'
+            },
+            {
+                value: 30,
+                color: '#e8590c'
+            }]
     },
     {
         type: 'spline',

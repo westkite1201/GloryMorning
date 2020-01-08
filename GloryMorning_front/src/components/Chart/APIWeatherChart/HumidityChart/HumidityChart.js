@@ -147,18 +147,47 @@ class HumidityChart extends Component {
             lineColor: "#748ffc"
         },
         color : "#748ffc",
-        zones: [{
+        zones: [
+        {
             value: 0,
-            color: '#1864ab'
-        }, {
-            value: 15,
-            color: '#f59f00'
-        }, {
-            value: 20,
-            color: '#d9480f'
-        },{
-            value: 30,
-            color: '#f03e3e'
+            color : '#edf2ff'
+        },
+        {
+            value : 10,
+            color : '#dbe4ff'
+        },
+        {
+            value : 20,
+            color :'#bac8ff'
+        },
+        {
+            value :  30,
+            color : '#91a7ff'
+        },
+        {
+            value : 40,
+            color: '#748ffc'
+        },
+        {
+            value : 50,
+            color:'#5c7cfa'
+        },
+        {
+            value: 60,
+            color:'#4c6ef5'
+        },
+        {
+
+            value : 70,
+            color: '#4263eb'
+        },
+        {
+            value : 80,
+            color : '#3b5bdb'
+        },
+        {
+            value : 90,
+            color : '#364fc7'
         }
         ]
     },
