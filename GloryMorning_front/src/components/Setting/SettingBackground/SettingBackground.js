@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import TextField from "@material-ui/core/TextField";
@@ -7,6 +7,8 @@ import { observer } from "mobx-react";
 import UseStores from "../UseStores.js";
 import BackgroundItem from "./BackgroundItem";
 import TagItem from "./TagItem";
+import BackgroundBookmark from "../SettingBackground/BackgroundBookMark";
+
 import GridListTile from "@material-ui/core/GridListTile";
 import GridList from "@material-ui/core/GridList";
 import ListSubheader from "@material-ui/core/ListSubheader";
@@ -15,10 +17,8 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ViewEyeIcon from "@material-ui/icons/RemoveRedEye";
 import PortraitIcon from "@material-ui/icons/Portrait";
 import PacmanLoader from "react-spinners/PacmanLoader";
-import bookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import _ from "lodash";
 
-import { red } from "@material-ui/core/colors";
+import _ from "lodash";
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -31,30 +31,9 @@ const useStyles = makeStyles(theme => ({
     width: 500,
     height: 500
   },
-  tileSpace: {
-    margin: "5px",
-    cursor: "pointer"
-  },
-
-  container: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200
-  },
-  dense: {
-    marginTop: 19
-  },
-  menu: {
-    width: 200
-  },
-  favoriteIcon: {
-    color: "red"
-  },
-  viewEyeIcon: {}
+  icon: {
+    color: "rgba(255, 255, 255, 0.54)"
+  }
 }));
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
@@ -98,6 +77,7 @@ const SettingBackground = observer(() => {
           item={item}
           setBackgroundUrl={setting.setBackgroundUrl}
           setdetailViewItem={setting.setdetailViewItem}
+          addBookMarkBackGround={setting.addBookMarkBackGround}
           classes={classes}
         ></BackgroundItem>
       );
@@ -174,6 +154,7 @@ const SettingBackground = observer(() => {
           </Button>
         </div>
       </div>
+      <BackgroundBookmark />
     </div>
   );
 });

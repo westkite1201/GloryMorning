@@ -1,22 +1,14 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
-import UseStores from "../UseStores.js";
-import { bookmarkBorder } from "@material-ui/icons";
-import data from "./data";
-const BackgroundBookMarkItem = observer(({ key, setting, item }) => {
-  return (
-    <div>
-      <button onClick={setting.addBookMarkBackGround}></button>
-      <img src={item.previewURL} />
-    </div>
-  );
-});
+import UseStores from "../../UseStores.js";
+import BackgroundBookMarkItem from "./BackgroundBookMarkItem";
 
 const BackgroundBookMark = observer(() => {
   const { setting } = UseStores();
-
-  makeList = () => {
+  console.log("[SEO] BackgroundBookMark RENDER ", setting.backgroundBookMark);
+  const makeList = () => {
     setting.backgroundBookMark.map((item, key) => {
+      console.log("[seo] item ", item);
       return <BackgroundBookMarkItem key={key} setting={setting} item={item} />;
     });
   };
@@ -27,7 +19,12 @@ const BackgroundBookMark = observer(() => {
   return (
     <div>
       <div>PHOTOS</div>
-      {makeList()}
+      {setting.backgroundBookMark.map((item, key) => {
+        console.log("[seo] item ", item);
+        return (
+          <BackgroundBookMarkItem key={key} setting={setting} item={item} />
+        );
+      })}
     </div>
   );
 });

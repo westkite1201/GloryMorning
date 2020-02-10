@@ -1,1 +1,1 @@
-export {default} from './SettingBackground'
+export { default } from "./SettingBackground";
