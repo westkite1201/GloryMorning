@@ -16,32 +16,33 @@ export default class SettingStore {
   @observable query = "";
   @observable selectedBackgroundUrl = "";
 
-  //detailView 화면에서 사용할 변수 
-  @observable detailViewitem = {
-    "largeImageURL": "",
-    "webformatHeight": '',
-    "webformatWidth": '',
-    "likes": '',
-    "imageWidth": '',
-    "id": '',
-    "user_id": '',
-    "views": '',
-    "comments": '',
-    "pageURL": "",
-    "imageHeight": '',
-    "webformatURL": "",
-    "type": "",
-    "previewHeight": '',
-    "tags": "",
-    "downloads": '',
-    "user": "",
-    "favorites": '',
-    "imageSize": '',
-    "previewWidth": '',
-    "userImageURL": "",
-    "previewURL": ""
-  }; 
+  @observable backgroundBookMark = [];
 
+  //detailView 화면에서 사용할 변수
+  @observable detailViewitem = {
+    largeImageURL: "",
+    webformatHeight: "",
+    webformatWidth: "",
+    likes: "",
+    imageWidth: "",
+    id: "",
+    user_id: "",
+    views: "",
+    comments: "",
+    pageURL: "",
+    imageHeight: "",
+    webformatURL: "",
+    type: "",
+    previewHeight: "",
+    tags: "",
+    downloads: "",
+    user: "",
+    favorites: "",
+    imageSize: "",
+    previewWidth: "",
+    userImageURL: "",
+    previewURL: ""
+  };
 
   @action
   onChangeQuery = e => {
@@ -49,62 +50,61 @@ export default class SettingStore {
     this.query = e.target.value;
   };
 
-  //redis에서 백 그라운드 가져오기 
+  //redis에서 백 그라운드 가져오기
   @action
-  getUserBackground = async() => {
-    console.log("[SEO] getUserBackground")
-    try{
-      let resData = await memberApi.getUserBackground('testUser');
+  getUserBackground = async () => {
+    console.log("[SEO] getUserBackground");
+    try {
+      let resData = await memberApi.getUserBackground("testUser");
       this.selectedBackgroundUrl = resData.data.backgroundURL;
-    }catch(e){
-      console.log("error ", e)
+    } catch (e) {
+      console.log("error ", e);
     }
+  };
 
-  }
-
-  //redis에 저장 
-  @action 
-  settingBackgroundURLRedis = async() => {
-    try{
-      let response = await memberApi.setUserBackground('testUser' , this.detailViewitem.largeImageURL );
-      console.log("[seo][settingBackgroundURLRedis] response", response)
-      if(response.data.message === 'success'){
-        console.log('h???')
-        toast.success('🦄 야호 저장에 성공하였습니다!', {
+  //redis에 저장
+  @action
+  settingBackgroundURLRedis = async () => {
+    try {
+      let response = await memberApi.setUserBackground(
+        "testUser",
+        this.detailViewitem.largeImageURL
+      );
+      console.log("[seo][settingBackgroundURLRedis] response", response);
+      if (response.data.message === "success") {
+        console.log("h???");
+        toast.success("🦄 야호 저장에 성공하였습니다!", {
           position: "top-center",
           autoClose: 1500,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
-          draggable: true,
-          });
+          draggable: true
+        });
       }
-      let resData = await memberApi.getUserBackground('testUser');
-      console.log("[SEO]backgroundURL " , resData.data.backgroundURL)
+      let resData = await memberApi.getUserBackground("testUser");
+      console.log("[SEO]backgroundURL ", resData.data.backgroundURL);
       this.selectedBackgroundUrl = resData.data.backgroundURL;
-    }catch(e){
-      console.log('error ', e )
+    } catch (e) {
+      console.log("error ", e);
     }
-
-  }
-
+  };
 
   /* 현재 클릭시 백그라운드 설정 */
   @action
   setBackgroundUrl = largeImageURL => {
-    console.log("[SEO] , setBackgroundUrl " , largeImageURL); 
+    console.log("[SEO] , setBackgroundUrl ", largeImageURL);
     this.selectedBackgroundUrl = largeImageURL;
   };
 
+  @action
+  setdetailViewItem = item => {
+    console.log("[SEO] , setdetailViewItem ", item);
+    this.detailViewitem = Object.assign({}, item);
+  };
 
   @action
-  setdetailViewItem = (item) =>{
-    console.log("[SEO] , setdetailViewItem " , item); 
-    this.detailViewitem = Object.assign({}, item)
-  }
-
-  @action
-  getPixabayImages = async(imageType) => {
+  getPixabayImages = async imageType => {
     let response;
     try {
       this.isPixabayLoading = true;
@@ -121,9 +121,9 @@ export default class SettingStore {
     }
   };
 
-
-
-  
-
-
+  @action
+  addBookMarkBackGround = item => {
+    this.backgroundBookMark.push(Object.assign({}, item));
+    console.log("[SEO] addBookMarkBackGround");
+  };
 }
