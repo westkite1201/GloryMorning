@@ -126,4 +126,11 @@ export default class SettingStore {
     this.backgroundBookMark.push(Object.assign({}, item));
     console.log("[SEO] addBookMarkBackGround ", this.backgroundBookMark);
   };
+
+  @action
+  filterBookMarkBackGround = id => {
+    this.backgroundBookMark = this.backgroundBookMark.filter(item => {
+      return item.id !== id;
+    });
+  };
 }

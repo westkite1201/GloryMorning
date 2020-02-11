@@ -9,7 +9,14 @@ const BackgroundBookMark = observer(() => {
   const makeList = () => {
     setting.backgroundBookMark.map((item, key) => {
       console.log("[seo] item ", item);
-      return <BackgroundBookMarkItem key={key} setting={setting} item={item} />;
+      return (
+        <BackgroundBookMarkItem
+          key={key}
+          setting={setting}
+          item={item}
+          filterBookMarkBackGround={setting.filterBookMarkBackGround}
+        />
+      );
     });
   };
 
