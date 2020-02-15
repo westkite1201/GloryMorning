@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import "./BackgroundBookMarkItem.scss";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-const BackgroundBookMarkItem = ({ item, filterBookMarkBackGround }) => {
+const BackgroundBookMarkItem = ({
+  item,
+  filterBookMarkBackGround,
+  setdetailViewItem
+}) => {
   const [isMouseHover, setHover] = useState(false);
 
   console.log("BackgroundBookMarkItem render", item, isMouseHover);
@@ -10,6 +14,7 @@ const BackgroundBookMarkItem = ({ item, filterBookMarkBackGround }) => {
       style={{ width: "100px", height: "50px", position: "relative" }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={() => setdetailViewItem(item)}
     >
       <img
         src={item.previewURL}

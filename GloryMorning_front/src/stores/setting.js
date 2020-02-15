@@ -133,4 +133,48 @@ export default class SettingStore {
       return item.id !== id;
     });
   };
+
+  @action
+  saveBookMarkBackground = async () => {
+    try {
+      const response = await memberApi.saveBookMarkBackground(
+        this.backgroundBookMark
+      );
+      if (response.status === 200) {
+        toast.success("🦄 야호 저장에 성공하였습니다!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        });
+      }
+      console.log("[SEO] saveBookMarkBackground = ", response);
+    } catch (e) {}
+  };
+
+  @action
+  getBookmarkBackground = async () => {
+    let memIdx = 1;
+    try {
+      const response = await memberApi.getBookmarkBackground(memIdx);
+      console.log("[SEO] getBookmarkBackgroud = ", response);
+      this.backgroundBookMark = response.data.map(item => {
+        return {
+          memIdx: item.MEM_IDX,
+          id: item.ID,
+          pageURL: item.PAGE_URL,
+          previewURL: item.PREVIEW_URL,
+          largeImageURL: item.LARGE_IMAGE_URL,
+          tags: item.TAGS,
+          likes: item.LIKES,
+          favorites: item.FAVORITES,
+          views: item.VIEW
+        };
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 }

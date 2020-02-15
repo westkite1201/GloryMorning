@@ -452,7 +452,7 @@ insertWeatherData = async (nx, ny) => {
         item.baseTime
       ];
     });
-    console.log("list", list);
+    //console.log("list", list);
     let rows = await weatherDaoNew.insertWeatherData(list);
     console.log("weatherDaoNew insertWeatherData ", rows);
     return new Promise((resolve, reject) => {

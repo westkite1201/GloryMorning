@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import UseStores from "../../UseStores.js";
 import BackgroundBookMarkItem from "./BackgroundBookMarkItem";
-import Grid from "@material-ui/core/Grid";
+import { Grid, Button } from "@material-ui/core";
 
 const BackgroundBookMark = observer(() => {
   const { setting } = UseStores();
@@ -15,15 +15,10 @@ const BackgroundBookMark = observer(() => {
     setting.backgroundBookMark.map((item, index) => {
       console.log("[SEOTEST]  index ", index);
       tempArr.push(Object.assign({}, item));
-      if ((index + 1) % 3 === 0) {
+      if (!arr[arr.length - 1]) {
         arr.push(tempArr);
-        tempArr = [];
       } else {
-        if (!arr[arr.length - 1]) {
-          arr.push(tempArr);
-        } else {
-          arr[arr.length - 1] = tempArr;
-        }
+        arr[arr.length - 1] = tempArr;
       }
     });
     console.log("[SEOTEST]  arr ", arr);
@@ -36,6 +31,7 @@ const BackgroundBookMark = observer(() => {
               setting={setting}
               item={item}
               filterBookMarkBackGround={setting.filterBookMarkBackGround}
+              setdetailViewItem={setting.setdetailViewItem}
             />
           </Grid>
         );
@@ -50,7 +46,9 @@ const BackgroundBookMark = observer(() => {
   };
 
   /* 나중에 사용  */
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setting.getBookmarkBackground();
+  }, []);
 
   return (
     <div>
@@ -60,18 +58,8 @@ const BackgroundBookMark = observer(() => {
         <Grid container item xs={12} spacing={3}></Grid>
         <Grid container item xs={12} spacing={3}></Grid>
       </Grid>
-      {/*setting.backgroundBookMark.map((item, key) => {
-        console.log("[seo] item ", item);
-        return (
-          <BackgroundBookMarkItem
-            key={key}
-            setting={setting}
-            item={item}
-            filterBookMarkBackGround={setting.filterBookMarkBackGround}
-          />
-        );
-      })*/}
       {makeList()}
+      <Button onClick={setting.saveBookMarkBackground}>saveBookmarkItem</Button>
     </div>
   );
 });

@@ -170,7 +170,7 @@ module.exports = function (callee) {
                 }
 
                 let res = await doRequest();
-                console.log("response " , res)
+                //console.log("response " , res)
                 return res
             },
             getDustNearStation :  async(tmX, tmY) =>{
