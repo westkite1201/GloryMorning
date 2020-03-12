@@ -1,8 +1,8 @@
-import { observable, action, computed } from "mobx";
-import _ from "lodash";
-import * as memberApi from "../lib/api/memberApi";
-import * as weatherApi from "../lib/api/weatherApi";
-import { toast } from "react-toastify";
+import { observable, action, computed } from 'mobx';
+import _ from 'lodash';
+import * as memberApi from '../lib/api/memberApi';
+import * as weatherApi from '../lib/api/weatherApi';
+import { toast } from 'react-toastify';
 
 /* setting 이지만 현재 backgroundSetting 이라 보는게 맞다  */
 export default class SettingStore {
@@ -13,52 +13,64 @@ export default class SettingStore {
   @observable open = false;
   @observable pixabayHits = [];
   @observable isPixabayLoading = false;
-  @observable query = "";
-  @observable selectedBackgroundUrl = "";
+  @observable query = '';
+  @observable selectedBackgroundUrl = '';
 
   @observable backgroundBookMark = [];
 
   //detailView 화면에서 사용할 변수
   @observable detailViewitem = {
-    largeImageURL: "",
-    webformatHeight: "",
-    webformatWidth: "",
-    likes: "",
-    imageWidth: "",
-    id: "",
-    user_id: "",
-    views: "",
-    comments: "",
-    pageURL: "",
-    imageHeight: "",
-    webformatURL: "",
-    type: "",
-    previewHeight: "",
-    tags: "",
-    downloads: "",
-    user: "",
-    favorites: "",
-    imageSize: "",
-    previewWidth: "",
-    userImageURL: "",
-    previewURL: ""
+    largeImageURL: '',
+    webformatHeight: '',
+    webformatWidth: '',
+    likes: '',
+    imageWidth: '',
+    id: '',
+    user_id: '',
+    views: '',
+    comments: '',
+    pageURL: '',
+    imageHeight: '',
+    webformatURL: '',
+    type: '',
+    previewHeight: '',
+    tags: '',
+    downloads: '',
+    user: '',
+    favorites: '',
+    imageSize: '',
+    previewWidth: '',
+    userImageURL: '',
+    previewURL: '',
+  };
+
+  @observable useBackgroundURL = true;
+  @observable backgroundColor = '#fff';
+  @action
+  setUseThemeOrURL = () => {
+    this.useBackgroundURL = !this.useBackgroundURL;
+  };
+
+  @action
+  setBackgroundColor = colorHex => {
+    this.backgroundColor = colorHex;
   };
 
   @action
   onChangeQuery = e => {
-    console.log("[SEO][ONCHAGENAME]", e.target.value);
+    console.log('[SEO][ONCHAGENAME]', e.target.value);
     this.query = e.target.value;
   };
 
   //redis에서 백 그라운드 가져오기
   @action
   getUserBackground = async () => {
-    console.log("[SEO] getUserBackground");
+    console.log('[SEO] getUserBackground');
     try {
-      let resData = await memberApi.getUserBackground("testUser");
+      let resData = await memberApi.getUserBackground('testUser');
       this.selectedBackgroundUrl = resData.data.backgroundURL;
     } catch (e) {
-      console.log("error ", e);
+      console.log('error ', e);
     }
   };
 
@@ -67,39 +79,39 @@ export default class SettingStore {
   settingBackgroundURLRedis = async () => {
     try {
       let response = await memberApi.setUserBackground(
-        "testUser",
-        this.detailViewitem.largeImageURL
+        'testUser',
+        this.detailViewitem.largeImageURL,
       );
-      console.log("[seo][settingBackgroundURLRedis] response", response);
-      if (response.data.message === "success") {
-        console.log("h???");
-        toast.success("🦄 야호 저장에 성공하였습니다!", {
-          position: "top-center",
+      console.log('[seo][settingBackgroundURLRedis] response', response);
+      if (response.data.message === 'success') {
+        console.log('h???');
+        toast.success('🦄 야호 저장에 성공하였습니다!', {
+          position: 'top-center',
           autoClose: 1500,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
-          draggable: true
+          draggable: true,
         });
       }
-      let resData = await memberApi.getUserBackground("testUser");
-      console.log("[SEO]backgroundURL ", resData.data.backgroundURL);
+      let resData = await memberApi.getUserBackground('testUser');
+      console.log('[SEO]backgroundURL ', resData.data.backgroundURL);
       this.selectedBackgroundUrl = resData.data.backgroundURL;
     } catch (e) {
-      console.log("error ", e);
+      console.log('error ', e);
     }
   };
 
   /* 현재 클릭시 백그라운드 설정 */
   @action
   setBackgroundUrl = largeImageURL => {
-    console.log("[SEO] , setBackgroundUrl ", largeImageURL);
+    console.log('[SEO] , setBackgroundUrl ', largeImageURL);
     this.selectedBackgroundUrl = largeImageURL;
   };
 
   @action
   setdetailViewItem = item => {
-    console.log("[SEO] , setdetailViewItem ", item);
+    console.log('[SEO] , setdetailViewItem ', item);
     this.detailViewitem = Object.assign({}, item);
   };
 
@@ -109,7 +121,7 @@ export default class SettingStore {
     try {
       this.isPixabayLoading = true;
       response = await weatherApi.getPixabayImages(this.query, imageType);
-      console.log("[SEO] getPixabayImages", response);
+      console.log('[SEO] getPixabayImages', response);
       let pixabayData = response.data.data;
       // pixabayData.hits.map((item) =>{
       //     console.log("[SEO] item", item)
@@ -124,7 +136,7 @@ export default class SettingStore {
   @action
   addBookMarkBackGround = item => {
     this.backgroundBookMark.push(Object.assign({}, item));
-    console.log("[SEO] addBookMarkBackGround ", this.backgroundBookMark);
+    console.log('[SEO] addBookMarkBackGround ', this.backgroundBookMark);
   };
 
   @action
@@ -138,19 +150,19 @@ export default class SettingStore {
   saveBookMarkBackground = async () => {
     try {
       const response = await memberApi.saveBookMarkBackground(
-        this.backgroundBookMark
+        this.backgroundBookMark,
       );
       if (response.status === 200) {
-        toast.success("🦄 야호 저장에 성공하였습니다!", {
-          position: "top-center",
+        toast.success('🦄 야호 저장에 성공하였습니다!', {
+          position: 'top-center',
           autoClose: 1500,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
-          draggable: true
+          draggable: true,
         });
       }
-      console.log("[SEO] saveBookMarkBackground = ", response);
+      console.log('[SEO] saveBookMarkBackground = ', response);
     } catch (e) {}
   };
 
@@ -159,7 +171,7 @@ export default class SettingStore {
     let memIdx = 1;
     try {
       const response = await memberApi.getBookmarkBackground(memIdx);
-      console.log("[SEO] getBookmarkBackgroud = ", response);
+      console.log('[SEO] getBookmarkBackgroud = ', response);
       this.backgroundBookMark = response.data.map(item => {
         return {
           memIdx: item.MEM_IDX,
@@ -170,7 +182,7 @@ export default class SettingStore {
           tags: item.TAGS,
           likes: item.LIKES,
           favorites: item.FAVORITES,
-          views: item.VIEW
+          views: item.VIEW,
         };
       });
     } catch (e) {

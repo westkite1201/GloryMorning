@@ -1,39 +1,46 @@
-import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect } from 'react';
 
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import { observer } from "mobx-react";
-import UseStores from "../UseStores.js";
-import BackgroundItem from "./BackgroundItem";
-import TagItem from "./TagItem";
-import BackgroundBookmark from "../SettingBackground/BackgroundBookMark";
+import { observer } from 'mobx-react';
+import UseStores from '../UseStores.js';
+import BackgroundItem from './BackgroundItem';
+import TagItem from './TagItem';
+import BackgroundBookmark from '../SettingBackground/BackgroundBookMark';
+import BackgroundTheme from '../SettingBackground/BackgroundTheme';
+import { makeStyles } from '@material-ui/core/styles';
+// import TextField from '@material-ui/core/TextField';
+// import Button from '@material-ui/core/Button';
+// import GridListTile from '@material-ui/core/GridListTile';
+// import GridList from '@material-ui/core/GridList';
+// import ListSubheader from '@material-ui/core/ListSubheader';
+import {
+  TextField,
+  Button,
+  Switch,
+  GridListTile,
+  GridList,
+  ListSubheader,
+} from '@material-ui/core';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ViewEyeIcon from '@material-ui/icons/RemoveRedEye';
+import PortraitIcon from '@material-ui/icons/Portrait';
+import PacmanLoader from 'react-spinners/PacmanLoader';
 
-import GridListTile from "@material-ui/core/GridListTile";
-import GridList from "@material-ui/core/GridList";
-import ListSubheader from "@material-ui/core/ListSubheader";
-
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ViewEyeIcon from "@material-ui/icons/RemoveRedEye";
-import PortraitIcon from "@material-ui/icons/Portrait";
-import PacmanLoader from "react-spinners/PacmanLoader";
-
-import _ from "lodash";
+import _ from 'lodash';
 const useStyles = makeStyles(theme => ({
   root: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-    backgroundColor: theme.palette.background.paper
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper,
   },
   gridList: {
     width: 500,
-    height: 500
+    height: 500,
   },
   icon: {
-    color: "rgba(255, 255, 255, 0.54)"
-  }
+    color: 'rgba(255, 255, 255, 0.54)',
+  },
 }));
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
@@ -50,8 +57,8 @@ const SettingBackground = observer(() => {
   const classes = useStyles();
   //componentDidMount 와 componentDidUpdate
   useEffect(() => {
-    setting.getPixabayImages("image");
-    console.log("render complete!");
+    setting.getPixabayImages('image');
+    console.log('render complete!');
   }, []);
 
   // const onChangeName = e => {
@@ -60,15 +67,15 @@ const SettingBackground = observer(() => {
 
   // 이미지 cover가 img src로는 해결 안되는 것 같아 이걸로 변경
   const detailImageView = {
-    width: "30em",
-    height: "25em",
+    width: '30em',
+    height: '25em',
     backgroundImage: `url(${setting.detailViewitem.largeImageURL})`,
-    backgroundSize: "contain",
-    backgroundRepeat: "no-Repeat"
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-Repeat',
   };
 
   const makeImageSrc = () => {
-    console.log("[SEO], setting ", setting.pixabayHits);
+    console.log('[SEO], setting ', setting.pixabayHits);
     let previewImages = setting.pixabayHits.map((item, key) => {
       return (
         <BackgroundItem
@@ -82,14 +89,24 @@ const SettingBackground = observer(() => {
         ></BackgroundItem>
       );
     });
-    console.log("[SEO] previewImages ", previewImages);
+    console.log('[SEO] previewImages ', previewImages);
     return previewImages;
   };
 
-  console.log("[SEO] SettingBackground , RENDER ", setting.detailViewItem);
+  console.log('[SEO] SettingBackground , RENDER ', setting.detailViewItem);
   return (
     <div>
-      <div style={{ color: "white" }}>
+      <div style={{ marginTop: '200px' }}>
+        URL THEME
+        <Switch
+          checked={setting.useBackgroundURL}
+          onChange={setting.setUseThemeOrURL}
+          value="checkedA"
+          inputProps={{ 'aria-label': 'secondary checkbox' }}
+        />
+        <BackgroundTheme />
+      </div>
+      <div style={{ color: 'white' }}>
         <p>찾고 싶은 사진을 입력해주세요 </p>
       </div>
       <div>
@@ -106,7 +123,7 @@ const SettingBackground = observer(() => {
         <Button
           variant="contained"
           className={classes.button}
-          onClick={() => setting.getPixabayImages("image")}
+          onClick={() => setting.getPixabayImages('image')}
         >
           SEARCH
         </Button>
@@ -114,15 +131,15 @@ const SettingBackground = observer(() => {
 
       <div className={classes.root}>
         <GridList cellHeight={180} className={classes.gridList}>
-          <GridListTile key="Subheader" cols={2} style={{ height: "auto" }}>
+          <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
             <ListSubheader component="div">SERACH RESULT</ListSubheader>
           </GridListTile>
           {setting.isPixabayLoading ? (
             <PacmanLoader
               css={override}
-              sizeUnit={"px"}
+              sizeUnit={'px'}
               size={20}
-              color={"#b197fc"}
+              color={'#b197fc'}
               loading={setting.isPixabayLoading}
             />
           ) : (
@@ -132,7 +149,7 @@ const SettingBackground = observer(() => {
 
         {/*background item을 클릭시에 detial 한 view를 보여주는 친구  */}
         <div>
-          {setting.detailViewitem.largeImageURL === "" ? null : (
+          {setting.detailViewitem.largeImageURL === '' ? null : (
             <span>
               <PortraitIcon />
               by. {setting.detailViewitem.user}
@@ -144,7 +161,7 @@ const SettingBackground = observer(() => {
           )}
           <div style={detailImageView}>
             <p>
-              {setting.detailViewitem.tags.split(",").map((item, key) => {
+              {setting.detailViewitem.tags.split(',').map((item, key) => {
                 return <TagItem item={item} key={key} />;
               })}
             </p>
