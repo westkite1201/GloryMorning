@@ -22,11 +22,11 @@ class EditView extends Component {
   }
 
   componentDidMount() {
-    let { loadPage, getUserBackground } = this.props;
+    let { loadPage, getUserBackground, nowGeolocation } = this.props;
+    nowGeolocation();
     loadPage();
     getUserBackground('testUser');
-
-    window.addEventListener('resize', this.updateDimensions);
+    window.addEventListener('resize', _.throttle(this.updateDimensions, 500));
     //window.onresize = this.handleResizeEnd;
   }
   updateDimensions = () => {
@@ -36,25 +36,7 @@ class EditView extends Component {
   };
   componentDidUpdate() {
     let { allChartResizing, handleResizable } = this.props;
-    console.log('componentDidUpdate ');
     allChartResizing();
-    console.log('componentDidUpdate');
-    // if ( typeof window.CustomEvent === "function" ) return false;
-    // function CustomEvent ( event, params ) {
-    //        params = params || { bubbles: false, cancelable: false, detail: undefined };
-    //        var evt = document.createEvent( 'CustomEvent' );
-    //        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-    //        return evt;
-    // }
-    //      CustomEvent.prototype = window.Event.prototype;
-    //      window.CustomEvent = CustomEvent;
-
-    //    let event = new CustomEvent("resize");
-    //    window.dispatchEvent(event);
-    //   setTimeout(() => {
-    //      window.dispatchEvent(event);
-    //      window.removeEventListener('onresize',this.handleResizeEnd);
-    //    },300)
   }
   render() {
     console.log('editview render');
@@ -114,7 +96,7 @@ class EditView extends Component {
   }
 }
 
-export default inject(({ edit, setting }) => ({
+export default inject(({ edit, setting, weather }) => ({
   index: edit.index,
   layout: edit.layout,
   page_number: edit.page_number,
@@ -133,4 +115,5 @@ export default inject(({ edit, setting }) => ({
   selectedBackgroundUrl: setting.selectedBackgroundUrl,
 
   handleResizable: edit.handleResizable,
+  nowGeolocation: weather.nowGeolocation,
 }))(observer(EditView));
