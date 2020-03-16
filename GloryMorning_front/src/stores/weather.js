@@ -150,6 +150,9 @@ export default class WeatherStore {
   @observable isFetchingTemp = false;
   @observable isFetchingHumi = false;
 
+  @observable isFetchingShortTerm = false;
+  @observable isFetchingHumiDust = false;
+
   @observable humidityDataList = []; //습도
   @observable rainfallDataList = []; //강수확률
   @observable rainfallmmDataList = []; //강수량
@@ -458,8 +461,10 @@ export default class WeatherStore {
     try {
       let response;
       if (MODE === 'MEMBER_MODE') {
+        this.isFetchingShortTerm = true;
         response = await weatherApi.getWeatherDataShortTerm(nx, ny);
       } else if (MODE === 'PRIVATE_MODE') {
+        this.isFetchingShortTerm = true;
         response = await weatherApi.getWeatherDataPrivateMode(nx, ny, true);
       }
       console.log('[seo][getWeatherDataShortTerm] response ', response);
@@ -552,8 +557,10 @@ export default class WeatherStore {
         };
         this.getJustFitClothes(weatherInfObject.temperatureNow);
         this.weatherInfObject = weatherInfObject;
+        this.isFetchingShortTerm = false;
       }
     } catch (e) {
+      this.isFetchingShortTerm = false;
       console.log(e);
     }
   };

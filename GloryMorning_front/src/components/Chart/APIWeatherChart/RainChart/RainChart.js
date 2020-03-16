@@ -14,7 +14,7 @@ class RainChart extends Component {
   }
 
   componentDidUpdate() {
-    const { isFetchingRain, allChartResizing } = this.props;
+    const { isFetchingRain, allChartResizing, getWeatherData } = this.props;
     let chart = this.refs.chart.getChart();
     if (isFetchingRain) {
       chart.showLoading('Loading...');
