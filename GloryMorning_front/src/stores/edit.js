@@ -56,12 +56,7 @@ export default class EditStore {
         detail: undefined,
       };
       var evt = document.createEvent('CustomEvent');
-      evt.initCustomEvent(
-        event,
-        params.bubbles,
-        params.cancelable,
-        params.detail,
-      );
+      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
       return evt;
     }
     CustomEvent.prototype = window.Event.prototype;
@@ -104,9 +99,7 @@ export default class EditStore {
         if (helpers.isEmpty(chart.userOptions.id)) {
           return false;
         }
-        let rect = document
-          .getElementById(chart.userOptions.id.replace('_c', ''))
-          .getBoundingClientRect();
+        let rect = document.getElementById(chart.userOptions.id.replace('_c', '')).getBoundingClientRect();
         //   console.log('rect ' , rect)
         chart.setSize(rect.width, rect.height);
       }
@@ -197,13 +190,15 @@ export default class EditStore {
 
   /* 컴포넌트 추가  */
   @action
-  putComponentList = (ListViewName, component) => {
-    this.componentList.push({
-      [ListViewName]: component,
-    });
-    //  console.log('putComponentList ' ,this.componentList)
+  // putComponentList = (ListViewName, component) => {
+  //   this.componentList.push({
+  //     [ListViewName]: component,
+  //   });
+  //   console.log('putComponentList ', this.componentList);
+  // };
+  putComponentList = componentList => {
+    this.componentList = componentList;
   };
-
   @action
   initComponetList = () => {
     this.componentList = [];
@@ -224,10 +219,7 @@ export default class EditStore {
             this.initlayout(this.page_number);
             this.page_number = this.page_number;
           } else {
-            console.log(
-              '[seo][res.data.component_list] ',
-              res.data.component_list,
-            );
+            console.log('[seo][res.data.component_list] ', res.data.component_list);
             this.page_number = this.page_number;
             if (res.data.component_list[0] === '') {
               this.layout = [];
@@ -283,16 +275,10 @@ export default class EditStore {
       cursor: 'pointer',
       zIndex: 99,
     };
-    let Tag = helpers.isEmpty(el.TagName)
-      ? 'div'
-      : this.searchComponentByName(el.TagName);
+    let Tag = helpers.isEmpty(el.TagName) ? 'div' : this.searchComponentByName(el.TagName);
     //let Tag = 'div'
     return (
-      <div
-        className={classnames({ dragHandle: this.editPageFlag })}
-        key={el.i}
-        style={{ zIndex: '99' }}
-      >
+      <div className={classnames({ dragHandle: this.editPageFlag })} key={el.i} style={{ zIndex: '99' }}>
         <div className={'componentContainer'} id={el.i}>
           <Tag data={el.i} wrapperid={el.i} editPageFlag={this.editPageFlag} />
         </div>

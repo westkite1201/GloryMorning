@@ -285,15 +285,21 @@ module.exports = function (callee) {
             
                 //async를 위해 request 함수 선언 
                 function doRequest() {
+                    
                     return new Promise(function (resolve, reject) {
                         request(OPTIONS, (err, res, result) => {
-                             response =  statusCodeErrorHandlerAsync(res.statusCode, result);
-                             if(response.message  !== 'error'){
-                                 resolve(response)
-                             }
-                             else{
+                            try{
+                                response =  statusCodeErrorHandlerAsync(res.statusCode, result);
+                                if(response.message  !== 'error'){
+                                    resolve(response)
+                                }
+                                else{
+                                   reject(err);
+                                }
+                            }catch(e){
                                 reject(err);
-                             }
+                            }
+        
                              //console.log(response)
                         });
                     });

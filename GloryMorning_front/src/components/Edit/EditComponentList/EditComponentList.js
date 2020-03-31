@@ -22,13 +22,24 @@ class EditComponentList extends Component {
       putComponentList('습도' , HumidityChart);
       */
     initComponetList();
-    putComponentList('습도NEW', HumidityChart_);
-    putComponentList('강수확률NEW', RainChart_);
-    putComponentList('온도NEW', TemperatureChart_);
-    putComponentList('weatherInfo', WeatherInfo);
-    putComponentList('Clock', Clock);
-    putComponentList('DustInfo', DustInfo);
-    putComponentList('SettingBackGround', SettingBackGround);
+    let componentList = [
+      { 습도NEW: HumidityChart_, category: 'weather', pageView: 'seoPage' },
+      { 강수확률NEW: RainChart_, category: 'weather', pageView: 'seoPage' },
+      { 온도NEW: TemperatureChart_, category: 'weather', pageView: 'seoPage' },
+      { weatherInfo: WeatherInfo, category: 'weather', pageView: 'seoPage' },
+      { DustInfo: DustInfo, category: 'weather', pageView: 'seoPage' },
+      { Clock: Clock, category: 'admin', pageView: '어드민' },
+      { SettingBackGround: SettingBackGround, category: 'admin', pageView: '어드민' },
+    ];
+    putComponentList(componentList);
+
+    // putComponentList('습도NEW', HumidityChart_);
+    // putComponentList('강수확률NEW', RainChart_);
+    // putComponentList('온도NEW', TemperatureChart_);
+    // putComponentList('weatherInfo', WeatherInfo);
+    // putComponentList('Clock', Clock);
+    // putComponentList('DustInfo', DustInfo);
+    // putComponentList('SettingBackGround', SettingBackGround);
   }
   componentWillUnmount() {
     const { initComponetList } = this.props;
