@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 //import { makeStyles } from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -34,13 +34,10 @@ const data = {
 //   },
 // });
 
-export default class RecursiveTreeView extends Component {
-  state = {
-    objectArr: [],
-  };
+const RecursiveTreeView = ({ pureComponents, addSelectedComponent }) => {
+  const [objectArr, setObjectArr] = useState([]);
 
-  componentDidMount() {
-    const { pureComponents } = this.props;
+  useEffect(() => {
     console.log('pureComponents', pureComponents);
     let hello = _.groupBy(pureComponents, 'category');
     let objectArr = Object.keys(hello).map((item, key) => {
@@ -56,9 +53,10 @@ export default class RecursiveTreeView extends Component {
           name: item,
           children: childrenObj[item].map((item, key) => {
             let componentName = Object.keys(item)[0];
+            //console.log('item', item);
             //console.log('componentName ', componentName);
             return {
-              id: item + '_' + key,
+              id: item.category + '_' + item.pageView + '_' + key,
               name: componentName,
             };
           }),
@@ -71,27 +69,37 @@ export default class RecursiveTreeView extends Component {
       };
     });
 
-    //console.log(objectArr);
-    this.setState({
-      objectArr: objectArr,
-    });
-  }
-  renderTree = nodes => (
-    <TreeItem key={nodes.id} nodeId={nodes.name} label={nodes.name} onClick={() => this.props.handleSelect(nodes.name)}>
-      {Array.isArray(nodes.children) ? nodes.children.map(node => this.renderTree(node)) : null}
+    setObjectArr(objectArr);
+  }, [pureComponents]);
+
+  const renderTree = nodes => (
+    <TreeItem
+      key={nodes.id}
+      nodeId={nodes.name}
+      label={nodes.name}
+      onClick={() =>
+        Array.isArray(nodes.children) ? null : addSelectedComponent(nodes.name)
+      }
+    >
+      {Array.isArray(nodes.children)
+        ? nodes.children.map(node => renderTree(node))
+        : null}
     </TreeItem>
   );
-  render() {
-    if (_.isEmpty(this.state.objectArr)) {
-      console.log('hell');
-      return null;
-    }
-    console.log();
-    //const { data } = this.state;
-    return (
-      <TreeView className="root-tree-view" defaultCollapseIcon={<ExpandMoreIcon />} defaultExpanded={['root']} defaultExpandIcon={<ChevronRightIcon />}>
-        {this.renderTree(this.state.objectArr[0])}
-      </TreeView>
-    );
+  console.log('objectArr ', objectArr);
+  if (objectArr.length === 0) {
+    return null;
   }
-}
+  return (
+    <TreeView
+      className="root-tree-view"
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpanded={['root']}
+      defaultExpandIcon={<ChevronRightIcon />}
+    >
+      {renderTree(objectArr[0])}
+    </TreeView>
+  );
+};
+
+export default RecursiveTreeView;

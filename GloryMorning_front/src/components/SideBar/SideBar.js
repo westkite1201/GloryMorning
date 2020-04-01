@@ -36,6 +36,7 @@ class SideBar extends Component {
       open,
       routes,
       openSideBar,
+      componentList,
       EditComponentCollapse,
       addSelectedComponent,
     } = this.props;
@@ -86,7 +87,8 @@ class SideBar extends Component {
           <Collapse isOpen={EditComponentCollapse}>
             {
               <RecursiveTreeView
-                onClick={addSelectedComponent}
+                pureComponents={componentList}
+                addSelectedComponent={addSelectedComponent}
               ></RecursiveTreeView>
 
               /*this.mapToComponent()*/
