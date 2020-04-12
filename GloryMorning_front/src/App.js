@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import EditView from './components/EditView'
-import EditComponentList from './components/Edit/EditComponentList'
+import EditView from './components/EditView';
+import EditComponentList from './components/Edit/EditComponentList';
 //import DevTools from 'mobx-react-devtools';
-import ReactHighcharts from 'react-highcharts'
+import dotenv from 'dotenv';
+import ReactHighcharts from 'react-highcharts';
 import 'bootstrap/dist/css/bootstrap.min.css';
+dotenv.config();
 ReactHighcharts.Highcharts.setOptions({
   time: {
-      useUTC: false
-  }
+    useUTC: false,
+  },
 });
 class App extends Component {
   render() {
     return (
-      <div style ={{height : '100%'}}>
-        <EditComponentList/>
-        <EditView/>
+      <div style={{ height: '100%' }}>
+        <EditComponentList />
+        <EditView />
         {/*process.env.NODE_ENV === 'development' && <DevTools />*/}
       </div>
     );

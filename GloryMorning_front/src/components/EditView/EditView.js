@@ -22,11 +22,17 @@ class EditView extends Component {
   }
 
   componentDidMount() {
-    let { loadPage, getUserBackground, nowGeolocation } = this.props;
+    let {
+      loadPage,
+      getUserBackground,
+      nowGeolocation,
+      updateWeatherDataIntevalStart,
+    } = this.props;
     nowGeolocation();
     loadPage();
     getUserBackground('testUser');
     window.addEventListener('resize', _.throttle(this.updateDimensions, 500));
+
     //window.onresize = this.handleResizeEnd;
   }
   updateDimensions = () => {
@@ -116,4 +122,5 @@ export default inject(({ edit, setting, weather }) => ({
 
   handleResizable: edit.handleResizable,
   nowGeolocation: weather.nowGeolocation,
+  updateWeatherDataIntevalStart: weather.updateWeatherDataIntevalStart,
 }))(observer(EditView));

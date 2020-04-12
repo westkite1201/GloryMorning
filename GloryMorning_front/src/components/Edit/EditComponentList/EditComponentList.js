@@ -28,8 +28,12 @@ class EditComponentList extends Component {
       { 온도NEW: TemperatureChart_, category: 'weather', pageView: 'seoPage' },
       { weatherInfo: WeatherInfo, category: 'weather', pageView: 'seoPage' },
       { DustInfo: DustInfo, category: 'weather', pageView: 'seoPage' },
-      { Clock: Clock, category: 'admin', pageView: '어드민' },
-      { SettingBackGround: SettingBackGround, category: 'admin', pageView: '어드민' },
+      { Clock: Clock, category: 'weather', pageView: 'seoPage' },
+      {
+        SettingBackGround: SettingBackGround,
+        category: 'admin',
+        pageView: '어드민',
+      },
     ];
     putComponentList(componentList);
 

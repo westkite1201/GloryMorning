@@ -236,7 +236,30 @@ export default class WeatherStore {
           this.timeObj = data.serverTime;
         }
       });
+      /* socket 이름 변경 요망  */
+      timeSocket.on('updateWeatherData', data => {
+        this.upateWeatherData();
+      });
     }
+  };
+
+  /*process => 
+    0. componentDidMount에서 한번 전체 실행되고 
+    그이후 update
+
+  */
+  @action
+  upateWeatherData = () => {
+    this.getWeatherData('REH');
+    this.getWeatherData('POP');
+    this.getWeatherData('R06');
+    this.getWeatherData('T3H');
+  };
+
+  /* 임시로 time socket 사용  */
+  @action
+  updateWeatherDataIntevalStart = () => {
+    this.timeSocket.emit('updateWeatherData', 'updateWeatherData');
   };
   @action
   getTimeIntervalStart = () => {
