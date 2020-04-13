@@ -1,22 +1,22 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-let { PythonShell } = require("python-shell");
-const weatherDao = require("../../model/mysql/weatherDao");
+let { PythonShell } = require('python-shell');
+const weatherDao = require('../../model/mysql/weatherDao');
 //const weatherDaoTest = require('../../model/mysql/weatherDaoTest')
-const weatherDaoNew = require("../../model/mysql/weatherDaoNew");
-const async = require("async");
-const CallSeverApi = require("./CallSeverApi")("weather");
-const CallSeverApiDust = require("./CallSeverApi")("dust");
-const CallSeverApiRiseSet = require("./CallSeverApi")("riseSet");
-const CallSeverApiPixabay = require("./CallSeverApi")("pixabay");
+const weatherDaoNew = require('../../model/mysql/weatherDaoNew');
+const async = require('async');
+const CallSeverApi = require('./CallSeverApi')('weather');
+const CallSeverApiDust = require('./CallSeverApi')('dust');
+const CallSeverApiRiseSet = require('./CallSeverApi')('riseSet');
+const CallSeverApiPixabay = require('./CallSeverApi')('pixabay');
 
-const moment = require("moment");
+const moment = require('moment');
 
 let newtime = 0;
 let newdate = 0;
 
 let defaultLocationList = [
-  { nx: 59, ny: 125, location: "서울특별시 관악구 인헌동" }
+  { nx: 59, ny: 125, location: '서울특별시 관악구 인헌동' },
 ];
 
 convert = (xx, yy) => {
@@ -54,20 +54,20 @@ convert = (xx, yy) => {
     var ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
     ro = (re * sf) / Math.pow(ro, sn);
     var rs = {};
-    if (code == "toXY") {
-      rs["lat"] = v1;
-      rs["lng"] = v2;
+    if (code == 'toXY') {
+      rs['lat'] = v1;
+      rs['lng'] = v2;
       var ra = Math.tan(Math.PI * 0.25 + v1 * DEGRAD * 0.5);
       ra = (re * sf) / Math.pow(ra, sn);
       var theta = v2 * DEGRAD - olon;
       if (theta > Math.PI) theta -= 2.0 * Math.PI;
       if (theta < -Math.PI) theta += 2.0 * Math.PI;
       theta *= sn;
-      rs["x"] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
-      rs["y"] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+      rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+      rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
     } else {
-      rs["x"] = v1;
-      rs["y"] = v2;
+      rs['x'] = v1;
+      rs['y'] = v2;
       var xn = v1 - XO;
       var yn = ro - v2 + YO;
       ra = Math.sqrt(xn * xn + yn * yn);
@@ -88,25 +88,25 @@ convert = (xx, yy) => {
         } else theta = Math.atan2(xn, yn);
       }
       var alon = theta / sn + olon;
-      rs["lat"] = alat * RADDEG;
-      rs["lng"] = alon * RADDEG;
+      rs['lat'] = alat * RADDEG;
+      rs['lng'] = alon * RADDEG;
     }
     return new Promise((resolve, reject) => {
       resolve(rs);
     });
   }
 
-  var rs = dfs_xy_conv("toXY", xx, yy);
+  var rs = dfs_xy_conv('toXY', xx, yy);
   //console.log(rs)
 
   return rs;
 };
 
 /* settingLocation   */
-router.post("/settingLocation", async (req, res) => {
+router.post('/settingLocation', async (req, res) => {
   try {
     const data = {
-      settingLocationArray: req.body.settingLocationArray
+      settingLocationArray: req.body.settingLocationArray,
     };
     let rows = await weatherDaoNew.settingLocation(data); // LOCATION 정보 XX,YY
     if (rows) {
@@ -114,146 +114,139 @@ router.post("/settingLocation", async (req, res) => {
       settingWeatherData();
       return res.json(rows);
     } else {
-      console.log("error");
+      console.log('error');
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
-router.post("/getSettingLocation", async (req, res) => {
+router.post('/getSettingLocation', async (req, res) => {
   try {
     let rows = await weatherDaoNew.getSettingLocation(); // LOCATION 정보 XX,YY
     if (rows) {
       //온경우
       return res.json(rows);
     } else {
-      console.log("error");
+      console.log('error');
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
 /* shortTerm은 간격이 짧음  */
 getNowTimeForShortTerm = () => {
   let date = new Date();
-  let hourMinute = parseInt(moment(date).format("HHMM"));
+  let hourMinute = parseInt(moment(date).format('HHMM'));
   console.log(hourMinute);
   if (0 <= hourMinute && hourMinute < 230) {
     //하루전날
-    newdate = moment(date)
-      .subtract(1, "days")
-      .format("YYYYMMDD");
-    newtime = "2300";
+    newdate = moment(date).subtract(1, 'days').format('YYYYMMDD');
+    newtime = '2300';
   } else {
     //현재 시간이 30분전이면
-    if (moment(date).format("MM") <= 30) {
-      newdate = moment(date).format("YYYYMMDD");
-      newtime =
-        moment(date)
-          .subtract(1, "hour")
-          .format("HH") + "30";
-      console.log("30 분전이면 ", newtime);
+    if (moment(date).format('MM') <= 30) {
+      newdate = moment(date).format('YYYYMMDD');
+      newtime = moment(date).subtract(1, 'hour').format('HH') + '30';
+      console.log('30 분전이면 ', newtime);
     } else {
       //크면
-      newdate = moment(date).format("YYYYMMDD");
-      newtime = moment(date).format("HH") + "00";
-      console.log("30 분 후면 ", newtime);
+      newdate = moment(date).format('YYYYMMDD');
+      newtime = moment(date).format('HH') + '00';
+      console.log('30 분 후면 ', newtime);
     }
   }
 };
 
 getNowTime = () => {
   let date = new Date();
-  let hourMinute = parseInt(moment(date).format("HHMM"));
-  console.log("hourMinute ", hourMinute);
+  let hourMinute = parseInt(moment(date).format('HHMM'));
+  console.log('hourMinute ', hourMinute);
   if (0 <= hourMinute && hourMinute < 230) {
     //하루전날 no
-    newdate = moment(date)
-      .subtract(1, "days")
-      .format("YYYYMMDD");
-    newtime = "2300";
+    newdate = moment(date).subtract(1, 'days').format('YYYYMMDD');
+    newtime = '2300';
   } else if (230 <= hourMinute && hourMinute < 530) {
-    newdate = moment(date).format("YYYYMMDD");
-    newtime = "0200";
+    newdate = moment(date).format('YYYYMMDD');
+    newtime = '0200';
   } else if (530 <= hourMinute && hourMinute < 830) {
-    newdate = moment(date).format("YYYYMMDD");
-    newtime = "0500";
+    newdate = moment(date).format('YYYYMMDD');
+    newtime = '0500';
   } else if (830 <= hourMinute && hourMinute < 1130) {
-    newdate = moment(date).format("YYYYMMDD");
-    newtime = "0800";
+    newdate = moment(date).format('YYYYMMDD');
+    newtime = '0800';
   } else if (1130 <= hourMinute && hourMinute < 1430) {
-    newdate = moment(date).format("YYYYMMDD");
-    newtime = "1100";
+    newdate = moment(date).format('YYYYMMDD');
+    newtime = '1100';
   } else if (1430 <= hourMinute && hourMinute < 1730) {
-    newdate = moment(date).format("YYYYMMDD");
-    newtime = "1400";
+    newdate = moment(date).format('YYYYMMDD');
+    newtime = '1400';
   } else if (1730 <= hourMinute && hourMinute < 2030) {
-    newdate = moment(date).format("YYYYMMDD");
-    newtime = "1700";
+    newdate = moment(date).format('YYYYMMDD');
+    newtime = '1700';
   } else if (2030 <= hourMinute && hourMinute < 2330) {
-    newdate = moment(date).format("YYYYMMDD");
-    newtime = "2000";
+    newdate = moment(date).format('YYYYMMDD');
+    newtime = '2000';
   }
 
   console.log(newdate, newtime);
 };
 
-isDayTime = sunSet => {
-  console.log("moment().format('HHmm') ", moment().format("HHmm"));
-  console.log("sunSet", sunSet.replace(/(\s*)/g, ""));
-  sunSet = sunSet.replace(/(\s*)/g, "");
+isDayTime = (sunSet) => {
+  console.log("moment().format('HHmm') ", moment().format('HHmm'));
+  console.log('sunSet', sunSet.replace(/(\s*)/g, ''));
+  sunSet = sunSet.replace(/(\s*)/g, '');
 
-  if (sunSet > moment().format("HHmm")) {
+  if (sunSet > moment().format('HHmm')) {
     return true;
   } else {
     return false;
   }
 };
 
-router.post("/getPixabayImages", async (req, res) => {
+router.post('/getPixabayImages', async (req, res) => {
   let query = req.body.query;
   let imageType = req.body.imageType;
 
   try {
     let response = await CallSeverApiPixabay.pixabay(query, imageType);
     //console.log("getPixabayImage response " , response );
-    if (response.message !== "error") {
+    if (response.message !== 'error') {
       return res.json(response);
     } else {
       return res.json({
-        message: "error",
-        statusCode: 400
+        message: 'error',
+        statusCode: 400,
       });
     }
   } catch (e) {
-    console.log("error ", e);
+    console.log('error ', e);
   }
 });
 
-router.post("/getAreaRiseSetInfo", async (req, res) => {
-  console.log("getAreaRiseSetInfo!");
+router.post('/getAreaRiseSetInfo', async (req, res) => {
+  console.log('getAreaRiseSetInfo!');
   let location = req.body.location;
-  let locdate = moment().format("YYYYMMDD");
+  let locdate = moment().format('YYYYMMDD');
   //console.log(tmX, tmY)
   try {
     let response = await CallSeverApiRiseSet.getAreaRiseSetInfo(
       location,
-      locdate
+      locdate,
     );
     isDayTimeYn = isDayTime(response.data.response.body.items.item.sunset);
     response.data.response.body.items.item.isDayTimeYn = isDayTimeYn;
-    if (response.message !== "error") {
+    if (response.message !== 'error') {
       res.json(response);
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
-router.post("/getNearbyMsrstnList", async (req, res) => {
-  console.log("getNearbyMsrstnList!");
+router.post('/getNearbyMsrstnList', async (req, res) => {
+  console.log('getNearbyMsrstnList!');
   let tmX = req.body.tmX;
   let tmY = req.body.tmY;
 
@@ -266,16 +259,16 @@ router.post("/getNearbyMsrstnList", async (req, res) => {
     let distance = response.data.list[0].tm; //거리
 
     //console.log("addr ", addr, "stationName ", stationName," distance ",distance )
-    if (response.message !== "error") {
+    if (response.message !== 'error') {
       const dustInfoResponse = await CallSeverApiDust.getDustInfo(stationName);
       //console.log("dustInfoResponse ", dustInfoResponse)
-      if (dustInfoResponse.message !== "error") {
+      if (dustInfoResponse.message !== 'error') {
         let dustInfo = dustInfoResponse.data.list[0];
-        dustInfo["addr"] = addr;
-        dustInfo["stationName"] = stationName;
-        dustInfo["distance"] = distance;
+        dustInfo['addr'] = addr;
+        dustInfo['stationName'] = stationName;
+        dustInfo['distance'] = distance;
         //console.log( dustInfoResponse.data.list[0])
-        console.log("[SEO] ", dustInfo);
+        console.log('[SEO] ', dustInfo);
         res.json(dustInfo);
         // return
         // {
@@ -307,7 +300,7 @@ router.post("/getNearbyMsrstnList", async (req, res) => {
       }
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
@@ -318,7 +311,7 @@ getWeatherData = async (res, nx, ny) => {
   let base_date, base_time, type;
   base_date = newdate;
   base_time = newtime;
-  type = "json";
+  type = 'json';
 
   await CallSeverApi.weather(
     base_date,
@@ -334,57 +327,57 @@ getWeatherData = async (res, nx, ny) => {
       } else {
         console.log(err);
       }
-    }
+    },
   );
 };
 
 /* db에서 weather shortTerm data 조회  */
-router.post("/getWeatherDataShortTerm", async (req, res) => {
+router.post('/getWeatherDataShortTerm', async (req, res) => {
   try {
     const data = {
       nx: req.body.nx,
       ny: req.body.ny,
-      category: req.body.category
+      category: req.body.category,
     };
-    console.log("getWeatherDataShortTerm", data);
+    console.log('getWeatherDataShortTerm', data);
     let rows = await weatherDaoNew.getWeatherDataShortTerm(data); // LOCATION 정보 XX,YY
     if (rows) {
       //온경우
       return res.json(rows);
     } else {
-      console.log("error");
+      console.log('error');
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
 /* db에서 weather data 조회  */
-router.post("/getWeatherData", async (req, res) => {
+router.post('/getWeatherData', async (req, res) => {
   try {
     const data = {
       nx: req.body.nx,
       ny: req.body.ny,
-      category: req.body.category
+      category: req.body.category,
     };
-    console.log("[getWeatherData] ", data);
+    console.log('[getWeatherData] ', data);
     let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY
     if (rows) {
       //온경우
-      console.log("return data ", rows);
+      console.log('return data ', rows);
       return res.json(rows);
     } else {
-      console.log("error");
+      console.log('error');
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
 /* api에서 조회  */
-router.post("/getWeatherDataPrivateMode", async (req, res) => {
+router.post('/getWeatherDataPrivateMode', async (req, res) => {
   try {
-    console.log("newdate", newdate, " newTime", newtime);
+    console.log('newdate', newdate, ' newTime', newtime);
     getNowTime();
     //nx, ny는 디비에서 가져오기
     //base_date오늘 날짜
@@ -392,7 +385,7 @@ router.post("/getWeatherDataPrivateMode", async (req, res) => {
     let base_date, base_time, type, nx, ny, shortTermYn;
     base_date = newdate;
     base_time = newtimegetWeatherData;
-    type = "json";
+    type = 'json';
     shortTermYn = req.body.shortTermYn;
     nx = req.body.nx;
     ny = req.body.ny;
@@ -403,22 +396,22 @@ router.post("/getWeatherDataPrivateMode", async (req, res) => {
       nx,
       ny,
       type,
-      shortTermYn
+      shortTermYn,
     );
-    console.log("resposne ", response);
-    if (response.message !== "error") {
+    console.log('resposne ', response);
+    if (response.message !== 'error') {
       //온경우
       return res.json(response);
     } else {
-      console.log("error");
+      console.log('error');
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
 insertWeatherData = async (nx, ny) => {
-  console.log("hello insertWeatherData");
+  console.log('hello insertWeatherData');
   getNowTime();
   //nx, ny는 디비에서 가져오기
   //base_date오늘 날짜
@@ -426,9 +419,9 @@ insertWeatherData = async (nx, ny) => {
   let base_date, base_time, type, shortTermYn;
   base_date = newdate;
   base_time = newtime;
-  type = "json";
+  type = 'json';
   shortTermYn = false;
-  console.log("nx ", nx, " ny ", ny);
+  console.log('nx ', nx, ' ny ', ny);
   //nx =60, ny =125
   try {
     let result = await CallSeverApi.weatherAsync(
@@ -437,10 +430,10 @@ insertWeatherData = async (nx, ny) => {
       nx,
       ny,
       type,
-      shortTermYn
+      shortTermYn,
     );
     //console.log("result", result.data.response.body.items.item )
-    let list = result.data.response.body.items.item.map(item => {
+    let list = result.data.response.body.items.item.map((item) => {
       return [
         item.fcstDate,
         item.fcstTime,
@@ -449,22 +442,22 @@ insertWeatherData = async (nx, ny) => {
         item.nx,
         item.ny,
         item.baseDate,
-        item.baseTime
+        item.baseTime,
       ];
     });
     //console.log("list", list);
     let rows = await weatherDaoNew.insertWeatherData(list);
-    console.log("weatherDaoNew insertWeatherData ", rows);
+    console.log('weatherDaoNew insertWeatherData ', rows);
     return new Promise((resolve, reject) => {
       resolve();
     });
   } catch (e) {
-    console.log("error ", e);
+    console.log('error ', e);
   }
 };
 
 insertWeatherDataShortTerm = async (nx, ny) => {
-  console.log("insertWeatherDataShortTerm!");
+  console.log('insertWeatherDataShortTerm!');
   getNowTimeForShortTerm();
   //nx, ny는 디비에서 가져오기
   //base_date오늘 날짜
@@ -472,7 +465,7 @@ insertWeatherDataShortTerm = async (nx, ny) => {
   let base_date, base_time, type, shortTermYn;
   base_date = newdate;
   base_time = newtime;
-  type = "json";
+  type = 'json';
   shortTermYn = true;
   console.log(nx, ny);
   try {
@@ -482,10 +475,10 @@ insertWeatherDataShortTerm = async (nx, ny) => {
       nx,
       ny,
       type,
-      shortTermYn
+      shortTermYn,
     );
     //console.log("result " , result.data.response.body.items)
-    let list = result.data.response.body.items.item.map(item => {
+    let list = result.data.response.body.items.item.map((item) => {
       return [
         item.fcstDate,
         item.fcstTime,
@@ -494,17 +487,17 @@ insertWeatherDataShortTerm = async (nx, ny) => {
         item.nx,
         item.ny,
         item.baseDate,
-        item.baseTime
+        item.baseTime,
       ];
     });
 
     let rows = await weatherDaoNew.insertWeatherDataShortTerm(list);
-    console.log("success", rows);
+    console.log('success', rows);
     return new Promise((resolve, reject) => {
       resolve();
     });
   } catch (e) {
-    console.log("error ", e);
+    console.log('error ', e);
   }
 };
 
@@ -519,13 +512,13 @@ settingWeatherData = async () => {
   //console.log(Minutes + " " + second)
   try {
     let rows = await weatherDaoNew.getSettingLocation(); // LOCATION 정보 XX,YY
-    console.log("settingWeatherData !");
+    console.log('settingWeatherData !');
     if (rows) {
       //온경우
       const convertList = await Promise.all(
         rows.map((item, key) => {
           return (convertXY = convert(item.Y, item.X));
-        })
+        }),
       );
 
       for (const item of convertList) {
@@ -533,7 +526,7 @@ settingWeatherData = async () => {
         await insertWeatherDataShortTerm(item.x, item.y);
       }
     } else {
-      console.log("error");
+      console.log('error');
     }
     if (Minutes === 0 && second === 0) {
       // 매 정시
@@ -543,35 +536,35 @@ settingWeatherData = async () => {
       // })
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 };
 
-settingWeatherData();
+//settingWeatherData();
 
 /* 디비 조회하기  */
-router.post("/dbtest", async (req, res) => {
+router.post('/dbtest', async (req, res) => {
   try {
     let rows = await weatherDaoTest.dbTest();
     if (rows) {
       //console.log(rows)
       return res.json(rows);
     } else {
-      console.log("error");
+      console.log('error');
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 //서버에서 모두 처리
 // 이슈사항...AWAIT 으로 어떻게 이쁘게 받지.?ㅜㅜ
-router.post("/getLocation_chain", async (req, res) => {
+router.post('/getLocation_chain', async (req, res) => {
   await getNowTime(); //현재 시간 세팅
   try {
     const data = {
       LOCATION_A: req.body.LOCATION_A,
       LOCATION_B: req.body.LOCATION_B,
-      LOCATION_C: req.body.LOCATION_C
+      LOCATION_C: req.body.LOCATION_C,
     };
     //console.log(data)
     let rows = await weatherDaoNew.getLocation(data); // LOCATION 정보 XX,YY
@@ -585,29 +578,29 @@ router.post("/getLocation_chain", async (req, res) => {
       //console.log('getWeatherData 완료')
       //return res.json(response)
     } else {
-      console.log("error");
+      console.log('error');
     }
   } catch (e) {
-    console.log("error", e);
+    console.log('error', e);
   }
 });
 
-router.post("/getLocation", async (req, res) => {
-  console.log("getLocation!!");
+router.post('/getLocation', async (req, res) => {
+  console.log('getLocation!!');
   const data = {
     LOCATION_A: req.body.LOCATION_A,
     LOCATION_B: req.body.LOCATION_B,
-    LOCATION_C: req.body.LOCATION_C
+    LOCATION_C: req.body.LOCATION_C,
   };
   try {
     async.waterfall(
       [
-        cb => {
+        (cb) => {
           weatherDao.connect(cb);
         },
         (conn, cb) => {
           weatherDao.getLocation(conn, data, cb);
-        }
+        },
       ],
       (error, conn, result) => {
         if (conn) {
@@ -615,42 +608,42 @@ router.post("/getLocation", async (req, res) => {
         }
         if (error) {
           return res.json({
-            error: error
+            error: error,
           });
         } else {
           return res.json(result);
         }
-      }
+      },
     );
   } catch (error) {
     console.error(error);
     return res.json({
-      message: "fail",
+      message: 'fail',
       code: 200,
-      error: error
+      error: error,
     });
   }
 });
 /* 파이썬 shell */
-router.post("/PYTHONTEST", function(req, res) {
-  console.log("PYTHONTEST");
+router.post('/PYTHONTEST', function (req, res) {
+  console.log('PYTHONTEST');
 
   let loc = req.body.loc;
 
-  res.set("Content-Type", "text/plain");
+  res.set('Content-Type', 'text/plain');
 
   let options = {
-    mode: "text",
+    mode: 'text',
     args: [loc],
-    pythonPath: "",
-    pythonOptions: ["-u"], // get print results in real-time
-    encoding: "",
-    scriptPath: "C:/nodejs/jwt/public/python"
+    pythonPath: '',
+    pythonOptions: ['-u'], // get print results in real-time
+    encoding: '',
+    scriptPath: 'C:/nodejs/jwt/public/python',
   };
 
-  PythonShell.run("weatherMain.py", options, (err, results) => {
+  PythonShell.run('weatherMain.py', options, (err, results) => {
     if (err) throw err;
-    console.log("안녕하세요");
+    console.log('안녕하세요');
     //console.log(results)
     function replaceAll(strTemp, strValue1, strValue2) {
       while (1) {
@@ -662,9 +655,9 @@ router.post("/PYTHONTEST", function(req, res) {
     }
     // let strTem = replaceAll(results.toString(),"\\","%");
     //console.log('str ' , strTem )
-    let decodingStr = unescape(replaceAll(results.toString(), "\\", "%"));
-    let splitList = decodingStr.split(",");
-    let weatherList = splitList.map(item => replaceAll(item, '"', ""));
+    let decodingStr = unescape(replaceAll(results.toString(), '\\', '%'));
+    let splitList = decodingStr.split(',');
+    let weatherList = splitList.map((item) => replaceAll(item, '"', ''));
     //console.log(weatherList);
     // var strContents =  Buffer.from(results);
     // let decodingString = (iconv.decode(strContents,'UTF-8').toString());
@@ -679,12 +672,12 @@ router.post("/PYTHONTEST", function(req, res) {
     // "response","06:13","18:58"]
 
     let arr = [
-      "TIME",
-      "WEATHER",
-      "TEMPERATURE",
-      "HUMIDITY",
-      "proPrecipitation",
-      "precipitation"
+      'TIME',
+      'WEATHER',
+      'TEMPERATURE',
+      'HUMIDITY',
+      'proPrecipitation',
+      'precipitation',
     ];
     let timeList = [];
     let weatherDetailList = [];
@@ -717,7 +710,7 @@ router.post("/PYTHONTEST", function(req, res) {
         proPrecipitationList.push(weatherList[i]);
       }
       if (idx == 6) {
-        if (weatherList[i] === "response") {
+        if (weatherList[i] === 'response') {
           break;
         }
         precipitation.push(weatherList[i]);
