@@ -38,7 +38,7 @@ router.post('/uploadFiles', async (req, res, next) => {
     upload(req, res, function (err) {
       if (err) {
         return res.json({
-          code: 200,
+          code: 400,
           message: 'file upload error',
           error: err,
         });
@@ -52,7 +52,7 @@ router.post('/uploadFiles', async (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.json({
-      code: 200,
+      code: 400,
       message: 'file upload error',
       error: error,
     });
@@ -99,7 +99,7 @@ async function userFilePathCheck(req) {
   } catch (error) {
     console.log(error);
     // return res.json({
-    //   code: 200,
+    //   code: 400,
     //   message: 'userFilePathCheck Error',
     //   error: error,
     // });
@@ -130,7 +130,7 @@ async function destFilePathCheck(req) {
     }
   } catch (error) {
     return res.json({
-      code: 200,
+      code: 400,
       message: 'destFilePathCheck Error',
       error: error,
     });
@@ -148,15 +148,15 @@ router.get('/file-downloads', (req, res) => {
   // const file_name = req.param.file_name;
   try {
     const dest_file_path = FILE_ROOT_DIR + FILE_FORDER_PATH + req.query.user_id;
-    // const dest_file_path = FILE_ROOT_DIR + '/jachoi/' + '20200220'
+    // const dest_file_path = FILE_ROOT_DIR + '/jachoi/' + '20400220'
     const file_name = req.query.file_name;
-    // const file_name = 'KakaoTalk_20200130_105558099.jpg_20200220114030'
+    // const file_name = 'KakaoTalk_20400130_105558099.jpg_20400220114030'
     console.log('file!: ', dest_file_path + '/' + file_name);
     res.download(dest_file_path + '/' + file_name);
   } catch (error) {
     console.log('file error!: ', error);
     return res.json({
-      code: 200,
+      code: 400,
       message: 'file download 에러',
       error: error,
     });
@@ -164,18 +164,40 @@ router.get('/file-downloads', (req, res) => {
 });
 
 // 이미지파일 호스팅 로직
-router.get('/image/:name', function (req, res) {
-  var filename = req.params.name;
-  console.log('filename', pathDir + filename);
-  fs.exists(pathDir + filename, function (exists) {
+router.get('/image/:userId/:name', function (req, res) {
+  let pathDir = FILE_ROOT_DIR + FILE_FORDER_PATH;
+  let userId = req.params.userId;
+  let filename = req.params.name;
+  console.log('filename', pathDir + userId + '/' + filename);
+  fs.exists(pathDir + userId + '/' + filename, function (exists) {
     if (exists) {
-      fs.readFile(pathDir + filename, function (err, data) {
+      fs.readFile(pathDir + userId + '/' + filename, function (err, data) {
         res.end(data);
       });
     } else {
       res.end('file is not exists');
     }
   });
+});
+
+//해당 디렉터리르 읽고 해당 디렉터리에 ㅣㅇㅆ는
+// 파일들을 반호나
+
+router.post('/getImageFilePath', function (req, res) {
+  const store_dir = FILE_ROOT_DIR + FILE_FORDER_PATH + req.body.user_id;
+  try {
+    let files = fs.readdirSync(store_dir); // 디렉토리를 읽어온다
+    console.log(' files', files);
+    return res.json({
+      code: 200,
+      message: 'success',
+      data: {
+        files: files,
+      },
+    });
+  } catch (e) {
+    console.log('error ', e);
+  }
 });
 
 //els 연동시
@@ -233,7 +255,7 @@ router.get('/image/:name', function (req, res) {
 //         console.log(result);
 //         if (err) {
 //           res.json({
-//             code: 200,
+//             code: 400,
 //             message: "elasticsearch update error",
 //             error: err
 //           });
@@ -248,7 +270,7 @@ router.get('/image/:name', function (req, res) {
 //   } catch (error) {
 //     console.error("elasticsearchFileDataUpdate: ", error);
 //     res.json({
-//       code: 200,
+//       code: 400,
 //       message: "elasticsearchFileDataUpdate error",
 //       error: error
 //     });
