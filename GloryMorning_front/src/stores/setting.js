@@ -80,7 +80,8 @@ export default class SettingStore {
     try {
       let response = await memberApi.setUserBackground(
         'testUser',
-        this.detailViewitem.largeImageURL,
+        this.selectedBackgroundUrl,
+        //this.detailViewitem.largeImageURL,
       );
       console.log('[seo][settingBackgroundURLRedis] response', response);
       if (response.data.message === 'success') {

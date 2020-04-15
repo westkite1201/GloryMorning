@@ -1,22 +1,23 @@
 /*
-* Client Configuration
-*
-*/
+ * Client Configuration
+ *
+ */
 module.exports = {
   apiKeys: {
-   kakaoApiKey : 'KakaoAK 964c43954aeb54d0711aed4e57a588e5',
-   datagoApiKey : '',
+    kakaoApiKey: 'KakaoAK 964c43954aeb54d0711aed4e57a588e5',
+    datagoApiKey: '',
   },
 
-
-   adminEmail : 'txtcopy@naver.com',
+  adminEmail: 'txtcopy@naver.com',
   //adminEmail : 'april3@sk.com'
-  
+
   // local dev
-   endpoint: {
-     web: "http://localhost:3031",
-     api: "http://localhost:3031/api"
-   },
+  endpoint: {
+    web: 'http://localhost:3031',
+    api: 'http://localhost:3031/api',
+  },
+
+  defaultImg: '/images/defaultImg.png',
 
   // // server
   // endpoint: {
@@ -45,4 +46,4 @@ module.exports = {
   //   web: "http://59.30.200.65:3030",
   //   api: "http://59.30.200.65:3030/api"
   //  },
-}
+};
