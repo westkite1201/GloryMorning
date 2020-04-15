@@ -540,7 +540,7 @@ settingWeatherData = async () => {
   }
 };
 
-//settingWeatherData();
+settingWeatherData();
 
 /* 디비 조회하기  */
 router.post('/dbtest', async (req, res) => {
