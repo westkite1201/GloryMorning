@@ -13,6 +13,7 @@ import Clock from '../../Clock';
 import DustInfo from '../../WeatherInfo/DustInfo';
 
 import SettingBackGround from '../../Setting/SettingBackground';
+import SearchAddressDaum from '../../Setting/SearchAddress/SearchAddressDaum';
 class EditComponentList extends Component {
   componentDidMount() {
     const { putComponentList, initComponetList } = this.props;
@@ -33,6 +34,11 @@ class EditComponentList extends Component {
         SettingBackGround: SettingBackGround,
         category: 'admin',
         pageView: '어드민',
+      },
+      {
+        SearchAddressDaum: SearchAddressDaum,
+        category: 'weather',
+        pageView: '서치다음',
       },
     ];
     putComponentList(componentList);
