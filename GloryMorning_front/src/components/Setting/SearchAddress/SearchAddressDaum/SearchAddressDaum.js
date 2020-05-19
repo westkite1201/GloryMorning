@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
+import { observer } from 'mobx-react';
 import DaumPostcode from 'react-daum-postcode';
+import Grid from '@material-ui/core/Grid';
+import UseStores from '../../../Setting/UseStores';
+import SearchAddressItem from '../SearchAddressItem';
+import SearchSelected from '../SearchSelected';
+const SearchAddressDaum = observer(() => {
+  const { search } = UseStores();
+  const [value, setValue] = useState('');
 
-const SearchAddressDaum = () => {
   const handleComplete = data => {
     let fullAddress = data.address;
     let extraAddress = '';
@@ -16,11 +23,32 @@ const SearchAddressDaum = () => {
       }
       fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
     }
-
     console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    search.searchAddress(fullAddress);
   };
+  let searchItems = search.searchAddressList.map((item, key) => {
+    return (
+      <SearchAddressItem search={search} key={key} value={key} item={item} />
+    );
+  });
 
-  return <DaumPostcode onComplete={handleComplete} />;
-};
+  return (
+    <Fragment>
+      <DaumPostcode onComplete={handleComplete} />
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <span> [ SEARCH ITEMS ] </span>
+          <div>{searchItems}</div>
+        </Grid>
+        <Grid item xs={6}>
+          <span> [ SELECTED ADDRESS ] </span>
+          <div>
+            <SearchSelected locationSettingMode={true} />
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
+});
 
 export default SearchAddressDaum;
