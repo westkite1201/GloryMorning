@@ -7,11 +7,16 @@ import 'moment/locale/ko';
 class TemperatureChart extends Component {
   componentDidMount() {
     const { getWeatherData } = this.props;
-    getWeatherData('T3H');
+    //getWeatherData('T3H');
   }
 
   componentDidUpdate() {
-    const { isFetchingTemp } = this.props;
+    const {
+      isFetchingTemp,
+      getWeather,
+      isWeatherDataFetchedYn,
+      isUpdatedTemp,
+    } = this.props;
     let chart = this.refs.chart.getChart();
     if (isFetchingTemp) {
       chart.showLoading('Loading...');
@@ -20,8 +25,9 @@ class TemperatureChart extends Component {
       const { allChartResizing } = this.props;
       allChartResizing();
     }
-    console.log('componentDidUpdate');
-    console.log('isFetching', isFetchingTemp);
+    if (isWeatherDataFetchedYn && !isUpdatedTemp) {
+      getWeather('T3H');
+    }
     // const { allChartResizing } = this.props;
     // allChartResizing();
     //this.chartUpdate()
@@ -267,4 +273,7 @@ export default inject(({ weather, edit }) => ({
   temperatureDataList: weather.temperatureDataList,
   temperatureDataListYesterday: weather.temperatureDataListYesterday,
   allChartResizing: edit.allChartResizing,
+  getWeather: weather.getWeather,
+  isWeatherDataFetchedYn: weather.isWeatherDataFetchedYn,
+  isUpdatedTemp: weather.isUpdatedTemp,
 }))(observer(TemperatureChart));

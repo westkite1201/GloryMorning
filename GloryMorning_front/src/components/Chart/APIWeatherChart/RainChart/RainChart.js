@@ -8,13 +8,20 @@ import 'moment/locale/ko';
 /* 강수량 같은 경우는 6시간 단위로만 가져오고 있습  */
 class RainChart extends Component {
   componentDidMount() {
-    const { getWeatherData } = this.props;
-    getWeatherData('POP');
-    getWeatherData('R06');
+    // const { getWeatherData } = this.props;
+    // getWeatherData('POP');
+    // getWeatherData('R06');
   }
 
   componentDidUpdate() {
-    const { isFetchingRain, allChartResizing, getWeatherData } = this.props;
+    const {
+      isFetchingRain,
+      allChartResizing,
+      getWeather,
+      isWeatherDataFetchedYn,
+      isUpdatedRain,
+      isUpdatedRainmm,
+    } = this.props;
     let chart = this.refs.chart.getChart();
     if (isFetchingRain) {
       chart.showLoading('Loading...');
@@ -22,6 +29,14 @@ class RainChart extends Component {
       chart.hideLoading('Loading...');
       allChartResizing();
     }
+
+    if (isWeatherDataFetchedYn && !isUpdatedRain) {
+      getWeather('POP');
+    }
+    if (isWeatherDataFetchedYn && !isUpdatedRainmm) {
+      getWeather('R06');
+    }
+
     console.log('componentDidUpdate');
     console.log('isFetching', isFetchingRain);
 
@@ -224,4 +239,8 @@ export default inject(({ weather, edit }) => ({
   rainfallDataList: weather.rainfallDataList,
   rainfallmmDataList: weather.rainfallmmDataList,
   allChartResizing: edit.allChartResizing,
+  getWeather: weather.getWeather,
+  isWeatherDataFetchedYn: weather.isWeatherDataFetchedYn,
+  isUpdatedRain: weather.isUpdatedRain,
+  isUpdatedRainmm: weather.isUpdatedRainmm,
 }))(observer(RainChart));

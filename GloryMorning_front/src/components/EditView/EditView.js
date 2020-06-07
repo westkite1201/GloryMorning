@@ -27,10 +27,12 @@ class EditView extends Component {
       getUserBackground,
       nowGeolocation,
       updateWeatherDataIntevalStart,
+      getWeatherDataV2,
     } = this.props;
-    nowGeolocation();
+    //nowGeolocation();
     loadPage();
     getUserBackground('testUser');
+    getWeatherDataV2('ALL');
     window.addEventListener('resize', _.throttle(this.updateDimensions, 500));
 
     //window.onresize = this.handleResizeEnd;
@@ -123,4 +125,5 @@ export default inject(({ edit, setting, weather }) => ({
   handleResizable: edit.handleResizable,
   nowGeolocation: weather.nowGeolocation,
   updateWeatherDataIntevalStart: weather.updateWeatherDataIntevalStart,
+  getWeatherDataV2: weather.getWeatherDataV2,
 }))(observer(EditView));

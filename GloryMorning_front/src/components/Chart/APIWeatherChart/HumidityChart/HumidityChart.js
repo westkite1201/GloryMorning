@@ -1,20 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { observer, inject } from 'mobx-react';
 import style from './HumidiyChart.module.css';
 import ReactHighcharts from 'react-highcharts';
 import moment from 'moment';
 import 'moment/locale/ko';
+import UseStores from '../../../Setting/UseStores';
 
 class HumidityChart extends Component {
   componentDidMount() {
-    const { getWeatherData, humidityDataList } = this.props;
-    getWeatherData('REH');
+    const { getWeather, getWeatherData, humidityDataList } = this.props;
     console.log('chartCompon');
   }
 
   componentDidUpdate() {
-    const { isFetchingHumi, allChartResizing } = this.props;
-
+    const {
+      isFetchingHumi,
+      allChartResizing,
+      isWeatherDataFetchedYn,
+      getWeather,
+      isUpdatedHumi,
+    } = this.props;
     let chart = this.refs.chart.getChart();
     if (isFetchingHumi) {
       chart.showLoading('Loading...');
@@ -22,12 +27,9 @@ class HumidityChart extends Component {
       chart.hideLoading('Loading...');
       allChartResizing();
     }
-    console.log('componentDidUpdate');
-    console.log('isFetching', isFetchingHumi);
-
-    //const { allChartResizing } = this.props;
-    //allChartResizing();
-    //this.chartUpdate()
+    if (isWeatherDataFetchedYn && !isUpdatedHumi) {
+      getWeather('REH');
+    }
   }
   componentWillUnmount() {
     console.log('componentWillUnmount!!');
@@ -240,6 +242,7 @@ class HumidityChart extends Component {
     return (
       <div>
         <ReactHighcharts config={config} ref="chart"></ReactHighcharts>
+        <button onClick={() => this.props.getWeather('REH')}>버튼클릭</button>
       </div>
     );
   }
@@ -251,4 +254,7 @@ export default inject(({ weather, edit }) => ({
   allChartResizing: edit.allChartResizing,
   getWeatherData: weather.getWeatherData,
   setHumidityDataListEmpty: weather.setHumidityDataListEmpty,
+  getWeather: weather.getWeather,
+  isWeatherDataFetchedYn: weather.isWeatherDataFetchedYn,
+  isUpdatedHumi: weather.isUpdatedHumi,
 }))(observer(HumidityChart));

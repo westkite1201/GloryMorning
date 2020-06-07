@@ -150,6 +150,12 @@ export default class WeatherStore {
   @observable isFetchingTemp = false;
   @observable isFetchingHumi = false;
 
+  @observable isUpdatedSky = false;
+  @observable isUpdatedRain = false;
+  @observable isUpdatedRainmm = false;
+  @observable isUpdatedTemp = false;
+  @observable isUpdatedHumi = false;
+
   @observable isFetchingShortTerm = false;
   @observable isFetchingHumiDust = false;
 
@@ -176,6 +182,10 @@ export default class WeatherStore {
     top: '',
     bottom: '',
   };
+
+  @observable weatherArray = [];
+  @observable yesterdayArray = [];
+  @observable isWeatherDataFetchedYn = false;
   /* dustInfoOverView 에 버튼 클릭시  */
   @action
   setSelectDustMessageInfo = objectName => {
@@ -888,6 +898,138 @@ export default class WeatherStore {
     });
   };
 
+  @action
+  getWeatherDataV2 = async category => {
+    let response;
+    let locationInfo;
+    let responsedata;
+    let nx;
+    let ny;
+    locationInfo = await this.nowGeolocation();
+    const { currentY, currentX } = locationInfo;
+    responsedata = this.convert(currentY, currentX);
+    nx = responsedata.x;
+    ny = responsedata.y;
+    if (category === 'ALL') {
+      this.isFetchingHumi = true;
+      this.isFetchingRain = true;
+      this.isFetchingRainmm = true;
+      this.isFetchingSky = true;
+      this.isFetchingTemp = true;
+    }
+    if (MODE === 'MEMBER_MODE') {
+      console.log('[seo] response 호출 ');
+      response = await weatherApi.getWeatherData(nx, ny, category);
+      console.log('[seo] response 중 ');
+      if (response.statusText === 'OK') {
+        let weatherArray;
+        let yesterdayArray;
+        weatherArray = response.data;
+        console.log('[seo] weatherArray! ', weatherArray);
+        //어제 부터 오늘
+        console.log(
+          '[SEO] yesterdayPlus',
+          moment()
+            .subtract(2, 'days')
+            .format('YYYYMMDD'),
+        );
+
+        let yesterdayPlus = moment()
+          .subtract(2, 'days')
+          .format('YYYYMMDD');
+        let yesterday = moment()
+          .subtract(1, 'days')
+          .format('YYYYMMDD');
+        let today = moment().format('YYYYMMDD');
+        let tommorow = moment()
+          .add(1, 'days')
+          .format('YYYYMMDD');
+
+        yesterdayArray = weatherArray.filter(item => {
+          return yesterdayPlus <= item.FCST_DATE && item.FCST_DATE <= today;
+        });
+        console.log('[SEO] YESTERDAY ', yesterdayArray);
+
+        //현재 ARRAY
+        weatherArray = weatherArray.filter(item => {
+          return yesterday <= item.FCST_DATE && item.FCST_DATE <= tommorow;
+        });
+        console.log('[SEO] TODAY ', weatherArray);
+        /* yesterdayArray가 커서 보여지는게 헷갈려서 아예 날려버림  */
+        if (yesterdayArray.length < weatherArray.length) {
+          yesterdayArray = [];
+        }
+
+        this.weatherArray = weatherArray;
+        this.yesterdayArray = yesterdayArray;
+        this.isWeatherDataFetchedYn = true;
+      }
+    }
+  };
+
+  getWeather = category => {
+    let weatherArray = this.weatherArray.slice();
+    let yesterdayArray = this.yesterdayArray.slice();
+    switch (category) {
+      case 'REH':
+        weatherArray = weatherArray.filter(item => item.CATEGORY === category);
+        yesterdayArray = yesterdayArray.filter(
+          item => item.CATEGORY === category,
+        );
+        console.log('weatherArray ', weatherArray);
+        console.log('yesterdayArray ', yesterdayArray);
+        this.humidityDataList = this.makeWeatherArray(weatherArray);
+        this.humidityDataListYesterday = this.makeWeatherArray(yesterdayArray);
+        this.isFetchingHumi = false;
+        this.isUpdatedHumi = true;
+        break;
+      case 'POP':
+        weatherArray = weatherArray.filter(item => item.CATEGORY === category);
+        yesterdayArray = yesterdayArray.filter(
+          item => item.CATEGORY === category,
+        );
+        this.rainfallDataList = this.makeWeatherArray(weatherArray);
+        this.rainfallDataListYesterday = this.makeWeatherArray(yesterdayArray);
+        this.isFetchingRain = false;
+        this.isUpdatedRain = true;
+        break;
+      case 'R06':
+        weatherArray = weatherArray.filter(item => item.CATEGORY === category);
+        yesterdayArray = yesterdayArray.filter(
+          item => item.CATEGORY === category,
+        );
+        this.rainfallmmDataList = this.makeWeatherArray(weatherArray);
+        this.rainfallmmDataListYesterday = this.makeWeatherArray(
+          yesterdayArray,
+        );
+        this.isFetchingRainmm = false;
+        this.isUpdatedRainmm = true;
+        break;
+      case 'SKY':
+        weatherArray = weatherArray.filter(item => item.CATEGORY === category);
+        yesterdayArray = yesterdayArray.filter(
+          item => item.CATEGORY === category,
+        );
+        this.skyDataList = this.makeWeatherArray(weatherArray);
+        this.skyDataListYesterday = this.makeWeatherArray(yesterdayArray);
+        this.isFetchingSky = false;
+        this.isUpdatedSky = true;
+        break;
+      case 'T3H':
+        weatherArray = weatherArray.filter(item => item.CATEGORY === category);
+        yesterdayArray = yesterdayArray.filter(
+          item => item.CATEGORY === category,
+        );
+        this.temperatureDataList = this.makeWeatherArray(weatherArray);
+        this.temperatureDataListYesterday = this.makeWeatherArray(
+          yesterdayArray,
+        );
+        this.isFetchingTemp = false;
+        this.isUpdatedTemp = true;
+        break;
+    }
+  };
+
   /*
       REH = humi
       POP = rain
@@ -1467,54 +1609,54 @@ export default class WeatherStore {
     }, 30000);
   };
 
-  @action
-  getWeather = async wantApi => {
-    //this.isFetching = true
-    this.weatherData = [];
-    this.rainData = [];
-    this.huminityData = [];
-    this.temperatureData = [];
-    if (wantApi === 'RAIN') {
-      this.isFetchingRain = true;
-    }
-    if (wantApi === 'HUMIDITY') {
-      this.isFetchingHumi = true;
-    }
-    if (wantApi === 'TEMPERATURE') {
-      this.isFetchingTemp = true;
-    }
-    this.error = null;
-    let data = {
-      loc: this.nowLocation,
-    };
-    try {
-      const response = await axios.post(
-        'http://localhost:3031/api/weather/PYTHONTEST',
-        data,
-      );
-      //const response = await axios.post('http://localhost:3031/api/bus/get_data')
-      //console.log(response)
-      this.isFetching = false;
-      if (wantApi === 'RAIN') {
-        this.rainData = this.makeTemperature(response.data, wantApi);
-        this.isFetchingRain = false;
-      }
-      if (wantApi === 'HUMINITY') {
-        this.humidityData = this.makeTemperature(response.data, wantApi);
-        this.isFetchingHumi = false;
-      }
-      if (wantApi === 'TEMPERATURE') {
-        this.temperatureData = this.makeTemperature(response.data, wantApi);
-        this.isFetchingTemp = false;
-      }
-      this.setInterval(wantApi);
-    } catch (e) {
-      //this.setWeatherData(response.data)
+  // @action
+  // getWeather = async wantApi => {
+  //   //this.isFetching = true
+  //   this.weatherData = [];
+  //   this.rainData = [];
+  //   this.huminityData = [];
+  //   this.temperatureData = [];
+  //   if (wantApi === 'RAIN') {
+  //     this.isFetchingRain = true;
+  //   }
+  //   if (wantApi === 'HUMIDITY') {
+  //     this.isFetchingHumi = true;
+  //   }
+  //   if (wantApi === 'TEMPERATURE') {
+  //     this.isFetchingTemp = true;
+  //   }
+  //   this.error = null;
+  //   let data = {
+  //     loc: this.nowLocation,
+  //   };
+  //   try {
+  //     const response = await axios.post(
+  //       'http://localhost:3031/api/weather/PYTHONTEST',
+  //       data,
+  //     );
+  //     //const response = await axios.post('http://localhost:3031/api/bus/get_data')
+  //     //console.log(response)
+  //     this.isFetching = false;
+  //     if (wantApi === 'RAIN') {
+  //       this.rainData = this.makeTemperature(response.data, wantApi);
+  //       this.isFetchingRain = false;
+  //     }
+  //     if (wantApi === 'HUMINITY') {
+  //       this.humidityData = this.makeTemperature(response.data, wantApi);
+  //       this.isFetchingHumi = false;
+  //     }
+  //     if (wantApi === 'TEMPERATURE') {
+  //       this.temperatureData = this.makeTemperature(response.data, wantApi);
+  //       this.isFetchingTemp = false;
+  //     }
+  //     this.setInterval(wantApi);
+  //   } catch (e) {
+  //     //this.setWeatherData(response.data)
 
-      this.error = true;
-      console.log(e);
-    }
-  };
+  //     this.error = true;
+  //     console.log(e);
+  //   }
+  // };
 
   convert = (xx, yy) => {
     console.log('[SEO] [CONVERT] ', xx, yy);

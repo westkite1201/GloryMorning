@@ -13,10 +13,6 @@ class WeatherInfo extends Component {
     const { getWeatherDataShortTerm } = this.props;
     getWeatherDataShortTerm(60, 127);
   }
-  componentDidUpdate() {
-    const { weatherClassName } = this.props;
-  }
-
   render() {
     let {
       isFetchingShortTerm,

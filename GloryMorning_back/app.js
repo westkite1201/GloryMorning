@@ -53,9 +53,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: true,
-    },
-  }),
+      secure: true
+    }
+  })
 );
 //app에 jwt-secret 생성
 
@@ -75,12 +75,12 @@ app.post('/api/login', (req, res, next) => {
       session: true,
       passReqToCallback: true,
       successRedirect: '/main',
-      failureRedirect: '/home',
+      failureRedirect: '/home'
     },
     async (err, user, info) => {
       console.log(info);
       return res.json(info);
-    },
+    }
   )(req, res, next);
 });
 
