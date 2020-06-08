@@ -4,6 +4,7 @@ import ReactGridLayout, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import { observer, inject } from 'mobx-react';
+
 const ResponsiveReactGridLayout = WidthProvider(ReactGridLayout);
 
 class EditView extends Component {
@@ -34,7 +35,6 @@ class EditView extends Component {
     getUserBackground('testUser');
     getWeatherDataV2('ALL');
     window.addEventListener('resize', _.throttle(this.updateDimensions, 500));
-
     //window.onresize = this.handleResizeEnd;
   }
   updateDimensions = () => {

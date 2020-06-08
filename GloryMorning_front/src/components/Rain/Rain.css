@@ -1,0 +1,11 @@
+.sildeshow {
+  margin: auto;
+}
+.test {
+  position: absolute;
+  font-size: 20rem;
+  z-index: 99999;
+  color: white;
+  top: 25%;
+  left: 25%;
+}

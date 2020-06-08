@@ -140,7 +140,12 @@ export default class EditStore {
   (단, 컴포넌트의 root div에 wrapperid  + _c 가 id 로 잡혀있는 경우만 해당)
   */
   handleResizeChildComponent = (allChild, target) => {
-    // console.log('handleResizeChildComponent ,allChild', allChild, ' target ', target.i);
+    console.log(
+      'handleResizeChildComponent ,allChild',
+      allChild,
+      ' target ',
+      target.i,
+    );
     let rect = document.getElementById(target.i).getBoundingClientRect();
 
     let targetDiv = document.getElementById(target.i + '_c');
@@ -149,6 +154,7 @@ export default class EditStore {
       targetDiv.style.height = rect.height;
     }
     this.allChartResizing();
+    this.reRenderRain(rect.width, rect.height);
   };
   /*
     searchComponentByName
@@ -167,6 +173,37 @@ export default class EditStore {
       }
     });
     return tag;
+  };
+
+  @action
+  reRenderRain = (width, height) => {
+    let awidth = width;
+    let aheight = height;
+    let dpi = window.devicePixelRatio;
+    // context
+    var canvas = document.querySelector('#rain-container');
+    var ctx = canvas.getContext('2d');
+    var gl = canvas.getContext('webgl'); // will always be null
+    // Set the viewport
+    // ctx3d.viewport(0, 0, this.width, this.height);
+    // ctx3d.clearColor(0, 0, 0, 0);
+
+    gl.viewport(0, 0, awidth, aheight);
+    gl = canvas.getContext('webgl', { alpha: false });
+    // gl.colorMask(false, false, false, true);
+    // gl.clearColor(0, 0, 0, 1);
+    // gl.clear(gl.COLOR_BUFFER_BIT);
+    // Clear the canvas.
+    //gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // gl.getExtension('WEBGL_lose_context').restoreContext();
+    canvas.width = awidth * dpi;
+    canvas.height = aheight * dpi;
+    canvas.style.width = awidth + 'px';
+    canvas.style.height = aheight + 'px';
+    //init(awidth, aheight, false)
+    //loadTextures(awidth, aheight, false)
+    //this.setState({});
   };
 
   /*

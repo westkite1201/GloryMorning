@@ -28,9 +28,6 @@ class TemperatureChart extends Component {
     if (isWeatherDataFetchedYn && !isUpdatedTemp) {
       getWeather('T3H');
     }
-    // const { allChartResizing } = this.props;
-    // allChartResizing();
-    //this.chartUpdate()
   }
 
   render() {

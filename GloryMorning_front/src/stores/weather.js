@@ -186,6 +186,7 @@ export default class WeatherStore {
   @observable weatherArray = [];
   @observable yesterdayArray = [];
   @observable isWeatherDataFetchedYn = false;
+
   /* dustInfoOverView 에 버튼 클릭시  */
   @action
   setSelectDustMessageInfo = objectName => {
@@ -230,27 +231,26 @@ export default class WeatherStore {
 
   @action
   setSocketConnection = () => {
-    console.log('[SetSocketConnectio]');
-    if (isEmpty(this.timeSocket)) {
-      const timeSocket = io('http://localhost:3031/time');
-      // console.log(socket)
-      timeSocket.on('connect', () => {
-        console.log('[seo] connected');
-      });
-      this.timeSocket = timeSocket;
-
-      /* socketIo를 통한 시계 구현  */
-      timeSocket.on('getTime', data => {
-        console.log('data!', data.count);
-        if (!_.isNil(data.serverTime)) {
-          this.timeObj = data.serverTime;
-        }
-      });
-      /* socket 이름 변경 요망  */
-      timeSocket.on('updateWeatherData', data => {
-        this.upateWeatherData();
-      });
-    }
+    // console.log('[SetSocketConnectio]');
+    // if (isEmpty(this.timeSocket)) {
+    //   const timeSocket = io('http://localhost:3031/time');
+    //   // console.log(socket)
+    //   timeSocket.on('connect', () => {
+    //     console.log('[seo] connected');
+    //   });
+    //   this.timeSocket = timeSocket;
+    //   /* socketIo를 통한 시계 구현  */
+    //   timeSocket.on('getTime', data => {
+    //     console.log('data!', data.count);
+    //     if (!_.isNil(data.serverTime)) {
+    //       this.timeObj = data.serverTime;
+    //     }
+    //   });
+    //   /* socket 이름 변경 요망  */
+    //   timeSocket.on('updateWeatherData', data => {
+    //     this.upateWeatherData();
+    //   });
+    // }
   };
 
   /*process => 
@@ -359,6 +359,7 @@ export default class WeatherStore {
       return resData.response.body.items;
     } catch (e) {
       console.log('error', e);
+      return 'error';
     }
   };
 
@@ -455,41 +456,52 @@ export default class WeatherStore {
   getWeatherDataShortTerm = async (isDefault, item) => {
     console.log('[SEO][getWeatherDataShortTerm][item] ', item);
     let locationInfo;
-    let riseSetInfo = await this.getAreaRiseSetInfo();
     let dayTimeYn;
     let responsedata;
     let nx;
     let ny;
-    /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
-    if (!isDefault && !_.isNil(item)) {
-      console.log(
-        '[SEO][getWeatherDataShortTerm] isDefault , item  ',
-        isDefault,
-        parseFloat(item.x),
-        item.y,
-      );
-      dayTimeYn = riseSetInfo.item.isDayTimeYn;
-      this.getLocationName(parseFloat(item.x), parseFloat(item.y));
-      responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
-      nx = responsedata.x;
-      ny = responsedata.y;
-      console.log('[SEO][getWeatherDataShortTerm] nx, ny ', nx, ny);
-    } else {
-      //기본 default
-      locationInfo = await this.nowGeolocation();
-      dayTimeYn = riseSetInfo.item.isDayTimeYn;
-      console.log('[SEO][getWeatherDataShortTerm] locationInfo ', locationInfo);
-      responsedata = this.convert(locationInfo.currentY, locationInfo.currentX);
-      nx = responsedata.x;
-      ny = responsedata.y;
-    }
+    try {
+      let riseSetInfo = await this.getAreaRiseSetInfo();
 
-    console.log('[SEO][getWeatherDataShortTerm] RiseSetInfo', riseSetInfo);
-    console.log('[SEO][getWeatherDataShortTerm] locationInfo', locationInfo);
-    console.log(
-      '[Seo][getWeatherDataShortTerm] getWeatherDataShortTerm ',
-      responsedata,
-    );
+      /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
+      if (!isDefault && !_.isNil(item)) {
+        console.log(
+          '[SEO][getWeatherDataShortTerm] isDefault , item  ',
+          isDefault,
+          parseFloat(item.x),
+          item.y,
+        );
+        dayTimeYn = riseSetInfo.item.isDayTimeYn;
+        this.getLocationName(parseFloat(item.x), parseFloat(item.y));
+        responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
+        nx = responsedata.x;
+        ny = responsedata.y;
+        console.log('[SEO][getWeatherDataShortTerm] nx, ny ', nx, ny);
+      } else {
+        //기본 default
+        locationInfo = await this.nowGeolocation();
+        dayTimeYn = riseSetInfo.item.isDayTimeYn;
+        console.log(
+          '[SEO][getWeatherDataShortTerm] locationInfo ',
+          locationInfo,
+        );
+        responsedata = this.convert(
+          locationInfo.currentY,
+          locationInfo.currentX,
+        );
+        nx = responsedata.x;
+        ny = responsedata.y;
+      }
+
+      console.log('[SEO][getWeatherDataShortTerm] RiseSetInfo', riseSetInfo);
+      console.log('[SEO][getWeatherDataShortTerm] locationInfo', locationInfo);
+      console.log(
+        '[Seo][getWeatherDataShortTerm] getWeatherDataShortTerm ',
+        responsedata,
+      );
+    } catch (e) {
+      console.log(e);
+    }
 
     try {
       let response;

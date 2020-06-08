@@ -14,6 +14,7 @@ import WisdomQuotes from '../components/Setting/WisdomQuotes';
 import DustInfoOverView from '../components/WeatherInfo/DustInfoOverView';
 import UnsplashContainer from '../components/UnsplashContainer';
 import SearchAddress from '../components/Setting/SearchAddress';
+import Rain from '../components/Rain';
 import App from '../App';
 
 // <Route exact path = {`${match.url}/notice`} component ={Board}/>
@@ -31,7 +32,7 @@ const dashboardRoutes = [
     sidebarName: 'UnsplashContainer',
     navbarName: 'UnsplashContainer',
     icon: UnsplashContainer,
-    component: UnsplashContainer
+    component: UnsplashContainer,
   },
 
   {
@@ -41,7 +42,7 @@ const dashboardRoutes = [
     sidebarName: 'SearchAddress',
     navbarName: 'SearchAddress',
     icon: SearchAddress,
-    component: SearchAddress
+    component: SearchAddress,
   },
 
   {
@@ -51,7 +52,7 @@ const dashboardRoutes = [
     sidebarName: 'seoPage',
     navbarName: 'seoPage',
     icon: Dashboard,
-    component: App
+    component: App,
   },
   {
     sideView: true,
@@ -60,7 +61,7 @@ const dashboardRoutes = [
     sidebarName: 'setting',
     navbarName: 'setting',
     icon: Dashboard,
-    component: SettingBackground
+    component: SettingBackground,
   },
   {
     sideView: true,
@@ -69,8 +70,17 @@ const dashboardRoutes = [
     sidebarName: 'WisdomQuotes',
     navbarName: 'WisdomQuotes',
     icon: Dashboard,
-    component: WisdomQuotes
-  }
+    component: WisdomQuotes,
+  },
+  {
+    sideView: true,
+    //exact : true,
+    path: '/Rain/',
+    sidebarName: 'Rain',
+    navbarName: 'Rain',
+    icon: Dashboard,
+    component: Rain,
+  },
 
   //{ redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];

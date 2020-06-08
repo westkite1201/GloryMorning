@@ -5,6 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { Switch, Button, Fab } from '@material-ui/core';
 import { MyLocation } from '@material-ui/icons';
 import Location from '../Location';
+import {
+  loadTextures,
+  init,
+  changeWeatherToOnClick,
+} from '../../lib/rain/lib/src/main.js';
 const styles = theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -17,6 +22,7 @@ const styles = theme => ({
     //fontSize: 36,
   },
 });
+
 @inject('sidebar')
 @inject('edit')
 @observer
@@ -28,11 +34,15 @@ class TopRow extends Component {
   // }
 
   render() {
+    const testRain = () => {
+      init(1000, 1000, true);
+    };
     const { edit } = this.props;
     console.log('[SEO] locationFlagView ', edit.locationFlagView);
     return (
       <div className="top-row">
         <div className="edit-component">
+          <button onClick={testRain}>test</button>
           <Switch
             checked={edit.editPageFlag}
             onChange={edit.handlePage}

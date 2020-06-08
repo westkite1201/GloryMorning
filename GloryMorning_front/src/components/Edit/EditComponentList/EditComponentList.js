@@ -14,6 +14,7 @@ import DustInfo from '../../WeatherInfo/DustInfo';
 
 import SettingBackGround from '../../Setting/SettingBackground';
 import SearchAddressDaum from '../../Setting/SearchAddress/SearchAddressDaum';
+import Rain from '../../Rain';
 class EditComponentList extends Component {
   componentDidMount() {
     const { putComponentList, initComponetList } = this.props;
@@ -30,6 +31,7 @@ class EditComponentList extends Component {
       { weatherInfo: WeatherInfo, category: 'weather', pageView: 'seoPage' },
       { DustInfo: DustInfo, category: 'weather', pageView: 'seoPage' },
       { Clock: Clock, category: 'weather', pageView: 'seoPage' },
+      { Rain: Rain, category: 'weather', pageView: 'seoPage' },
       {
         SettingBackGround: SettingBackGround,
         category: 'admin',
