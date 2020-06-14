@@ -154,7 +154,7 @@ export default class EditStore {
       targetDiv.style.height = rect.height;
     }
     this.allChartResizing();
-    this.reRenderRain(rect.width, rect.height);
+    //this.reRenderRain(rect.width, rect.height);
   };
   /*
     searchComponentByName
@@ -181,9 +181,10 @@ export default class EditStore {
     let aheight = height;
     let dpi = window.devicePixelRatio;
     // context
-    var canvas = document.querySelector('#rain-container');
-    var ctx = canvas.getContext('2d');
-    var gl = canvas.getContext('webgl'); // will always be null
+    let canvas = document.querySelector('#rain-container');
+    if(canvas){
+          let ctx = canvas.getContext('2d');
+    let gl = canvas.getContext('webgl'); // will always be null
     // Set the viewport
     // ctx3d.viewport(0, 0, this.width, this.height);
     // ctx3d.clearColor(0, 0, 0, 0);
@@ -204,6 +205,8 @@ export default class EditStore {
     //init(awidth, aheight, false)
     //loadTextures(awidth, aheight, false)
     //this.setState({});
+    }
+
   };
 
   /*
