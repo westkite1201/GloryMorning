@@ -154,7 +154,7 @@ export default class EditStore {
       targetDiv.style.height = rect.height;
     }
     this.allChartResizing();
-    //this.reRenderRain(rect.width, rect.height);
+    this.reRenderRain(rect.width, rect.height);
   };
   /*
     searchComponentByName
@@ -182,31 +182,30 @@ export default class EditStore {
     let dpi = window.devicePixelRatio;
     // context
     let canvas = document.querySelector('#rain-container');
-    if(canvas){
-          let ctx = canvas.getContext('2d');
-    let gl = canvas.getContext('webgl'); // will always be null
-    // Set the viewport
-    // ctx3d.viewport(0, 0, this.width, this.height);
-    // ctx3d.clearColor(0, 0, 0, 0);
+    if (canvas) {
+      let ctx = canvas.getContext('2d');
+      let gl = canvas.getContext('webgl'); // will always be null
+      // Set the viewport
+      // ctx3d.viewport(0, 0, this.width, this.height);
+      // ctx3d.clearColor(0, 0, 0, 0);
 
-    gl.viewport(0, 0, awidth, aheight);
-    gl = canvas.getContext('webgl', { alpha: false });
-    // gl.colorMask(false, false, false, true);
-    // gl.clearColor(0, 0, 0, 1);
-    // gl.clear(gl.COLOR_BUFFER_BIT);
-    // Clear the canvas.
-    //gl.clear(gl.COLOR_BUFFER_BIT);
+      //   gl.viewport(0, 0, awidth, aheight);
+      gl = canvas.getContext('webgl', { alpha: false });
+      // gl.colorMask(false, false, false, true);
+      // gl.clearColor(0, 0, 0, 1);
+      // gl.clear(gl.COLOR_BUFFER_BIT);
+      // Clear the canvas.
+      //gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // gl.getExtension('WEBGL_lose_context').restoreContext();
-    canvas.width = awidth * dpi;
-    canvas.height = aheight * dpi;
-    canvas.style.width = awidth + 'px';
-    canvas.style.height = aheight + 'px';
-    //init(awidth, aheight, false)
-    //loadTextures(awidth, aheight, false)
-    //this.setState({});
+      // gl.getExtension('WEBGL_lose_context').restoreContext();
+      canvas.width = awidth * dpi;
+      canvas.height = aheight * dpi;
+      canvas.style.width = awidth + 'px';
+      canvas.style.height = aheight + 'px';
+      //init(awidth, aheight, false)
+      //loadTextures(awidth, aheight, false)
+      //this.setState({});
     }
-
   };
 
   /*
