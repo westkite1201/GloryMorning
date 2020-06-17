@@ -153,8 +153,8 @@ export default class EditStore {
       targetDiv.style.width = rect.width;
       targetDiv.style.height = rect.height;
     }
-    this.allChartResizing();
     this.reRenderRain(rect.width, rect.height);
+    this.allChartResizing();
   };
   /*
     searchComponentByName

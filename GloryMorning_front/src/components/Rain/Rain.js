@@ -64,7 +64,7 @@ export default class Rain extends Component {
         <div className="rain-container">
           <div className="slideshow">
             <canvas id="rain-container"></canvas>
-            {/*<div className="test">RAIN</div>*/}
+            {<div className="test">RAIN</div>}
           </div>
           {/*
           <p className="nosupport">

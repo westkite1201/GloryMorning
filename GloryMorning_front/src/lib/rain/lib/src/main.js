@@ -49,7 +49,8 @@ export function loadTextures(width, height, defaultYn) {
 
     { name: 'textureRainFg', src: 'images/weather/texture-rain-fg.png' },
     { name: 'textureRainBg', src: 'images/weather/texture-rain-bg.png' },
-
+    // { name: 'textureRainFg', src: 'images/hiclipart.com.png' },
+    // { name: 'textureRainBg', src: 'images/hiclipart.com.png' },
     {
       name: 'textureStormLightningFg',
       src: 'images/weather/texture-storm-lightning-fg.png',

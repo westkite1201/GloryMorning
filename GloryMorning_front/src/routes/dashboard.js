@@ -28,7 +28,7 @@ const dashboardRoutes = [
   {
     sideView: true,
     //exact : true,
-    path: '/UnsplashContainer/',
+    path: '/UnsplashContainer',
     sidebarName: 'UnsplashContainer',
     navbarName: 'UnsplashContainer',
     icon: UnsplashContainer,
@@ -38,7 +38,7 @@ const dashboardRoutes = [
   {
     sideView: true,
     //exact : true,
-    path: '/SearchAddress/',
+    path: '/SearchAddress',
     sidebarName: 'SearchAddress',
     navbarName: 'SearchAddress',
     icon: SearchAddress,
@@ -48,7 +48,7 @@ const dashboardRoutes = [
   {
     sideView: true,
     //exact : true,
-    path: '/seoPage/',
+    path: '/seoPage',
     sidebarName: 'seoPage',
     navbarName: 'seoPage',
     icon: Dashboard,
@@ -57,7 +57,7 @@ const dashboardRoutes = [
   {
     sideView: true,
     //exact : true,
-    path: '/setting/',
+    path: '/setting',
     sidebarName: 'setting',
     navbarName: 'setting',
     icon: Dashboard,
@@ -66,7 +66,7 @@ const dashboardRoutes = [
   {
     sideView: true,
     //exact : true,
-    path: '/WisdomQuotes/',
+    path: '/WisdomQuotes',
     sidebarName: 'WisdomQuotes',
     navbarName: 'WisdomQuotes',
     icon: Dashboard,
@@ -75,7 +75,7 @@ const dashboardRoutes = [
   {
     sideView: true,
     //exact : true,
-    path: '/Rain/',
+    path: '/Rain',
     sidebarName: 'Rain',
     navbarName: 'Rain',
     icon: Dashboard,

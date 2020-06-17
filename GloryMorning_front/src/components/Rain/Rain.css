@@ -3,9 +3,9 @@
 }
 .test {
   position: absolute;
-  font-size: 20rem;
-  z-index: 99999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   color: white;
-  top: 25%;
-  left: 25%;
+  font-size: 3rem;
 }
