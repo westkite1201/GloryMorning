@@ -71,33 +71,7 @@ export async function loadTextures(width, height, defaultYn) {
 
     { name: 'textureWhiteBg', src: 'images/weather/white.jpg' },
   ]);
-  // .then(images => {
-  //   console.log('[rain] images', images);
-  //   textureRainFg = images.textureRainFg.img;
-  //   textureRainBg = images.textureRainBg.img;
 
-  //   textureFalloutFg = images.textureFalloutFg.img;
-  //   textureFalloutBg = images.textureFalloutBg.img;
-
-  //   textureStormLightningFg = images.textureStormLightningFg.img;
-  //   textureStormLightningBg = images.textureStormLightningBg.img;
-
-  //   textureSunFg = images.textureSunFg.img;
-  //   textureSunBg = images.textureSunBg.img;
-
-  //   textureDrizzleFg = images.textureDrizzleFg.img;
-  //   textureDrizzleBg = images.textureDrizzleBg.img;
-
-  //   textureWhiteBg = images.textureWhiteBg.img;
-
-  //   dropColor = images.dropColor.img;
-  //   dropAlpha = images.dropAlpha.img;
-  //   console.log('[rain]hello');
-  //   init(width, height, defaultYn).then(render => {
-  //     alert(render);
-  //     return render;
-  //   });
-  // });
   textureRainFg = images.textureRainFg.img;
   textureRainBg = images.textureRainBg.img;
 
@@ -119,7 +93,7 @@ export async function loadTextures(width, height, defaultYn) {
   dropAlpha = images.dropAlpha.img;
 
   let render = await init(width, height, defaultYn);
-  alert('main render', render);
+  //alert('main render', render);
   return render;
 }
 //loadTextures();
@@ -403,17 +377,6 @@ export function changeWeatherToOnClick(param) {
 }
 
 function newUpdateWeather(selectWeather) {
-  // let hash=window.location.hash;
-  // let currentSlide=null;
-  // let currentNav=null;
-  // if(hash!=""){
-  //   currentSlide = document.querySelector(hash);
-  // }
-  // if(currentSlide==null){
-  //   currentSlide = document.querySelector(".slide");
-  //   hash="#"+currentSlide.getAttribute("id");
-  // }
-  //currentNav=document.querySelector("[href='"+hash+"']");
   let data = weatherData[selectWeather];
   curWeatherData = data;
   raindrops.options = Object.assign(raindrops.options, data);
@@ -434,15 +397,6 @@ function newUpdateWeather(selectWeather) {
       },
     },
   );
-
-  // let lastSlide=document.querySelector(".slide--current");
-  // if(lastSlide!=null) lastSlide.classList.remove("slide--current");
-
-  // let lastNav=document.querySelector(".nav-item--current");
-  // if(lastNav!=null) lastNav.classList.remove("nav-item--current");
-
-  // currentSlide.classList.add("slide--current");
-  // currentNav.classList.add("nav-item--current");
 }
 
 function initWeather() {
