@@ -174,7 +174,7 @@ function setupParallax() {
 
     TweenLite.to(parallax, 1, {
       x: (x / canvas.width) * 2 - 1,
-      y: (y / canvas.height) * 1 - 1,
+      y: (y / canvas.height) * 1.5 - 1,
       ease: Power4.easeOut,
       onUpdate: () => {
         renderer.parallaxX = parallax.x;
@@ -211,10 +211,10 @@ function setupWeatherData() {
     raining: true,
     minR: 20,
     maxR: 50,
-    rainChance: 0.35,
-    rainLimit: 6,
-    dropletsRate: 50,
-    dropletsSize: [3, 5.5],
+    rainChance: 0.15,
+    rainLimit: 3,
+    dropletsRate: 25,
+    dropletsSize: [2, 4.5],
     trailRate: 1,
     trailScaleRange: [0.25, 0.35],
     fg: textureRainFg,
