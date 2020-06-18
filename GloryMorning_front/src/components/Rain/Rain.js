@@ -16,6 +16,7 @@ const Rain = observer(() => {
   let defaultYn = true;
   useEffect(() => {
     async function loadRainDrop() {
+      //let targetDiv = document.getElementById('rain-container').getBoundingClientRect();
       let render = await loadTextures(width, height, defaultYn);
       setRender(render);
     }
@@ -24,8 +25,8 @@ const Rain = observer(() => {
 
   useEffect(() => {
     if (render) {
-      edit.handleRainContainerResize();
       edit.setRainRender(true);
+      edit.handleRainContainerResize();
     }
   }, [render]);
   return (
