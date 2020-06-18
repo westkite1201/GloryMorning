@@ -41,16 +41,16 @@ let weatherData = null;
 let curWeatherData = null;
 let blend = { v: 0 };
 
-export function loadTextures(width, height, defaultYn) {
+export async function loadTextures(width, height, defaultYn) {
   console.log('[rain] start');
-  loadImages([
+  let images = await loadImages([
     { name: 'dropAlpha', src: 'images/drop-alpha.png' },
     { name: 'dropColor', src: 'images/drop-color.png' },
 
-    { name: 'textureRainFg', src: 'images/weather/texture-rain-fg.png' },
-    { name: 'textureRainBg', src: 'images/weather/texture-rain-bg.png' },
-    // { name: 'textureRainFg', src: 'images/hiclipart.com.png' },
-    // { name: 'textureRainBg', src: 'images/hiclipart.com.png' },
+    // { name: 'textureRainFg', src: 'images/weather/texture-rain-fg.png' },
+    // { name: 'textureRainBg', src: 'images/weather/texture-rain-bg.png' },
+    { name: 'textureRainFg', src: 'images/gloumy.jpg' },
+    { name: 'textureRainBg', src: 'images/gloumy.jpg' },
     {
       name: 'textureStormLightningFg',
       src: 'images/weather/texture-storm-lightning-fg.png',
@@ -70,34 +70,61 @@ export function loadTextures(width, height, defaultYn) {
     { name: 'textureDrizzleBg', src: 'images/weather/texture-drizzle-bg.png' },
 
     { name: 'textureWhiteBg', src: 'images/weather/white.jpg' },
-  ]).then(images => {
-    console.log('[rain] images', images);
-    textureRainFg = images.textureRainFg.img;
-    textureRainBg = images.textureRainBg.img;
+  ]);
+  // .then(images => {
+  //   console.log('[rain] images', images);
+  //   textureRainFg = images.textureRainFg.img;
+  //   textureRainBg = images.textureRainBg.img;
 
-    textureFalloutFg = images.textureFalloutFg.img;
-    textureFalloutBg = images.textureFalloutBg.img;
+  //   textureFalloutFg = images.textureFalloutFg.img;
+  //   textureFalloutBg = images.textureFalloutBg.img;
 
-    textureStormLightningFg = images.textureStormLightningFg.img;
-    textureStormLightningBg = images.textureStormLightningBg.img;
+  //   textureStormLightningFg = images.textureStormLightningFg.img;
+  //   textureStormLightningBg = images.textureStormLightningBg.img;
 
-    textureSunFg = images.textureSunFg.img;
-    textureSunBg = images.textureSunBg.img;
+  //   textureSunFg = images.textureSunFg.img;
+  //   textureSunBg = images.textureSunBg.img;
 
-    textureDrizzleFg = images.textureDrizzleFg.img;
-    textureDrizzleBg = images.textureDrizzleBg.img;
+  //   textureDrizzleFg = images.textureDrizzleFg.img;
+  //   textureDrizzleBg = images.textureDrizzleBg.img;
 
-    textureWhiteBg = images.textureWhiteBg.img;
+  //   textureWhiteBg = images.textureWhiteBg.img;
 
-    dropColor = images.dropColor.img;
-    dropAlpha = images.dropAlpha.img;
-    console.log('[rain]hello');
-    init(width, height, defaultYn);
-  });
+  //   dropColor = images.dropColor.img;
+  //   dropAlpha = images.dropAlpha.img;
+  //   console.log('[rain]hello');
+  //   init(width, height, defaultYn).then(render => {
+  //     alert(render);
+  //     return render;
+  //   });
+  // });
+  textureRainFg = images.textureRainFg.img;
+  textureRainBg = images.textureRainBg.img;
+
+  textureFalloutFg = images.textureFalloutFg.img;
+  textureFalloutBg = images.textureFalloutBg.img;
+
+  textureStormLightningFg = images.textureStormLightningFg.img;
+  textureStormLightningBg = images.textureStormLightningBg.img;
+
+  textureSunFg = images.textureSunFg.img;
+  textureSunBg = images.textureSunBg.img;
+
+  textureDrizzleFg = images.textureDrizzleFg.img;
+  textureDrizzleBg = images.textureDrizzleBg.img;
+
+  textureWhiteBg = images.textureWhiteBg.img;
+
+  dropColor = images.dropColor.img;
+  dropAlpha = images.dropAlpha.img;
+
+  let render = await init(width, height, defaultYn);
+  alert('main render', render);
+  return render;
 }
 //loadTextures();
 
-export function init(width, height, defaultYn) {
+export async function init(width, height, defaultYn) {
   console.log('[rain] init');
   canvas = document.querySelector('#rain-container');
   console.log('canvas!! width height defaultYn', width, height, defaultYn);
@@ -156,13 +183,15 @@ export function init(width, height, defaultYn) {
     },
   );
 
-  setupEvents();
+  await setupEvents();
+  return true;
 }
 
-function setupEvents() {
+async function setupEvents() {
   setupParallax();
   setupWeather();
   setupFlash();
+  return;
 }
 function setupParallax() {
   document.addEventListener('mousemove', event => {

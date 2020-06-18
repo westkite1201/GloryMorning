@@ -111,6 +111,7 @@ export default class EditStore {
         chart.setSize(rect.width, rect.height);
       }
     });
+
     /*
     추가#
     창 크기가 변경되어 차트를 리사이징 시킬 때 레이아웃 상의 모든
@@ -118,18 +119,49 @@ export default class EditStore {
     다만 하이차트 리사이징과 중복되기 때문에 둘을 구분하고 최적화하는 로직 필요함
     (단, 컴포넌트의 root div에 wrapperid  + _c 가 id 로 잡혀있는 경우만 해당)
     */
-    // this.layout.forEach((target) => {
-
-    //   if(!helpers.isEmpty(document.getElementById(target.i))){
-    //   let rect = document.getElementById(target.i).getBoundingClientRect();
-    //   let targetDiv =document.getElementById(target.i+ '_c');
-    //     if(!helpers.isEmpty(targetDiv)){
-    //       targetDiv.style.width = rect.width;
-    //       targetDiv.style.height = rect.height;
+    // this.layout.forEach(target => {
+    //   if (!helpers.isEmpty(document.getElementById(target.i))) {
+    //     // let rect = document.getElementById(target.i).getBoundingClientRect();
+    //     // console.log('targetDiv ', document.getElementById(target.i));
+    //     let targetDiv = document.getElementById(target.i);
+    //     if (targetDiv.hasChildNodes()) {
+    //       var children = targetDiv.childNodes;
+    //       for (var i = 0; i < children.length; i++) {
+    //         if (children[i].className === 'rain-container') {
+    //           let rect = document
+    //             .getElementById(target.i)
+    //             .getBoundingClientRect();
+    //           //this.reRenderRain(rect.width, rect.height);
+    //           return;
+    //         }
+    //       }
     //     }
     //   }
-    // })
+    // });
   };
+
+  handleRainContainerResize() {
+    this.layout.forEach(target => {
+      if (!helpers.isEmpty(document.getElementById(target.i))) {
+        // let rect = document.getElementById(target.i).getBoundingClientRect();
+        // console.log('targetDiv ', document.getElementById(target.i));
+        let targetDiv = document.getElementById(target.i);
+        if (targetDiv.hasChildNodes()) {
+          var children = targetDiv.childNodes;
+          for (var i = 0; i < children.length; i++) {
+            if (children[i].className === 'rain-container') {
+              let rect = document
+                .getElementById(target.i)
+                .getBoundingClientRect();
+              this.reRenderRain(rect.width, rect.height);
+              return;
+            }
+          }
+        }
+      }
+    });
+  }
+
   /*
   추가#
   handleResizeChildComponent
