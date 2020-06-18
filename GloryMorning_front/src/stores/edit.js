@@ -14,6 +14,7 @@ export default class EditStore {
   constructor(rootStore) {
     this.rootStore = rootStore;
   }
+  @observable isRainRender = false;
   @observable page_number = 'home';
   @observable layout = [];
   @observable editPageFlag = false;
@@ -39,7 +40,10 @@ export default class EditStore {
   //     console.log(e)
   //   }
   // }
-
+  @action
+  setRainRender = () => {
+    this.isRainRender = true;
+  };
   @action
   setLocationFlagView = () => {
     console.log('[seo] setLocationFlagView ', this.locationViewFlag);
@@ -138,28 +142,32 @@ export default class EditStore {
     //     }
     //   }
     // });
+
+    this.handleRainContainerResize();
   };
 
   handleRainContainerResize() {
-    this.layout.forEach(target => {
-      if (!helpers.isEmpty(document.getElementById(target.i))) {
-        // let rect = document.getElementById(target.i).getBoundingClientRect();
-        // console.log('targetDiv ', document.getElementById(target.i));
-        let targetDiv = document.getElementById(target.i);
-        if (targetDiv.hasChildNodes()) {
-          var children = targetDiv.childNodes;
-          for (var i = 0; i < children.length; i++) {
-            if (children[i].className === 'rain-container') {
-              let rect = document
-                .getElementById(target.i)
-                .getBoundingClientRect();
-              this.reRenderRain(rect.width, rect.height);
-              return;
+    if (this.isRainRender) {
+      this.layout.forEach(target => {
+        if (!helpers.isEmpty(document.getElementById(target.i))) {
+          // let rect = document.getElementById(target.i).getBoundingClientRect();
+          // console.log('targetDiv ', document.getElementById(target.i));
+          let targetDiv = document.getElementById(target.i);
+          if (targetDiv.hasChildNodes()) {
+            var children = targetDiv.childNodes;
+            for (var i = 0; i < children.length; i++) {
+              if (children[i].className === 'rain-container') {
+                let rect = document
+                  .getElementById(target.i)
+                  .getBoundingClientRect();
+                this.reRenderRain(rect.width, rect.height);
+                return;
+              }
             }
           }
         }
-      }
-    });
+      });
+    }
   }
 
   /*
@@ -218,10 +226,10 @@ export default class EditStore {
       let ctx = canvas.getContext('2d');
       let gl = canvas.getContext('webgl'); // will always be null
       // Set the viewport
-      // ctx3d.viewport(0, 0, this.width, this.height);
-      // ctx3d.clearColor(0, 0, 0, 0);
+      // ctx.viewport(0, 0, awidth, aheight);
+      // ctx.clearColor(0, 0, 0, 0);
 
-      //   gl.viewport(0, 0, awidth, aheight);
+      //gl.viewport(0, 0, awidth, aheight);
       gl = canvas.getContext('webgl', { alpha: false });
       // gl.colorMask(false, false, false, true);
       // gl.clearColor(0, 0, 0, 1);
@@ -235,7 +243,7 @@ export default class EditStore {
       canvas.style.width = awidth + 'px';
       canvas.style.height = aheight + 'px';
       //init(awidth, aheight, false)
-      //loadTextures(awidth, aheight, false)
+      //loadTextures(awidth, aheight, false);
       //this.setState({});
     }
   };
