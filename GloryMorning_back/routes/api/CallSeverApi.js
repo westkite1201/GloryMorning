@@ -109,7 +109,9 @@ module.exports = function (callee) {
 
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
-        let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        let serviceKey = process.env.DATA_GO_API_KEY + '&';
+
         let propertiesObject = querystring.stringify({
           base_date: base_date,
           base_time: base_time,
@@ -148,7 +150,9 @@ module.exports = function (callee) {
         console.log('#################!!!!!!!!!!!! nx,ny', nx, ny);
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
-        let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        let serviceKey = process.env.DATA_GO_API_KEY + '&';
+
         let propertiesObject = querystring.stringify({
           base_date: base_date,
           base_time: base_time,
@@ -209,7 +213,8 @@ module.exports = function (callee) {
         OPTIONS.url = HOST + BASE_PATH_NEAR_STATION;
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
-        let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        let serviceKey = process.env.DATA_GO_API_KEY + '&';
         let propertiesObject = querystring.stringify({
           tmX: tmX,
           tmY: tmY,
@@ -247,8 +252,9 @@ module.exports = function (callee) {
         OPTIONS.url = HOST + BASE_PATH_GET_DUST_INFO;
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
-        let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
-        console.log('stationName', stationName);
+       //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+       let serviceKey = process.env.DATA_GO_API_KEY + '&'; 
+       console.log('stationName', stationName);
         let propertiesObject = querystring.stringify({
           stationName: stationName,
           dataTerm: 'DAILY',
@@ -291,8 +297,8 @@ module.exports = function (callee) {
         OPTIONS.url = HOST + BASE_PATH_RIST_SET;
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
-        let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
-
+        //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        let serviceKey = process.env.DATA_GO_API_KEY + '&';
         let propertiesObject = querystring.stringify({
           location: location,
           locdate: locDate,

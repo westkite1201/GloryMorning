@@ -34,6 +34,9 @@ const SearchAddressDaum = observer(() => {
 
   return (
     <Fragment>
+      <div style ={{marginTop:'50px'}}> 
+
+      </div>
       <DaumPostcode onComplete={handleComplete} />
       <Grid container spacing={3}>
         <Grid item xs={6}>
@@ -47,6 +50,7 @@ const SearchAddressDaum = observer(() => {
           </div>
         </Grid>
       </Grid>
+      <button onClick={search.settingLocation}> settingLocation </button>
     </Fragment>
   );
 });

@@ -174,7 +174,7 @@ function setupParallax() {
 
     TweenLite.to(parallax, 1, {
       x: (x / canvas.width) * 2 - 1,
-      y: (y / canvas.height) * 1.5 - 1,
+      y: (y / canvas.height) * 1 - 1,
       ease: Power4.easeOut,
       onUpdate: () => {
         renderer.parallaxX = parallax.x;

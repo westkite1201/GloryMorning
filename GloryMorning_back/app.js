@@ -94,6 +94,7 @@ app.use('/api/weather', weatherApi);
 app.use('/api/bus', busRouter);
 app.use('/api/file', fileRouter);
 app.use('/api/quotes', quotesRotuer);
+require('dotenv').config()
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

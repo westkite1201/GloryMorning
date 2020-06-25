@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 
 
 def excelTest(MySQLdb):
-    path_dir = 'C:\\koreaLocation\\XXYY_DATA.xlsx'   # 가져올 파일들이 있는 directory path
+    path_dir = 'XXYY_DATA.xlsx'   # 가져올 파일들이 있는 directory path
    #data_only=Ture로 해줘야 수식이 아닌 값으로 받아온다.
     load_wb = load_workbook(path_dir, data_only=True)
     #시트 이름으로 불러오기
@@ -31,7 +31,7 @@ def excelTest(MySQLdb):
                     value[3],
                     value[4]
         )] 
-        MySQLdb.insert_CQMS_TABLE(sql, params, 'location')     
+        MySQLdb.insertData(sql, params)
     #셀 좌표로 값 출력
     #print(load_ws.cell(1,2).value)
         

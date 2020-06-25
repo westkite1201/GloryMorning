@@ -14,6 +14,7 @@ import WisdomQuotes from '../components/Setting/WisdomQuotes';
 import DustInfoOverView from '../components/WeatherInfo/DustInfoOverView';
 import UnsplashContainer from '../components/UnsplashContainer';
 import SearchAddress from '../components/Setting/SearchAddress';
+import SearchAddresDaum from '../components/Setting/SearchAddress/SearchAddressDaum';
 import Rain from '../components/Rain';
 import App from '../App';
 
@@ -25,6 +26,15 @@ import App from '../App';
 // <Route path = {`${match.url}/notice/editPosts/:editNumber`} component ={EditBoard}/>
 
 const dashboardRoutes = [
+  {
+    sideView: true,
+    //exact : true,
+    path: '/SearchAddresDaum',
+    sidebarName: 'SearchAddresDaum',
+    navbarName: 'SearchAddresDaum',
+    icon: SearchAddresDaum,
+    component: SearchAddresDaum,
+  },
   {
     sideView: true,
     //exact : true,

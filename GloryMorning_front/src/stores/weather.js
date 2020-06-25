@@ -7,7 +7,7 @@ import * as helpers from '../lib/helpers';
 import * as weatherApi from '../lib/api/weatherApi';
 import { isEmpty } from 'lodash';
 import clientConfig from '../configuration/clientConfig';
-import { templates } from 'handlebars';
+
 // PRIVATE -> API 키 이용해서 직접 호출
 // MEMBER -> 내 DB에서 조회 호출
 //const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
@@ -802,8 +802,8 @@ export default class WeatherStore {
         {
           params: {
             // query string
-            // x: '127.10459896729914',
-            // y: '37.40269721785548'
+            //  x: '127.10459896729914',
+            //  y: '37.40269721785548'
             x: currentX.toString(),
             y: currentY.toString(),
           },
