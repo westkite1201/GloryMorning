@@ -6,12 +6,13 @@ import createCanvas from './create-canvas';
 import TweenLite, { Power4 } from 'gsap';
 import times from './times';
 import { random, chance } from './random';
-import React, { Component } from 'react';
 
 let textureRainFg,
   textureRainBg,
   textureStormLightningFg,
+  textureStormLightningFg_,
   textureStormLightningBg,
+  textureStormLightningBg_,
   textureFalloutFg,
   textureFalloutBg,
   textureSunFg,
@@ -60,11 +61,23 @@ export async function loadTextures(width, height, defaultYn) {
       src: 'images/weather/texture-storm-lightning-bg.png',
     },
 
+    {
+      name: 'textureStormLightningFg_',
+      src: 'images/storm.jpg',
+    },
+    {
+      name: 'textureStormLightningBg_',
+      src: 'images/storm.jpg',
+    },
+
     { name: 'textureFalloutFg', src: 'images/weather/texture-fallout-fg.png' },
     { name: 'textureFalloutBg', src: 'images/weather/texture-fallout-bg.png' },
 
-    { name: 'textureSunFg', src: 'images/weather/texture-sun-fg.png' },
-    { name: 'textureSunBg', src: 'images/weather/texture-sun-bg.png' },
+    // { name: 'textureSunFg', src: 'images/weather/texture-sun-fg.png' },
+    // { name: 'textureSunBg', src: 'images/weather/texture-sun-bg.png' },
+
+    { name: 'textureSunFg', src: 'images/sunny.jpg' },
+    { name: 'textureSunBg', src: 'images/sunny.jpg' },
 
     { name: 'textureDrizzleFg', src: 'images/weather/texture-drizzle-fg.png' },
     { name: 'textureDrizzleBg', src: 'images/weather/texture-drizzle-bg.png' },
@@ -80,7 +93,8 @@ export async function loadTextures(width, height, defaultYn) {
 
   textureStormLightningFg = images.textureStormLightningFg.img;
   textureStormLightningBg = images.textureStormLightningBg.img;
-
+  textureStormLightningFg_ = images.textureStormLightningFg_.img;
+  textureStormLightningBg_ = images.textureStormLightningBg_.img;
   textureSunFg = images.textureSunFg.img;
   textureSunBg = images.textureSunBg.img;
 
@@ -174,7 +188,7 @@ function setupParallax() {
 
     TweenLite.to(parallax, 1, {
       x: (x / canvas.width) * 2 - 1,
-      y: (y / canvas.height) * 1.5 - 1,
+      y: (y / canvas.height) * 1.2 - 1,
       ease: Power4.easeOut,
       onUpdate: () => {
         renderer.parallaxX = parallax.x;
@@ -247,8 +261,8 @@ function setupWeatherData() {
       dropletsSize: [3, 5.5],
       trailRate: 2.5,
       trailScaleRange: [0.25, 0.4],
-      fg: textureRainFg,
-      bg: textureRainBg,
+      fg: textureStormLightningFg_,
+      bg: textureStormLightningBg_,
       flashFg: textureStormLightningFg,
       flashBg: textureStormLightningBg,
       flashChance: 0.1,
@@ -270,8 +284,8 @@ function setupWeatherData() {
       rainLimit: 2,
       dropletsRate: 10,
       dropletsSize: [3.5, 6],
-      fg: textureWhiteBg,
-      bg: textureWhiteBg,
+      fg: textureRainFg,
+      bg: textureRainBg,
     }),
     sunny: weather({
       rainChance: 0,
@@ -397,9 +411,4 @@ function newUpdateWeather(selectWeather) {
       },
     },
   );
-}
-
-function initWeather() {
-  let rainChance = 0.35;
-  let dropletsRate = 50;
 }

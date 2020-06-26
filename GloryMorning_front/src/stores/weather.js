@@ -1,13 +1,11 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action } from 'mobx';
 import axios from 'axios';
 import moment from 'moment';
 import io from 'socket.io-client';
 import * as _ from 'lodash';
 import * as helpers from '../lib/helpers';
 import * as weatherApi from '../lib/api/weatherApi';
-import { isEmpty } from 'lodash';
 import clientConfig from '../configuration/clientConfig';
-import { templates } from 'handlebars';
 // PRIVATE -> API 키 이용해서 직접 호출
 // MEMBER -> 내 DB에서 조회 호출
 //const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
@@ -125,7 +123,7 @@ export default class WeatherStore {
     ver: '',
     _returnType: '',
   };
-  @observable weatherInfObject = {
+  @observable weatherInfoObject = {
     baseTime: '',
     baseDate: '',
     weatherclassNames: '',
@@ -548,7 +546,7 @@ export default class WeatherStore {
         });
         let skyInfoStr = String(sky) + String(pty);
         let weatherInfoData = this.getWeatherClassName(skyInfoStr, dayTimeYn);
-        let weatherInfObject = {
+        let weatherInfoObject = {
           baseDate: baseDate,
           baseTime: baseTime,
           weatherClassName: weatherInfoData.weatherClassName,
@@ -557,7 +555,7 @@ export default class WeatherStore {
           rainNow: rainNow,
           humidityNow: humidityNow,
         };
-        this.weatherInfObject = weatherInfObject;
+        this.weatherInfoObject = weatherInfoObject;
       }
       if (MODE === 'MEMBER_MODE') {
         weatherInfo = response.data;
@@ -591,7 +589,7 @@ export default class WeatherStore {
         //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
         //this.weatherInfoData = weatherInfo;
         let weatherInfoData = this.getWeatherClassName(skyInfoStr, dayTimeYn);
-        let weatherInfObject = {
+        let weatherInfoObject = {
           baseDate: baseDate,
           baseTime: baseTime,
           weatherClassName: weatherInfoData.weatherClassName,
@@ -600,8 +598,8 @@ export default class WeatherStore {
           rainNow: rainNow,
           humidityNow: humidityNow,
         };
-        this.getJustFitClothes(weatherInfObject.temperatureNow);
-        this.weatherInfObject = weatherInfObject;
+        this.getJustFitClothes(weatherInfoObject.temperatureNow);
+        this.weatherInfoObject = weatherInfoObject;
         this.isFetchingShortTerm = false;
       }
     } catch (e) {
@@ -609,7 +607,7 @@ export default class WeatherStore {
       console.log(e);
     }
   };
-
+  getWeatherName = () => {};
   getWeatherClassName = (skyInfoStr, dayTimeYn) => {
     let className = '';
     let weatherInfoName = '';
@@ -1039,6 +1037,8 @@ export default class WeatherStore {
         this.isFetchingTemp = false;
         this.isUpdatedTemp = true;
         break;
+      default:
+        break;
     }
   };
 
@@ -1294,6 +1294,8 @@ export default class WeatherStore {
                     momentobj._d.valueOf(),
                     parseInt(item.fcstValue),
                   ]);
+                  break;
+                default:
                   break;
               }
             }

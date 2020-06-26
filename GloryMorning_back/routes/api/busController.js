@@ -1,22 +1,22 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-const userRedis = require("../../model/redis/redisDao");
-const userDao = require("../../model/mysql/userDao");
+const userRedis = require('../../model/redis/redisDao');
+const userDao = require('../../model/mysql/userDao');
 statusCodeErrorHandlerAsync = (statusCode, data, noNeedParse) => {
   try {
     if (noNeedParse) {
       switch (statusCode) {
         case 200:
-          return { message: "success", data: data };
+          return { message: 'success', data: data };
         default:
-          return { message: "error", data: data };
+          return { message: 'error', data: data };
       }
     } else {
       switch (statusCode) {
         case 200:
-          return { message: "success", data: JSON.parse(data) };
+          return { message: 'success', data: JSON.parse(data) };
         default:
-          return { message: "error", data: JSON.parse(data) };
+          return { message: 'error', data: JSON.parse(data) };
       }
     }
   } catch (e) {
@@ -24,7 +24,7 @@ statusCodeErrorHandlerAsync = (statusCode, data, noNeedParse) => {
   }
 };
 
-router.post("/getBookmarkBackground", async (req, res) => {
+router.post('/getBookmarkBackground', async (req, res) => {
   try {
     const data = {
       memIdx: req.body.memIdx
@@ -34,16 +34,16 @@ router.post("/getBookmarkBackground", async (req, res) => {
     //console.log("getBookmarkBackground response ", response);
     return res.json(response);
   } catch (error) {
-    console.log("error", error);
+    console.log('error', error);
     return statusCodeErrorHandlerAsync(400, error, false);
   }
 });
 
-router.post("/saveBookmarkBackground", async (req, res) => {
+router.post('/saveBookmarkBackground', async (req, res) => {
   try {
     const backgroundBookMarkList = req.body.backgroundBookMarkList;
-    console.log("backgroundBookMarkList ", backgroundBookMarkList);
-    let bookmarkItemList = backgroundBookMarkList.map(item => {
+    console.log('backgroundBookMarkList ', backgroundBookMarkList);
+    let bookmarkItemList = backgroundBookMarkList.map((item) => {
       //console.log("item ", item);
       return [
         1,
@@ -65,12 +65,12 @@ router.post("/saveBookmarkBackground", async (req, res) => {
     const response = await userDao.saveBookmarkBackgroud(data);
     return res.json(response);
   } catch (error) {
-    console.log("error", error);
+    console.log('error', error);
     return statusCodeErrorHandlerAsync(400, error, false);
   }
 });
 
-router.post("/setUserBackground", async (req, res) => {
+router.post('/setUserBackground', async (req, res) => {
   try {
     const userId = req.body.userId;
     const backgroundURL = req.body.backgroundURL;
@@ -78,37 +78,37 @@ router.post("/setUserBackground", async (req, res) => {
       userId: userId,
       backgroundURL: backgroundURL
     });
-    console.log("sssss");
+    console.log('sssss');
     return res.json({
-      message: "success",
-      api: "setUserComponents",
+      message: 'success',
+      api: 'setUserComponents',
       code: 200
     });
   } catch (error) {
-    console.log("error", error);
+    console.log('error', error);
     return statusCodeErrorHandlerAsync(400, error, false);
   }
 });
 /* 백그라운드 가져오기  */
-router.post("/getUserBackground", async (req, res) => {
+router.post('/getUserBackground', async (req, res) => {
   try {
     const userId = req.body.userId;
-    console.log("userId ", userId);
+    console.log('userId ', userId);
     let backgroundURL = await userRedis.getUserBackGround({
       userId: userId
     });
-    console.log("[getUserBackGround] back ", backgroundURL);
+    console.log('[getUserBackGround] back ', backgroundURL);
     return res.json({
-      message: "success",
+      message: 'success',
       backgroundURL: backgroundURL
     });
   } catch (error) {
-    console.log("error ", error);
-    return res.json({ message: "error" });
+    console.log('error ', error);
+    return res.json({ message: 'error' });
   }
 });
 
-router.post("/set_user_components", async (req, res) => {
+router.post('/set_user_components', async (req, res) => {
   try {
     const userId = req.body.user_id;
     const pageNumber = req.body.page_number;
@@ -126,22 +126,22 @@ router.post("/set_user_components", async (req, res) => {
     });
 
     return res.json({
-      message: "success",
-      api: "setUserComponents",
-      code: 100
+      message: 'success',
+      api: 'setUserComponents',
+      code: 200
     });
   } catch (error) {
     console.error(error);
     return res.json({
-      message: "fail",
-      api: "setUserComponents",
-      code: 200,
+      message: 'fail',
+      api: 'setUserComponents',
+      code: 400,
       error: error
     });
   }
 });
 
-router.post("/get_user_components", async (req, res) => {
+router.post('/get_user_components', async (req, res) => {
   try {
     const userId = req.body.user_id;
     const pageNumber = req.body.page_number;
@@ -152,17 +152,17 @@ router.post("/get_user_components", async (req, res) => {
     });
 
     return res.json({
-      message: "success",
-      api: "getUserComponents",
-      code: 100,
+      message: 'success',
+      api: 'getUserComponents',
+      code: 200,
       component_list: componentList
     });
   } catch (error) {
     console.error(error);
     return res.json({
-      message: "fail",
-      api: "getUserComponents",
-      code: 200,
+      message: 'fail',
+      api: 'getUserComponents',
+      code: 400,
       error: error
     });
   }

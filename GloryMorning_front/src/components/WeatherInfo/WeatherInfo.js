@@ -16,14 +16,15 @@ class WeatherInfo extends Component {
   render() {
     let {
       isFetchingShortTerm,
-      weatherInfObject,
+      weatherInfoObject,
       LocationA,
       LocationB,
       LocationC,
       justFitClothes,
     } = this.props;
-    let weatherClassNames = weatherInfObject.weatherClassName + ' weather_icon';
-    let weatherInfoName = weatherInfObject.weatherInfoName;
+    let weatherClassNames =
+      weatherInfoObject.weatherClassName + ' weather_icon';
+    let weatherInfoName = weatherInfoObject.weatherInfoName;
     console.log('weatherClassNames!!!!', weatherClassNames);
 
     const override = `
@@ -47,8 +48,8 @@ class WeatherInfo extends Component {
               {LocationA} {LocationB} {LocationC}
             </div>
             <div className="location-info-time">
-              {moment(weatherInfObject.baseDate).format('YYYY월 MM월 DD일 ')}
-              {weatherInfObject.baseTime}
+              {moment(weatherInfoObject.baseDate).format('YYYY월 MM월 DD일 ')}
+              {weatherInfoObject.baseTime}
             </div>
             <div className="weather_icon_wrapper">
               <i className={weatherClassNames}></i>
@@ -56,7 +57,7 @@ class WeatherInfo extends Component {
             </div>
 
             <div className="temperture">
-              {weatherInfObject.temperatureNow}
+              {weatherInfoObject.temperatureNow}
               <i className="wi wi-celsius"></i>
             </div>
             <hr></hr>
@@ -65,10 +66,10 @@ class WeatherInfo extends Component {
                 <span style={{ marginRight: '10px' }}>
                   <i className="wi wi-umbrella rain_icon"></i>
                 </span>
-                {weatherInfObject.rainNow}mm
+                {weatherInfoObject.rainNow}mm
                 <Progress
                   backgroundColor="#1864ab"
-                  fcstValue={weatherInfObject.rainNow}
+                  fcstValue={weatherInfoObject.rainNow}
                 />
               </div>
               <div className="humidity">
@@ -76,10 +77,10 @@ class WeatherInfo extends Component {
                   <OpacityIcon style={{ fontSize: '50px' }} />
                   {/*<i className = "wi wi-humidity humidity_icon"></i>*/}
                 </span>
-                {weatherInfObject.humidityNow} %
+                {weatherInfoObject.humidityNow} %
                 <Progress
                   backgroundColor="#748ffc"
-                  fcstValue={weatherInfObject.humidityNow}
+                  fcstValue={weatherInfoObject.humidityNow}
                 />
               </div>
             </div>
@@ -102,7 +103,7 @@ export default inject(({ weather }) => ({
   LocationB: weather.LocationB,
   LocationC: weather.LocationC,
 
-  weatherInfObject: weather.weatherInfObject,
+  weatherInfoObject: weather.weatherInfoObject,
   temperatureNow: weather.temperatureNow,
   weatherClassName: weather.weatherClassName,
   weatherInfoData: weather.weatherInfoData,

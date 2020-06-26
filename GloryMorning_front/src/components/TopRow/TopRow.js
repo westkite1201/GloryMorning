@@ -5,11 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Switch, Button, Fab } from '@material-ui/core';
 import { MyLocation } from '@material-ui/icons';
 import Location from '../Location';
-import {
-  loadTextures,
-  init,
-  changeWeatherToOnClick,
-} from '../../lib/rain/lib/src/main.js';
+import { changeWeatherToOnClick } from '../../lib/rain/lib/src/main.js';
+
 const styles = theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -34,15 +31,27 @@ class TopRow extends Component {
   // }
 
   render() {
-    const testRain = () => {
-      init(1000, 1000, true);
+    const sunny = () => {
+      changeWeatherToOnClick('sunny');
+    };
+    const drizzle = () => {
+      changeWeatherToOnClick('drizzle');
+    };
+    const rain = () => {
+      changeWeatherToOnClick('rain');
+    };
+    const storm = () => {
+      changeWeatherToOnClick('storm');
     };
     const { edit } = this.props;
     console.log('[SEO] locationFlagView ', edit.locationFlagView);
     return (
       <div className="top-row">
         <div className="edit-component">
-          <button onClick={testRain}>test</button>
+          <button onClick={sunny}>sunny</button>
+          <button onClick={drizzle}>drizzle</button>
+          <button onClick={rain}>rain</button>
+          <button onClick={storm}>storm</button>
           <Switch
             checked={edit.editPageFlag}
             onChange={edit.handlePage}

@@ -1,13 +1,13 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action } from 'mobx';
 import clientConfig from '../configuration/clientConfig';
 import helpers from '../lib/helpers';
 import axios from 'axios';
-import React, { Component } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import _ from 'lodash';
 import Highcharts from 'highcharts';
 import { toast } from 'react-toastify';
-import * as weatherApi from '../lib/api/weatherApi';
+//import * as weatherApi from '../lib/api/weatherApi';
 let LayoutTemporaryStorage;
 export default class EditStore {
   /* edit 스토어에 접근하기 위함  */
