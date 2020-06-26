@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import * as helpers from '../lib/helpers';
 import * as weatherApi from '../lib/api/weatherApi';
 import clientConfig from '../configuration/clientConfig';
+
 // PRIVATE -> API 키 이용해서 직접 호출
 // MEMBER -> 내 DB에서 조회 호출
 //const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
@@ -594,6 +595,7 @@ export default class WeatherStore {
           baseTime: baseTime,
           weatherClassName: weatherInfoData.weatherClassName,
           weatherInfoName: weatherInfoData.weatherInfoName,
+          weatherInfoGamsung: this.getWeatherGamsungName(skyInfoStr, dayTimeYn),
           temperatureNow: temperatureNow,
           rainNow: rainNow,
           humidityNow: humidityNow,
@@ -607,7 +609,25 @@ export default class WeatherStore {
       console.log(e);
     }
   };
-  getWeatherName = () => {};
+
+  getWeatherGamsungName = (skyInfoStr, dayTimeYn) => {
+    let weatherCode = skyInfoStr.split('');
+    let sky = weatherCode[0];
+    let pty = weatherCode[1];
+
+    if (sky === 1) {
+      return '맑은 하루에요.';
+    } else {
+      if (pty === 1 || pty === 2) {
+        return '비가 옵니다.';
+      } else if (pty === 3 || pty === 4) {
+        return '눈이 내려요.';
+      } else {
+        return '흐린 하루에요.';
+      }
+    }
+  };
+
   getWeatherClassName = (skyInfoStr, dayTimeYn) => {
     let className = '';
     let weatherInfoName = '';
