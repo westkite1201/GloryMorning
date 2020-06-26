@@ -68,7 +68,7 @@ class database:
             print('***************************************inserting Success')
             
         except: 
-             print(" inserting error  에러 종류  " , ex )
+             print(" inserting error  에러 종류  " )
             
         self.db.close()
     

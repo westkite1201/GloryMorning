@@ -800,8 +800,8 @@ export default class WeatherStore {
         {
           params: {
             // query string
-            // x: '127.10459896729914',
-            // y: '37.40269721785548'
+            //  x: '127.10459896729914',
+            //  y: '37.40269721785548'
             x: currentX.toString(),
             y: currentY.toString(),
           },

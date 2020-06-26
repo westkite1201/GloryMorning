@@ -143,7 +143,7 @@ export default class EditStore {
     //   }
     // });
 
-    this.handleRainContainerResize();
+    //this.handleRainContainerResize();
   };
 
   handleRainContainerResize() {

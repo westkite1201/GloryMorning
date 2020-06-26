@@ -1,3 +1,3 @@
 id = 'txtcopy'
 password = ''
-db_passwd = ''
+db_passwd = 'seo1282'
