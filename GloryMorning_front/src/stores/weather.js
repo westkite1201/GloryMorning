@@ -616,13 +616,25 @@ export default class WeatherStore {
     let pty = weatherCode[1];
 
     if (sky === 1) {
+      if (dayTimeYn) {
+        return '맑은 밤이에요.';
+      }
       return '맑은 하루에요.';
     } else {
       if (pty === 1 || pty === 2) {
+        if (dayTimeYn) {
+          return '비오는 밤.';
+        }
         return '비가 옵니다.';
       } else if (pty === 3 || pty === 4) {
+        if (dayTimeYn) {
+          return '눈오는 밤.';
+        }
         return '눈이 내려요.';
       } else {
+        if (dayTimeYn) {
+          return '흐린 밤이네요.';
+        }
         return '흐린 하루에요.';
       }
     }
