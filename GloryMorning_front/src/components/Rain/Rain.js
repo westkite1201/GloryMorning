@@ -4,6 +4,7 @@ import {
   init,
   changeWeatherToOnClick,
 } from '../../lib/rain/lib/src/main.js';
+import * as helpers from '../../lib/helpers';
 import './Rain.css';
 import { observer } from 'mobx-react';
 import UseStores from '../Setting/UseStores';
@@ -27,11 +28,17 @@ const Rain = observer(() => {
     if (render) {
       edit.setRainRender(true);
       edit.handleRainContainerResize();
+      if (weather.weatherInfoObject.weatherInfoCode) {
+        let weatherInfoCode = weather.weatherInfoObject.weatherInfoCode;
+        let rainViewName = helpers.rainViewCodeConverter(weatherInfoCode);
+        //alert(rainViewName);
+        changeWeatherToOnClick(rainViewName);
+      }
     }
-  }, [render]);
+  }, [render, weather.weatherInfoObject]);
+
   return (
     <Fragment>
-      {/*<div style={{ marginTop: '50px' }}></div>*/}
       <div className="rain-container">
         <div className="slideshow">
           <canvas id="rain-container"></canvas>

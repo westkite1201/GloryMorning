@@ -461,7 +461,7 @@ export default class WeatherStore {
     let ny;
     try {
       let riseSetInfo = await this.getAreaRiseSetInfo();
-
+      console.log('riseSetInfo ', riseSetInfo);
       /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
       if (!isDefault && !_.isNil(item)) {
         console.log(
@@ -590,12 +590,14 @@ export default class WeatherStore {
         //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
         //this.weatherInfoData = weatherInfo;
         let weatherInfoData = this.getWeatherClassName(skyInfoStr, dayTimeYn);
+        let weatherRainBoxInfoData = this.getWeatherGamsungName(skyInfoStr, dayTimeYn);
         let weatherInfoObject = {
           baseDate: baseDate,
           baseTime: baseTime,
           weatherClassName: weatherInfoData.weatherClassName,
           weatherInfoName: weatherInfoData.weatherInfoName,
-          weatherInfoGamsung: this.getWeatherGamsungName(skyInfoStr, dayTimeYn),
+          weatherInfoGamsung: weatherRainBoxInfoData.info, //rainComponent 용
+          weatherInfoCode  : weatherRainBoxInfoData.rainViewCode,  //rainComopnent용
           temperatureNow: temperatureNow,
           rainNow: rainNow,
           humidityNow: humidityNow,
@@ -611,31 +613,42 @@ export default class WeatherStore {
   };
 
   getWeatherGamsungName = (skyInfoStr, dayTimeYn) => {
+    let rainCodeSetting;
+    //sunny
+    //rain
     let weatherCode = skyInfoStr.split('');
     let sky = weatherCode[0];
     let pty = weatherCode[1];
+    //흐림 0
+    //sunny 1
+    //rain  2
+    //drizzle 3  //추후 추가 예정
+    //storm  4   //추후 추가 예정
+    //snow
 
+    //day 1
+    //night 2
     if (sky === 1) {
-      if (dayTimeYn) {
-        return '맑은 밤이에요.';
+      if (!dayTimeYn) {
+        return { rainViewCode: '11', info: '맑은 밤이에요.' };
       }
-      return '맑은 하루에요.';
+      return { rainViewCode: '12', info: '맑은 하루에요.' };
     } else {
       if (pty === 1 || pty === 2) {
-        if (dayTimeYn) {
-          return '비오는 밤.';
+        if (!dayTimeYn) {
+          return { rainViewCode: '22', info: '비오는 밤.' };
         }
-        return '비가 옵니다.';
+        return { rainViewCode: '12', info: '맑은 밤이에요.' };
       } else if (pty === 3 || pty === 4) {
-        if (dayTimeYn) {
-          return '눈오는 밤.';
+        if (!dayTimeYn) {
+          return { rainViewCode: '52', info: '눈오는 밤.' };
         }
-        return '눈이 내려요.';
+        return { rainViewCode: '51', info: '눈이 내려요.' };
       } else {
-        if (dayTimeYn) {
-          return '흐린 밤이네요.';
+        if (!dayTimeYn) {
+          return { rainViewCode: '02', info: '흐린 밤이네요.' };
         }
-        return '흐린 하루에요.';
+        return { rainViewCode: '01', info: '흐린 하루에요.' };
       }
     }
   };

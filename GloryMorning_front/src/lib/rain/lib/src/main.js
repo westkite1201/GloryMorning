@@ -17,6 +17,12 @@ let textureRainFg,
   textureFalloutBg,
   textureSunFg,
   textureSunBg,
+  textureSunNightFg,
+  textureSunNightBg,
+  textureCloudyFg,
+  textureCloudyBg,
+  textureCloudyNightFg,
+  textureCloudyNightBg,
   textureDrizzleFg,
   textureDrizzleBg,
   textureWhiteBg,
@@ -78,6 +84,13 @@ export async function loadTextures(width, height, defaultYn) {
 
     { name: 'textureSunFg', src: 'images/sunny.jpg' },
     { name: 'textureSunBg', src: 'images/sunny.jpg' },
+    { name: 'textureSunNightFg', src: 'images/deep_night.jpg' },
+    { name: 'textureSunNightBg', src: 'images/deep_night.jpg' },
+
+    { name: 'textureCloudyFg', src: 'images/gloumy.jpg' },
+    { name: 'textureCloudyBg', src: 'images/gloumy.jpg' },
+    { name: 'textureCloudyNightFg', src: 'images/cloudy_night.jpg' },
+    { name: 'textureCloudyNightBg', src: 'images/cloudy_night.jpg' },
 
     { name: 'textureDrizzleFg', src: 'images/weather/texture-drizzle-fg.png' },
     { name: 'textureDrizzleBg', src: 'images/weather/texture-drizzle-bg.png' },
@@ -95,8 +108,16 @@ export async function loadTextures(width, height, defaultYn) {
   textureStormLightningBg = images.textureStormLightningBg.img;
   textureStormLightningFg_ = images.textureStormLightningFg_.img;
   textureStormLightningBg_ = images.textureStormLightningBg_.img;
+
   textureSunFg = images.textureSunFg.img;
   textureSunBg = images.textureSunBg.img;
+  textureSunNightFg = images.textureSunNightFg.img;
+  textureSunNightBg = images.textureSunNightBg.img;
+
+  textureCloudyFg = images.textureCloudyFg.img;
+  textureCloudyBg = images.textureCloudyBg.img;
+  textureCloudyNightFg = images.textureCloudyNightFg.img;
+  textureCloudyNightBg = images.textureCloudyNightFg.img;
 
   textureDrizzleFg = images.textureDrizzleFg.img;
   textureDrizzleBg = images.textureDrizzleBg.img;
@@ -188,7 +209,7 @@ function setupParallax() {
 
     TweenLite.to(parallax, 1, {
       x: (x / canvas.width) * 2 - 1,
-      y: (y / canvas.height) * 1.2 - 1,
+      y: (y / canvas.height) * 0.8 - 1,
       ease: Power4.easeOut,
       onUpdate: () => {
         renderer.parallaxX = parallax.x;
@@ -331,8 +352,25 @@ function setupWeatherData() {
       rainLimit: 0,
       droplets: 0,
       raining: false,
-      fg: textureSunFg,
-      bg: textureSunBg,
+      fg: textureSunNightFg,
+      bg: textureSunNightBg,
+    }),
+
+    cloudy: weather({
+      rainChance: 0,
+      rainLimit: 0,
+      droplets: 0,
+      raining: false,
+      fg: textureCloudyFg,
+      bg: textureCloudyBg,
+    }),
+    cloudy_night: weather({
+      rainChance: 0,
+      rainLimit: 0,
+      droplets: 0,
+      raining: false,
+      fg: textureCloudyNightFg,
+      bg: textureCloudyNightBg,
     }),
   };
 }
