@@ -33,7 +33,7 @@ class EditView extends Component {
     loadPage();
     getUserBackground('testUser');
     getWeatherDataV2('ALL');
-    window.addEventListener('resize', _.throttle(this.updateDimensions, 500));
+    window.addEventListener('resize', _.debounce(this.updateDimensions, 300));
     //window.onresize = this.handleResizeEnd;
   }
   updateDimensions = () => {

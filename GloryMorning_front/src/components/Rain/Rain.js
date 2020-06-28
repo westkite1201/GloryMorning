@@ -6,6 +6,7 @@ import {
 } from '../../lib/rain/lib/src/main.js';
 import * as helpers from '../../lib/helpers';
 import './Rain.css';
+import Snowfall from 'react-snowfall';
 import { observer } from 'mobx-react';
 import UseStores from '../Setting/UseStores';
 let width = 1920;
@@ -39,20 +40,24 @@ const Rain = observer(() => {
 
   return (
     <Fragment>
-      <div className="rain-container">
+      <div className="rain-container" id="rain">
         <div className="slideshow">
           <canvas id="rain-container"></canvas>
-          {
-            <div className="rain-info">
-              {weather.weatherInfoObject.weatherInfoGamsung}
-            </div>
-          }
+          <div className="rain-info">
+            {weather.weatherInfoObject.weatherInfoGamsung}
+          </div>
         </div>
-        {/*
-        <p className="nosupport">
-          Sorry, but your browser does not support WebGL!
-        </p>
-        */}
+
+        <div
+          style={{
+            height: 200,
+            width: 400,
+            background: '#282c34',
+            display: 'none',
+          }}
+        >
+          <Snowfall />
+        </div>
       </div>
     </Fragment>
   );

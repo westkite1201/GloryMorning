@@ -143,7 +143,7 @@ export default class EditStore {
     //   }
     // });
 
-    //this.handleRainContainerResize();
+    this.handleRainContainerResize();
   };
 
   handleRainContainerResize() {
@@ -193,7 +193,9 @@ export default class EditStore {
       targetDiv.style.width = rect.width;
       targetDiv.style.height = rect.height;
     }
-    this.reRenderRain(rect.width, rect.height);
+    if (document.getElementById('rain')) {
+      this.reRenderRain(rect.width, rect.height);
+    }
     this.allChartResizing();
   };
   /*

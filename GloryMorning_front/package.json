@@ -94,6 +94,7 @@
     "react-responsive-carousel": "^3.1.47",
     "react-router-dom": "^5.0.0",
     "react-select": "^2.4.3",
+    "react-snowfall": "^1.0.2",
     "react-spinners": "^0.6.1",
     "react-switch": "^4.1.0",
     "react-toastify": "^5.3.2",
