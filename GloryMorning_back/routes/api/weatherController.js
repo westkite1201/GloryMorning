@@ -16,7 +16,7 @@ let newtime = 0;
 let newdate = 0;
 
 let defaultLocationList = [
-  { nx: 60, ny: 125, location: '서울특별시 관악구 낙성대동' },
+  { nx: 60, ny: 125, location: '서울특별시 관악구 낙성대동' }
 ];
 
 convert = (xx, yy) => {
@@ -105,8 +105,9 @@ convert = (xx, yy) => {
 /* settingLocation   */
 router.post('/settingLocation', async (req, res) => {
   try {
+    console.log('settingLocation');
     const data = {
-      settingLocationArray: req.body.settingLocationArray,
+      settingLocationArray: req.body.settingLocationArray
     };
     let rows = await weatherDaoNew.settingLocation(data); // LOCATION 정보 XX,YY
     if (rows) {
@@ -114,6 +115,7 @@ router.post('/settingLocation', async (req, res) => {
       settingWeatherData();
       return res.json(rows);
     } else {
+      return res.json({ message: e, status: 400 });
       console.log('error');
     }
   } catch (e) {
@@ -217,7 +219,7 @@ router.post('/getPixabayImages', async (req, res) => {
     } else {
       return res.json({
         message: 'error',
-        statusCode: 400,
+        statusCode: 400
       });
     }
   } catch (e) {
@@ -233,7 +235,7 @@ router.post('/getAreaRiseSetInfo', async (req, res) => {
   try {
     let response = await CallSeverApiRiseSet.getAreaRiseSetInfo(
       location,
-      locdate,
+      locdate
     );
     isDayTimeYn = isDayTime(response.data.response.body.items.item.sunset);
     response.data.response.body.items.item.isDayTimeYn = isDayTimeYn;
@@ -301,6 +303,7 @@ router.post('/getNearbyMsrstnList', async (req, res) => {
     }
   } catch (e) {
     console.log('error', e);
+    return res.json({ message: e, status: 400 });
   }
 });
 
@@ -327,7 +330,7 @@ getWeatherData = async (res, nx, ny) => {
       } else {
         console.log(err);
       }
-    },
+    }
   );
 };
 
@@ -337,17 +340,26 @@ router.post('/getWeatherDataShortTerm', async (req, res) => {
     const data = {
       nx: req.body.nx,
       ny: req.body.ny,
-      category: req.body.category,
+      category: req.body.category
     };
     console.log('getWeatherDataShortTerm', data);
     let rows = await weatherDaoNew.getWeatherDataShortTerm(data); // LOCATION 정보 XX,YY
-    if (rows) {
+    if (rows && rows.length !== 0) {
       //온경우
+      console.log('return data ', rows);
       return res.json(rows);
     } else {
-      console.log('error');
+      let insertYn = await insertWeatherDataShortTerm(data.nx, data.ny);
+      if (insertYn && insertYn.status === 200) {
+        let reRows = await weatherDaoNew.getWeatherDataShortTerm(data); // LOCATION 정보 XX,YY
+        return res.json(reRows);
+      } else {
+        console.log('error');
+        return res.json({ message: '재 조회 실패', status: 400, error: e });
+      }
     }
   } catch (e) {
+    return res.json({ message: e, status: 400, error: e });
     console.log('error', e);
   }
 });
@@ -358,19 +370,26 @@ router.post('/getWeatherData', async (req, res) => {
     const data = {
       nx: req.body.nx,
       ny: req.body.ny,
-      category: req.body.category,
+      category: req.body.category
     };
     console.log('[getWeatherData] ', data);
     let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY
-    if (rows) {
+    if (rows && rows.length !== 0) {
       //온경우
       console.log('return data ', rows);
       return res.json(rows);
     } else {
-      console.log('error');
+      let insertYn = await insertWeatherData(data.nx, data.ny);
+      if (insertYn && insertYn.status === 200) {
+        let reRows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY
+        return res.json(reRows);
+      } else {
+        console.log('error');
+        return res.json({ message: '재 조회 실패', status: 400, error: e });
+      }
     }
   } catch (e) {
-    console.log('error', e);
+    return res.json({ message: e, status: 400, error: e });
   }
 });
 
@@ -396,7 +415,7 @@ router.post('/getWeatherDataPrivateMode', async (req, res) => {
       nx,
       ny,
       type,
-      shortTermYn,
+      shortTermYn
     );
     console.log('resposne ', response);
     if (response.message !== 'error') {
@@ -430,7 +449,7 @@ insertWeatherData = async (nx, ny) => {
       nx,
       ny,
       type,
-      shortTermYn,
+      shortTermYn
     );
     //console.log("result", result.data.response.body.items.item )
     let list = result.data.response.body.items.item.map((item) => {
@@ -442,14 +461,14 @@ insertWeatherData = async (nx, ny) => {
         item.nx,
         item.ny,
         item.baseDate,
-        item.baseTime,
+        item.baseTime
       ];
     });
     //console.log("list", list);
     let rows = await weatherDaoNew.insertWeatherData(list);
     console.log('weatherDaoNew insertWeatherData ', rows);
     return new Promise((resolve, reject) => {
-      resolve();
+      resolve({ message: 'success', status: 200 });
     });
   } catch (e) {
     console.log('error ', e);
@@ -475,7 +494,7 @@ insertWeatherDataShortTerm = async (nx, ny) => {
       nx,
       ny,
       type,
-      shortTermYn,
+      shortTermYn
     );
     //console.log("result " , result.data.response.body.items)
     let list = result.data.response.body.items.item.map((item) => {
@@ -487,7 +506,7 @@ insertWeatherDataShortTerm = async (nx, ny) => {
         item.nx,
         item.ny,
         item.baseDate,
-        item.baseTime,
+        item.baseTime
       ];
     });
 
@@ -518,7 +537,7 @@ settingWeatherData = async () => {
       const convertList = await Promise.all(
         rows.map((item, key) => {
           return (convertXY = convert(item.Y, item.X));
-        }),
+        })
       );
 
       for (const item of convertList) {
@@ -530,10 +549,10 @@ settingWeatherData = async () => {
     }
     //if (Minutes === 0 && second === 0) {
     // 매 정시
-    defaultLocationList.map((item) => {
-      insertWeatherDataShortTerm(item.nx, item.ny);
-      insertWeatherData(item.nx, item.ny);
-    });
+    // defaultLocationList.map((item) => {
+    //   insertWeatherDataShortTerm(item.nx, item.ny);
+    //   insertWeatherData(item.nx, item.ny);
+    // });
     //}
   } catch (e) {
     console.log('error', e);
@@ -564,7 +583,7 @@ router.post('/getLocation_chain', async (req, res) => {
     const data = {
       LOCATION_A: req.body.LOCATION_A,
       LOCATION_B: req.body.LOCATION_B,
-      LOCATION_C: req.body.LOCATION_C,
+      LOCATION_C: req.body.LOCATION_C
     };
     //console.log(data)
     let rows = await weatherDaoNew.getLocation(data); // LOCATION 정보 XX,YY
@@ -590,7 +609,7 @@ router.post('/getLocation', async (req, res) => {
   const data = {
     LOCATION_A: req.body.LOCATION_A,
     LOCATION_B: req.body.LOCATION_B,
-    LOCATION_C: req.body.LOCATION_C,
+    LOCATION_C: req.body.LOCATION_C
   };
   try {
     async.waterfall(
@@ -600,7 +619,7 @@ router.post('/getLocation', async (req, res) => {
         },
         (conn, cb) => {
           weatherDao.getLocation(conn, data, cb);
-        },
+        }
       ],
       (error, conn, result) => {
         if (conn) {
@@ -608,19 +627,19 @@ router.post('/getLocation', async (req, res) => {
         }
         if (error) {
           return res.json({
-            error: error,
+            error: error
           });
         } else {
           return res.json(result);
         }
-      },
+      }
     );
   } catch (error) {
     console.error(error);
     return res.json({
       message: 'fail',
       code: 200,
-      error: error,
+      error: error
     });
   }
 });

@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Switch, Button, Fab } from '@material-ui/core';
 import { MyLocation } from '@material-ui/icons';
 import Location from '../Location';
-import { changeWeatherToOnClick } from '../../lib/rain/lib/src/main.js';
+//import { changeWeatherToOnClick } from '../../lib/rain/lib/src/main.js';
 
 const styles = theme => ({
   menuButton: {
@@ -31,27 +31,30 @@ class TopRow extends Component {
   // }
 
   render() {
-    const sunny = () => {
-      changeWeatherToOnClick('sunny');
-    };
-    const drizzle = () => {
-      changeWeatherToOnClick('drizzle');
-    };
-    const rain = () => {
-      changeWeatherToOnClick('rain');
-    };
-    const storm = () => {
-      changeWeatherToOnClick('storm');
-    };
+    // const sunny = () => {
+    //   changeWeatherToOnClick('sunny');
+    // };
+    // const drizzle = () => {
+    //   changeWeatherToOnClick('drizzle');
+    // };
+    // const rain = () => {
+    //   changeWeatherToOnClick('rain');
+    // };
+    // const storm = () => {
+    //   changeWeatherToOnClick('storm');
+    // };
     const { edit } = this.props;
     console.log('[SEO] locationFlagView ', edit.locationFlagView);
+    let topRowClassName = edit.editPageFlag ? 'top-row-hide' : 'top-row' 
     return (
-      <div className="top-row">
+      <div className={topRowClassName}>
         <div className="edit-component">
+          {/*
           <button onClick={sunny}>sunny</button>
           <button onClick={drizzle}>drizzle</button>
           <button onClick={rain}>rain</button>
           <button onClick={storm}>storm</button>
+        */}
           <Switch
             checked={edit.editPageFlag}
             onChange={edit.handlePage}

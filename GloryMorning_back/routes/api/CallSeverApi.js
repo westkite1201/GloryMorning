@@ -10,7 +10,7 @@ module.exports = function (callee) {
       method: 'GET',
       timeout: 10000,
       followRedirect: true,
-      maxRedirects: 10,
+      maxRedirects: 10
     };
     const PORT = '3500';
     const BASE_PATH = '/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?';
@@ -55,7 +55,7 @@ module.exports = function (callee) {
 
         let propertiesObject = querystring.stringify({
           q: query,
-          image_type: imageType,
+          image_type: imageType
         });
 
         OPTIONS.url += 'key=' + serviceKey;
@@ -64,22 +64,27 @@ module.exports = function (callee) {
         function doRequest() {
           return new Promise(function (resolve, reject) {
             request(OPTIONS, (err, res, result) => {
-              if (_.isNil(res)) {
+              try {
+                if (_.isNil(res)) {
+                  reject(err);
+                }
+                if (!res) {
+                  reject(err);
+                }
+                if (_.isNil(res.statusCode)) {
+                  reject(err);
+                }
+                let statusCode = res.statusCode ? res.statusCode : 400;
+                response = statusCodeErrorHandlerAsync(statusCode, result);
+                if (response.message !== 'error') {
+                  resolve(response);
+                } else {
+                  reject(err);
+                }
+              } catch (e) {
                 reject(err);
               }
-              if (!res) {
-                reject(err);
-              }
-              if (_.isNil(res.statusCode)) {
-                reject(err);
-              }
-              let statusCode = res.statusCode ? res.statusCode : 400;
-              response = statusCodeErrorHandlerAsync(statusCode, result);
-              if (response.message !== 'error') {
-                resolve(response);
-              } else {
-                reject(err);
-              }
+
               //console.log(response)
             });
           });
@@ -96,7 +101,7 @@ module.exports = function (callee) {
         ny,
         type,
         shortTermYn,
-        callback,
+        callback
       ) {
         console.log('weather! 사용중 ');
         const request = require('request');
@@ -118,7 +123,7 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          _type: type,
+          _type: type
         });
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
@@ -135,7 +140,7 @@ module.exports = function (callee) {
         ny,
         type,
         shortTermYn,
-        callback,
+        callback
       ) => {
         const request = require('request');
         const querystring = require('querystring');
@@ -159,7 +164,7 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          _type: type,
+          _type: type
         });
         console.log('base_date ', base_date, ' base_time', base_time);
         OPTIONS.url += 'ServiceKey=' + serviceKey;
@@ -218,7 +223,7 @@ module.exports = function (callee) {
         let propertiesObject = querystring.stringify({
           tmX: tmX,
           tmY: tmY,
-          _returnType: 'json',
+          _returnType: 'json'
         });
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
@@ -227,15 +232,43 @@ module.exports = function (callee) {
         let response;
 
         //async를 위해 request 함수 선언
+        // function doRequest() {
+        //   return new Promise(function (resolve, reject) {
+        //     request(OPTIONS, (err, res, result) => {
+        //       response = statusCodeErrorHandlerAsync(res.statusCode, result);
+        //       if (response.message !== 'error') {
+        //         resolve(response);
+        //       } else {
+        //         reject(err);
+        //       }
+        //       //console.log(response)
+        //     });
+        //   });
+        // }
         function doRequest() {
           return new Promise(function (resolve, reject) {
             request(OPTIONS, (err, res, result) => {
-              response = statusCodeErrorHandlerAsync(res.statusCode, result);
-              if (response.message !== 'error') {
-                resolve(response);
-              } else {
+              try {
+                if (_.isNil(res)) {
+                  reject(err);
+                }
+                if (!res) {
+                  reject(err);
+                }
+                if (_.isNil(res.statusCode)) {
+                  reject(err);
+                }
+                let statusCode = res.statusCode ? res.statusCode : 400;
+                response = statusCodeErrorHandlerAsync(statusCode, result);
+                if (response.message !== 'error') {
+                  resolve(response);
+                } else {
+                  reject(err);
+                }
+              } catch (e) {
                 reject(err);
               }
+
               //console.log(response)
             });
           });
@@ -252,16 +285,16 @@ module.exports = function (callee) {
         OPTIONS.url = HOST + BASE_PATH_GET_DUST_INFO;
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
-       //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
-       let serviceKey = process.env.DATA_GO_API_KEY + '&'; 
-       console.log('stationName', stationName);
+        //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
+        let serviceKey = process.env.DATA_GO_API_KEY + '&';
+        console.log('stationName', stationName);
         let propertiesObject = querystring.stringify({
           stationName: stationName,
           dataTerm: 'DAILY',
           pageNo: 1,
           numOfRows: 1,
           ver: 1.3,
-          _returnType: 'json',
+          _returnType: 'json'
         });
 
         propertiesObject = querystring.unescape(propertiesObject);
@@ -302,7 +335,7 @@ module.exports = function (callee) {
         let propertiesObject = querystring.stringify({
           location: location,
           locdate: locDate,
-          _type: 'json',
+          _type: 'json'
         });
 
         propertiesObject = querystring.unescape(propertiesObject);
@@ -335,7 +368,7 @@ module.exports = function (callee) {
 
         let res = await doRequest();
         return res;
-      },
+      }
     };
   }
   function statusCodeErrorHandler(statusCode, callback, data) {
