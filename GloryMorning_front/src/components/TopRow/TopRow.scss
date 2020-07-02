@@ -1,3 +1,11 @@
+.top-row-handler {
+  z-index: 102;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+}
 .top-row {
   z-index: 101;
   display: flex;
@@ -7,6 +15,8 @@
   top: 0;
   left: 0;
   right: 0;
+  background: #ffffff;
+  box-shadow: 0px 7px 54px -18px rgba(0, 0, 0, 0.75);
 }
 
 .top-row-hide {

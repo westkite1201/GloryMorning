@@ -60,7 +60,7 @@ module.exports = function (callee) {
 
         OPTIONS.url += 'key=' + serviceKey;
         OPTIONS.url += propertiesObject;
-        // console.log(OPTIONS.url)
+        console.log('[seo] option,url', OPTIONS.url);
         function doRequest() {
           return new Promise(function (resolve, reject) {
             request(OPTIONS, (err, res, result) => {

@@ -1,60 +1,52 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './TopRow.scss';
-import { observer, inject } from 'mobx-react';
-import { withStyles } from '@material-ui/core/styles';
+import { observer } from 'mobx-react';
 import { Switch, Button, Fab } from '@material-ui/core';
 import { MyLocation } from '@material-ui/icons';
 import Location from '../Location';
+import UseStores from '../Setting/UseStores';
+import { useSpring, animated } from 'react-spring';
+import * as easings from 'd3-ease';
+
 //import { changeWeatherToOnClick } from '../../lib/rain/lib/src/main.js';
+const TopRow = observer(() => {
+  const { edit } = UseStores();
+  const [isGrow, setIsGrow] = useState(false);
 
-const styles = theme => ({
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
+  function handleMouseOver() {
+    console.log('handleMouseOver');
+    setIsGrow(true);
+  }
+  function handleMouseLeave() {
+    setIsGrow(false);
+  }
+  function switchView(pageName) {
+    edit.setPageName(pageName);
+    edit.loadPage();
+  }
+  const topRowStyle = useSpring({
+    config: { duration: 700, easing: easings.easeExpOut },
+    transform: isGrow ? 'translate3d(0, 0, 0) ' : 'translate3d(0, -100%, 0)',
+    opacity: isGrow ? 1 : 0,
+    //backGroundColor: isGrow ? 'white' : '',
+  });
 
-  closebtn: {
-    top: 0,
-    right: 25,
-    color: 'white',
-    //fontSize: 36,
-  },
-});
-
-@inject('sidebar')
-@inject('edit')
-@observer
-class TopRow extends Component {
-  // menuHandler = () => {
-  //     const { sidebar,edit } =this.props;
-  //     sidebar.openSideBar();
-  //     edit.handleDispatchEventResize();
-  // }
-
-  render() {
-    // const sunny = () => {
-    //   changeWeatherToOnClick('sunny');
-    // };
-    // const drizzle = () => {
-    //   changeWeatherToOnClick('drizzle');
-    // };
-    // const rain = () => {
-    //   changeWeatherToOnClick('rain');
-    // };
-    // const storm = () => {
-    //   changeWeatherToOnClick('storm');
-    // };
-    const { edit } = this.props;
-    console.log('[SEO] locationFlagView ', edit.locationFlagView);
-    let topRowClassName = edit.editPageFlag ? 'top-row-hide' : 'top-row' 
-    return (
-      <div className={topRowClassName}>
+  console.log('[SEO] locationFlagView ', edit.locationFlagView);
+  let topRowClassName = edit.editPageFlag ? 'top-row-hide' : 'top-row';
+  return (
+    <React.Fragment>
+      <div
+        className="top-row-handler"
+        onMouseOver={handleMouseOver}
+        style={{ display: isGrow ? 'none' : '' }}
+      ></div>
+      <animated.div
+        style={topRowStyle}
+        className={topRowClassName}
+        onMouseOver={handleMouseOver}
+        onMouseLeave={handleMouseLeave}
+      >
         <div className="edit-component">
-          {/*
-          <button onClick={sunny}>sunny</button>
-          <button onClick={drizzle}>drizzle</button>
-          <button onClick={rain}>rain</button>
-          <button onClick={storm}>storm</button>
-        */}
           <Switch
             checked={edit.editPageFlag}
             onChange={edit.handlePage}
@@ -65,6 +57,16 @@ class TopRow extends Component {
             <Button onClick={edit.handleSavePage}>컴포넌트 저장</Button>
           )}
         </div>
+        <div onClick={() => switchView('home')} name="home">
+          home
+        </div>
+        <div onClick={() => switchView('test1')} name="test1">
+          test1
+        </div>
+        <div onClick={() => switchView('test2')} name="test2">
+          test2
+        </div>
+
         <div>
           <Fab onClick={edit.setLocationFlagView}>
             <MyLocation />
@@ -75,8 +77,9 @@ class TopRow extends Component {
             </div>
           )}
         </div>
-      </div>
-    );
-  }
-}
-export default withStyles(styles)(TopRow);
+      </animated.div>
+    </React.Fragment>
+  );
+});
+
+export default TopRow;

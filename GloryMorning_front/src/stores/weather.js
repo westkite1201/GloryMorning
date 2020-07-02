@@ -12,7 +12,7 @@ import clientConfig from '../configuration/clientConfig';
 //const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
 const MODE = 'MEMBER_MODE';
 export default class WeatherStore {
-  locationInfo = null;
+  @observable locationInfo = null;
   @observable timeSocket = null;
   @observable timeObj = {
     hour: '',
@@ -252,6 +252,10 @@ export default class WeatherStore {
     // }
   };
 
+  @action
+  settingLocationInfo = async () => {
+    this.locationInfo = await this.nowGeolocation();
+  };
   /*process => 
     0. componentDidMount에서 한번 전체 실행되고 
     그이후 update
@@ -260,6 +264,20 @@ export default class WeatherStore {
   @action
   upateWeatherData = () => {
     this.getWeatherDataV2('ALL');
+  };
+
+  @action
+  updateWeatherDataShortTerm = () => {
+    this.getWeatherDataShortTerm();
+  };
+
+  //사용할지 안할지 생각해보기
+  @action
+  initDefaultUpdateWeater = async () => {
+    await this.settingLocationInfo();
+    await this.getWeatherDataV2('ALL');
+    await this.getWeatherDataShortTerm();
+    await this.getDustInfo();
   };
 
   /* 임시로 time socket 사용  */
@@ -365,11 +383,13 @@ export default class WeatherStore {
   @action
   getDustInfo = async (isDefault, item) => {
     try {
-      let locationInfo;
+      let locationInfo = this.locationInfo;
       let tmCordinate;
       if (isDefault) {
         console.log('[SEO] getDustInfo1');
-        locationInfo = await this.nowGeolocation();
+        if (!locationInfo) {
+          locationInfo = await this.nowGeolocation();
+        }
         console.log('[SEO] getDustInfo2 locationInfo', locationInfo);
         tmCordinate = await this.getCordinate('TM', locationInfo);
         console.log('[SEO] getDustInfo3');
@@ -451,7 +471,7 @@ export default class WeatherStore {
   @action
   getWeatherDataShortTerm = async (isDefault, item) => {
     console.log('[SEO][getWeatherDataShortTerm][item] ', item);
-    let locationInfo;
+    let locationInfo = this.locationInfo;
     let dayTimeYn;
     let responsedata;
     let nx;
@@ -475,7 +495,9 @@ export default class WeatherStore {
         console.log('[SEO][getWeatherDataShortTerm] nx, ny ', nx, ny);
       } else {
         //기본 default
-        locationInfo = await this.nowGeolocation();
+        if (!locationInfo) {
+          locationInfo = await this.nowGeolocation();
+        }
         dayTimeYn = riseSetInfo.item.isDayTimeYn;
         console.log(
           '[SEO][getWeatherDataShortTerm] locationInfo ',
@@ -557,6 +579,10 @@ export default class WeatherStore {
       }
       if (MODE === 'MEMBER_MODE') {
         weatherInfo = response.data;
+        if (!weatherInfo) {
+          alert('getWeatherDataShortTerm not response ');
+          return;
+        }
         console.log(
           '[SEO][getWeatherDataShortTerm] WEATHER INFO ',
           weatherInfo,
@@ -602,6 +628,7 @@ export default class WeatherStore {
           rainNow: rainNow,
           humidityNow: humidityNow,
         };
+        console.log('weatherInfoObject ', weatherInfoObject);
         this.getJustFitClothes(weatherInfoObject.temperatureNow);
         this.weatherInfoObject = weatherInfoObject;
         this.isFetchingShortTerm = false;
@@ -613,7 +640,6 @@ export default class WeatherStore {
   };
 
   getWeatherGamsungName = (skyInfoStr, dayTimeYn) => {
-    let rainCodeSetting;
     //sunny
     //rain
     let weatherCode = skyInfoStr.split('');
@@ -956,7 +982,7 @@ export default class WeatherStore {
   @action
   getWeatherDataV2 = async (category, isDefault = true, item) => {
     let response;
-    let locationInfo;
+    let locationInfo = this.locationInfo;
     let responsedata;
     let nx;
     let ny;
@@ -967,7 +993,9 @@ export default class WeatherStore {
       nx = responsedata.x;
       ny = responsedata.y;
     } else {
-      locationInfo = await this.nowGeolocation();
+      if (!locationInfo) {
+        locationInfo = await this.nowGeolocation();
+      }
       const { currentY, currentX } = locationInfo;
       responsedata = this.convert(currentY, currentX);
       nx = responsedata.x;

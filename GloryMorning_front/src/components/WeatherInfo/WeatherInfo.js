@@ -11,7 +11,7 @@ import './WeatherInfo.scss';
 class WeatherInfo extends Component {
   componentDidMount() {
     const { getWeatherDataShortTerm } = this.props;
-    getWeatherDataShortTerm(60, 127);
+    getWeatherDataShortTerm();
   }
   render() {
     let {
