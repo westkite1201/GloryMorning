@@ -22,19 +22,18 @@ class EditView extends Component {
   }
 
   componentDidMount() {
-    let {
-      loadPage,
-      getUserBackground,
-      nowGeolocation,
-      updateWeatherDataIntevalStart,
-      getWeatherDataV2,
-    } = this.props;
+    let { loadPage, getUserBackground, getWeatherDataV2 } = this.props;
     //nowGeolocation();
+    alert('componentDidMount');
     loadPage();
     getUserBackground('testUser');
     getWeatherDataV2('ALL');
     window.addEventListener('resize', _.debounce(this.updateDimensions, 300));
     //window.onresize = this.handleResizeEnd;
+  }
+  componentWillUnmount() {
+    alert('edit view componentWillUnMount');
+    window.removeEventListener('resize', this.updateDimensions);
   }
   updateDimensions = () => {
     const { allChartResizing } = this.props;
@@ -42,7 +41,7 @@ class EditView extends Component {
     allChartResizing();
   };
   componentDidUpdate() {
-    let { allChartResizing, handleResizable } = this.props;
+    let { allChartResizing } = this.props;
     allChartResizing();
   }
   render() {
@@ -50,7 +49,6 @@ class EditView extends Component {
     let {
       layout,
       onLayoutChange,
-      editPageFlag,
       createElement,
       handleResizeChildComponent,
       backgroundUrl,
@@ -107,7 +105,7 @@ export default inject(({ edit, setting, weather }) => ({
   index: edit.index,
   layout: edit.layout,
   page_number: edit.page_number,
-  editPageFlag: edit.editPageFlag,
+
   loadPage: edit.loadPage,
   onLayoutChange: edit.onLayoutChange,
   createElement: edit.createElement,
@@ -121,8 +119,5 @@ export default inject(({ edit, setting, weather }) => ({
   getUserBackground: setting.getUserBackground,
   selectedBackgroundUrl: setting.selectedBackgroundUrl,
 
-  handleResizable: edit.handleResizable,
-  nowGeolocation: weather.nowGeolocation,
-  updateWeatherDataIntevalStart: weather.updateWeatherDataIntevalStart,
   getWeatherDataV2: weather.getWeatherDataV2,
 }))(observer(EditView));

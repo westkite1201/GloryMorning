@@ -12,6 +12,9 @@ ReactHighcharts.Highcharts.setOptions({
   },
 });
 class App extends Component {
+  componentWillUnmount() {
+    alert('APP UNMOUNT');
+  }
   render() {
     return (
       <div style={{ height: '100%' }}>

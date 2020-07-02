@@ -17,12 +17,20 @@ const Rain = observer(() => {
   const { edit, weather } = UseStores();
   let defaultYn = true;
   useEffect(() => {
+    alert('rain useEfftect, ' + edit.isRainRender);
     async function loadRainDrop() {
+      alert('loadRainDrop');
       //let targetDiv = document.getElementById('rain-container').getBoundingClientRect();
       let render = await loadTextures(width, height, defaultYn);
       setRender(render);
     }
-    loadRainDrop();
+    if (!edit.isRainRender) {
+      loadRainDrop();
+    }
+    return () => {
+      alert('RAIN return');
+      edit.setRainRender(false);
+    };
   }, []);
 
   useEffect(() => {

@@ -21,6 +21,7 @@ const TopRow = observer(() => {
     setIsGrow(false);
   }
   function switchView(pageName) {
+    alert('switchView');
     edit.setPageName(pageName);
     edit.loadPage();
   }

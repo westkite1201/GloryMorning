@@ -41,8 +41,9 @@ export default class EditStore {
   //   }
   // }
   @action
-  setRainRender = () => {
-    this.isRainRender = true;
+  setRainRender = (value = true) => {
+    alert('ISRAINRender');
+    this.isRainRender = value;
   };
   @action
   setLocationFlagView = () => {
