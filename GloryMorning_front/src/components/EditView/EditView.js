@@ -32,7 +32,9 @@ class EditView extends Component {
     //window.onresize = this.handleResizeEnd;
   }
   componentWillUnmount() {
+    const { setLayout } = this.props;
     alert('edit view componentWillUnMount');
+    setLayout(null);
     window.removeEventListener('resize', this.updateDimensions);
   }
   updateDimensions = () => {
@@ -81,20 +83,22 @@ class EditView extends Component {
     return (
       <div className={style.rglContainer} style={style}>
         <div className={style.dropLayout} style={{ width: '100%' }}>
-          <ResponsiveReactGridLayout
-            id={'rgl'}
-            layout={layout}
-            onLayoutChange={onLayoutChange}
-            useCSSTransforms={true}
-            draggableHandle=".dragHandle"
-            resizableHandle=".resizeHandle"
-            margin={[25, 25]}
-            onResize={handleResizeChildComponent}
-            //verticalCompact ={false}
-            {...this.props}
-          >
-            {layout.map((el, index) => createElement(el, index))}
-          </ResponsiveReactGridLayout>
+          {layout && (
+            <ResponsiveReactGridLayout
+              id={'rgl'}
+              //layout={layout}
+              onLayoutChange={onLayoutChange}
+              useCSSTransforms={true}
+              draggableHandle=".dragHandle"
+              resizableHandle=".resizeHandle"
+              margin={[25, 25]}
+              onResize={handleResizeChildComponent}
+              //verticalCompact ={false}
+              {...this.props}
+            >
+              {layout.map((el, index) => createElement(el, index))}
+            </ResponsiveReactGridLayout>
+          )}
         </div>
       </div>
     );
@@ -108,6 +112,7 @@ export default inject(({ edit, setting, weather }) => ({
 
   loadPage: edit.loadPage,
   onLayoutChange: edit.onLayoutChange,
+  setLayout: edit.setLayout,
   createElement: edit.createElement,
   onRemoveItem: edit.onRemoveItem,
   allChartResizing: edit.allChartResizing,

@@ -37,10 +37,7 @@ const Rain = observer(() => {
     if (render) {
       edit.setRainRender(true);
       edit.handleRainContainerResize();
-      if (
-        !weather.isFetchingShortTerm &&
-        weather.weatherInfoObject.weatherInfoCode
-      ) {
+      if (weather.weatherInfoObject.weatherInfoCode) {
         let weatherInfoCode = weather.weatherInfoObject.weatherInfoCode;
         let rainViewName = helpers.rainViewCodeConverter(weatherInfoCode);
         alert(rainViewName);
@@ -73,4 +70,4 @@ const Rain = observer(() => {
     </Fragment>
   );
 });
-export default Rain;
+export default React.memo(Rain);

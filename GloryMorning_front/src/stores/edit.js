@@ -16,7 +16,7 @@ export default class EditStore {
   }
   @observable isRainRender = false;
   @observable page_name = 'home';
-  @observable layout = [];
+  @observable layout = null;
   @observable editPageFlag = false;
   @observable locationViewFlag = false;
 
@@ -40,6 +40,10 @@ export default class EditStore {
   //     console.log(e)
   //   }
   // }
+  @action
+  setLayout = value => {
+    this.layout = value;
+  };
   @action
   setRainRender = (value = true) => {
     alert('ISRAINRender');

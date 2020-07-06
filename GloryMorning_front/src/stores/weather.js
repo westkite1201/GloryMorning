@@ -231,25 +231,25 @@ export default class WeatherStore {
   @action
   setSocketConnection = () => {
     // console.log('[SetSocketConnectio]');
-    // if (isEmpty(this.timeSocket)) {
-    //   const timeSocket = io('http://localhost:3031/time');
-    //   // console.log(socket)
-    //   timeSocket.on('connect', () => {
-    //     console.log('[seo] connected');
-    //   });
-    //   this.timeSocket = timeSocket;
-    //   /* socketIo를 통한 시계 구현  */
-    //   timeSocket.on('getTime', data => {
-    //     console.log('data!', data.count);
-    //     if (!_.isNil(data.serverTime)) {
-    //       this.timeObj = data.serverTime;
-    //     }
-    //   });
-    //   /* socket 이름 변경 요망  */
-    //   timeSocket.on('updateWeatherData', data => {
-    //     this.upateWeatherData();
-    //   });
-    // }
+    if (_.isEmpty(this.timeSocket)) {
+      const timeSocket = io('http://localhost:3031/time');
+      // console.log(socket)
+      timeSocket.on('connect', () => {
+        console.log('[seo] connected');
+      });
+      this.timeSocket = timeSocket;
+      /* socketIo를 통한 시계 구현  */
+      timeSocket.on('getTime', data => {
+        console.log('data!', data.count);
+        if (!_.isNil(data.serverTime)) {
+          this.timeObj = data.serverTime;
+        }
+      });
+      /* socket 이름 변경 요망  */
+      timeSocket.on('updateWeatherData', data => {
+        this.upateWeatherData();
+      });
+    }
   };
 
   @action
