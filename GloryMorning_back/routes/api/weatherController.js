@@ -105,6 +105,7 @@ convert = (xx, yy) => {
 /* settingLocation   */
 router.post('/settingLocation', async (req, res) => {
   try {
+    console.log('settingLocation');
     const data = {
       settingLocationArray: req.body.settingLocationArray,
     };
@@ -114,6 +115,7 @@ router.post('/settingLocation', async (req, res) => {
       settingWeatherData();
       return res.json(rows);
     } else {
+      return res.json({ message: e, status: 400 });
       console.log('error');
     }
   } catch (e) {
@@ -301,6 +303,7 @@ router.post('/getNearbyMsrstnList', async (req, res) => {
     }
   } catch (e) {
     console.log('error', e);
+    return res.json({ message: e, status: 400 });
   }
 });
 
@@ -341,13 +344,22 @@ router.post('/getWeatherDataShortTerm', async (req, res) => {
     };
     console.log('getWeatherDataShortTerm', data);
     let rows = await weatherDaoNew.getWeatherDataShortTerm(data); // LOCATION 정보 XX,YY
-    if (rows) {
+    if (rows && rows.length !== 0) {
       //온경우
+      console.log('return data ', rows);
       return res.json(rows);
     } else {
-      console.log('error');
+      let insertYn = await insertWeatherDataShortTerm(data.nx, data.ny);
+      if (insertYn && insertYn.status === 200) {
+        let reRows = await weatherDaoNew.getWeatherDataShortTerm(data); // LOCATION 정보 XX,YY
+        return res.json(reRows);
+      } else {
+        console.log('error');
+        return res.json({ message: '재 조회 실패', status: 400, error: e });
+      }
     }
   } catch (e) {
+    return res.json({ message: e, status: 400, error: e });
     console.log('error', e);
   }
 });
@@ -362,15 +374,22 @@ router.post('/getWeatherData', async (req, res) => {
     };
     console.log('[getWeatherData] ', data);
     let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY
-    if (rows) {
+    if (rows && rows.length !== 0) {
       //온경우
       console.log('return data ', rows);
       return res.json(rows);
     } else {
-      console.log('error');
+      let insertYn = await insertWeatherData(data.nx, data.ny);
+      if (insertYn && insertYn.status === 200) {
+        let reRows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY
+        return res.json(reRows);
+      } else {
+        console.log('error');
+        return res.json({ message: '재 조회 실패', status: 400, error: e });
+      }
     }
   } catch (e) {
-    console.log('error', e);
+    return res.json({ message: e, status: 400, error: e });
   }
 });
 
@@ -449,7 +468,7 @@ insertWeatherData = async (nx, ny) => {
     let rows = await weatherDaoNew.insertWeatherData(list);
     console.log('weatherDaoNew insertWeatherData ', rows);
     return new Promise((resolve, reject) => {
-      resolve();
+      resolve({ message: 'success', status: 200 });
     });
   } catch (e) {
     console.log('error ', e);
@@ -503,12 +522,6 @@ insertWeatherDataShortTerm = async (nx, ny) => {
 
 /* 이거를 crontab으로 할지   */
 settingWeatherData = async () => {
-  //그냥 매 정시 마다 실행 시키도록 함
-  let d = new Date();
-  // d.getTime()
-  // d.getHours()
-  let Minutes = d.getMinutes();
-  let second = d.getSeconds();
   //console.log(Minutes + " " + second)
   try {
     let rows = await weatherDaoNew.getSettingLocation(); // LOCATION 정보 XX,YY
@@ -528,13 +541,22 @@ settingWeatherData = async () => {
     } else {
       console.log('error');
     }
-    //if (Minutes === 0 && second === 0) {
-    // 매 정시
-    defaultLocationList.map((item) => {
-      insertWeatherDataShortTerm(item.nx, item.ny);
-      insertWeatherData(item.nx, item.ny);
-    });
-    //}
+    setInterval(() => {
+      //그냥 매 정시 마다 실행 시키도록 함
+      let d = new Date();
+      // d.getTime()
+      // d.getHours()
+      let minutes = d.getMinutes();
+      let second = d.getSeconds();
+      //console.log(minutes + ' ' + second);
+      if (minutes === 0 && second === 0) {
+        //매 정시
+        defaultLocationList.map((item) => {
+          insertWeatherDataShortTerm(item.nx, item.ny);
+          insertWeatherData(item.nx, item.ny);
+        });
+      }
+    }, 1000);
   } catch (e) {
     console.log('error', e);
   }

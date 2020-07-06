@@ -25,16 +25,25 @@ class EditView extends Component {
     let {
       loadPage,
       getUserBackground,
-      nowGeolocation,
-      updateWeatherDataIntevalStart,
       getWeatherDataV2,
+      setSocketConnection,
+      updateWeatherDataIntevalStart,
     } = this.props;
     //nowGeolocation();
+    alert('componentDidMount');
     loadPage();
+    setSocketConnection();
+    updateWeatherDataIntevalStart();
     getUserBackground('testUser');
     getWeatherDataV2('ALL');
-    window.addEventListener('resize', _.throttle(this.updateDimensions, 500));
+    window.addEventListener('resize', _.debounce(this.updateDimensions, 300));
     //window.onresize = this.handleResizeEnd;
+  }
+  componentWillUnmount() {
+    const { setLayout } = this.props;
+    //alert('edit view componentWillUnMount');
+    //setLayout(null);
+    window.removeEventListener('resize', this.updateDimensions);
   }
   updateDimensions = () => {
     const { allChartResizing } = this.props;
@@ -42,7 +51,7 @@ class EditView extends Component {
     allChartResizing();
   };
   componentDidUpdate() {
-    let { allChartResizing, handleResizable } = this.props;
+    let { allChartResizing } = this.props;
     allChartResizing();
   }
   render() {
@@ -50,7 +59,6 @@ class EditView extends Component {
     let {
       layout,
       onLayoutChange,
-      editPageFlag,
       createElement,
       handleResizeChildComponent,
       backgroundUrl,
@@ -107,9 +115,10 @@ export default inject(({ edit, setting, weather }) => ({
   index: edit.index,
   layout: edit.layout,
   page_number: edit.page_number,
-  editPageFlag: edit.editPageFlag,
+
   loadPage: edit.loadPage,
   onLayoutChange: edit.onLayoutChange,
+  setLayout: edit.setLayout,
   createElement: edit.createElement,
   onRemoveItem: edit.onRemoveItem,
   allChartResizing: edit.allChartResizing,
@@ -120,9 +129,7 @@ export default inject(({ edit, setting, weather }) => ({
   backgroundColor: setting.backgroundColor,
   getUserBackground: setting.getUserBackground,
   selectedBackgroundUrl: setting.selectedBackgroundUrl,
-
-  handleResizable: edit.handleResizable,
-  nowGeolocation: weather.nowGeolocation,
+  setSocketConnection: weather.setSocketConnection,
   updateWeatherDataIntevalStart: weather.updateWeatherDataIntevalStart,
   getWeatherDataV2: weather.getWeatherDataV2,
 }))(observer(EditView));

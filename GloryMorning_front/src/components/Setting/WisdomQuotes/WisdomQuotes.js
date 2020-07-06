@@ -37,13 +37,7 @@ const WisdomQuotes = observer(() => {
     root: rootRef.current,
     target: targetRef.current,
     onIntersect: ([{ isIntersecting }]) => {
-      if (
-        isIntersecting
-        //&&
-        //   !!currentQuery.current &&
-        //   currentPage.current < totalPage.current
-        //
-      ) {
+      if (isIntersecting) {
         quotes.getQuotes();
         //loadMoreImage();
       }

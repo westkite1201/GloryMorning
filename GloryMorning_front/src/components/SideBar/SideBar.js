@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import style from './SideBar.module.css';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Collapse } from 'reactstrap';
 import RecursiveTreeView from '../Common/RecursiveTreeView';
 class SideBar extends Component {
@@ -32,10 +32,8 @@ class SideBar extends Component {
   };
   render() {
     const {
-      match,
       open,
       routes,
-      openSideBar,
       componentList,
       EditComponentCollapse,
       addSelectedComponent,

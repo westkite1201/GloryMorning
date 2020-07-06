@@ -11,185 +11,213 @@ const key_component_location = 'Component_Location_Info';
 const key_route_info = 'RouteInfo';
 const key_component_info = 'ComponentInfo';
 
-const BACKGROUND ='background'
-
+const BACKGROUND = 'background';
 
 const setUserStatus = (data) => {
   console.log('----- setUserStatus --------');
   console.log('data =>', data);
-  return redishelpers.redis.hset(data.key, data.user_id, JSON.stringify(data.user_status));
+  return redishelpers.redis.hset(
+    data.key,
+    data.user_id,
+    JSON.stringify(data.user_status)
+  );
 };
 
 const getUserStatus = (data) => {
   console.log('----- getUserStatus --------');
   console.log('data =>', data);
   return redishelpers.redis.hget(data.key, data.user_id);
-}
+};
 
 const getAllComponent = () => {
   console.log('----- getAllComponent --------');
 
-  const key = util.format("%s:*", key_component_logic);
+  const key = util.format('%s:*', key_component_logic);
   return redishelpers.redis.keys(key);
-}
+};
 
 const getMyComponent = (data) => {
   console.log('----- getMyComponent --------');
   console.log('data =>', data);
-  const key = util.format("%s:%s", key_using_user, data.component_id);
+  const key = util.format('%s:%s', key_using_user, data.component_id);
   console.log('key =>', key);
 
   return redishelpers.redis.sismember(key, data.user_id);
-}
+};
 
 // Component사용자에 user_id 추가.
 const setMyComponent = (data) => {
   console.log('----- setMyComponent --------');
   console.log('data =>', data);
 
-  const key = util.format("%s:%s", key_using_user, data.component_id);
+  const key = util.format('%s:%s', key_using_user, data.component_id);
   console.log('key =>', key);
 
   return redishelpers.redis.sadd(key, data.user_id);
-}
+};
 
 // 컴포넌트에 하위 컴포넌트 or 로직 셋팅
 const setComponentLogic = (data) => {
   console.log('----- setComponentLogic --------');
   console.log('data =>', data);
 
-  const key = util.format("%s:%s", key_component_logic, data.target_component);
+  const key = util.format('%s:%s', key_component_logic, data.target_component);
   console.log('key =>', key);
 
   return redishelpers.redis.sadd(key, data.logic_list);
-}
+};
 
 const getZsetMaxscore = (data) => {
   console.log('----- getZsetMaxscore --------');
   console.log('data =>', data);
 
-  const key = util.format("%s:%s", key_user_info, data.user_id);
+  const key = util.format('%s:%s', key_user_info, data.user_id);
   console.log('key =>', key);
 
   return redishelpers.redis.zrange(key, -1, -1, 'WITHSCORES');
-}
+};
 
 const setUserInfo = (data) => {
   console.log('----- setUserInfo --------');
   console.log('data =>', data);
 
-  const key = util.format("%s:%s", key_user_info, data.user_id);
+  const key = util.format('%s:%s', key_user_info, data.user_id);
   console.log('key =>', key);
 
   return redishelpers.redis.zadd(key, data.score, data.user_info);
-}
+};
 
 const getUserInfo = (data) => {
   console.log('----- getUserInfo --------');
   console.log('data =>', data);
 
-  const key = util.format("%s:%s", key_user_info, data.user_id);
+  const key = util.format('%s:%s', key_user_info, data.user_id);
   console.log('key =>', key);
 
   return redishelpers.redis.zrangebyscore(key, data.max_score, data.max_score);
-}
-
-
-
+};
 
 ///////////////////////////////
 
 const setUserBackground = (data) => {
   console.log('----- setUserBackground --------');
-  const key = util.format("%s:%s", BACKGROUND, data.userId);
+  const key = util.format('%s:%s', BACKGROUND, data.userId);
   console.log('key =>', key);
   return redishelpers.redis.set(key, data.backgroundURL);
-}
+};
 
 const getUserBackGround = (data) => {
   console.log('----- getUserBackground --------');
-  console.log('userId ' , data.userId)
-  const key = util.format("%s:%s", BACKGROUND, data.userId);
+  console.log('userId ', data.userId);
+  const key = util.format('%s:%s', BACKGROUND, data.userId);
   console.log('key =>', key);
   return redishelpers.redis.get(key);
-}
-
-
+};
 
 const setUserComponents = (data) => {
   console.log('----- setUserComponents --------');
   console.log(data);
 
-  const key = util.format("%s:%s:%s", key_component_info, data.user_id, data.page_number);
+  const key = util.format(
+    '%s:%s:%s',
+    key_component_info,
+    data.user_id,
+    data.page_name
+  );
   console.log('key =>', key);
   return redishelpers.redis.sadd(key, data.component_list);
-}
+};
 
 const getUserComponents = (data) => {
   console.log('----- getUserComponents --------');
   console.log(data);
 
-  const key = util.format("%s:%s:%s", key_component_info, data.user_id, data.page_number);
+  const key = util.format(
+    '%s:%s:%s',
+    key_component_info,
+    data.user_id,
+    data.page_name
+  );
   console.log('key =>', key);
   return redishelpers.redis.smembers(key);
-}
+};
 
 const getUserPages = (data) => {
   console.log('----- getUserPages --------');
   console.log(data);
 
-  const key = util.format("%s:%s", key_route_info, data.user_id);
+  const key = util.format('%s:%s', key_route_info, data.user_id);
   console.log('key =>', key);
-  return redishelpers.redis.zrange(key, 0, -1, "WITHSCORES");
-}
+  return redishelpers.redis.zrange(key, 0, -1, 'WITHSCORES');
+};
 
 const setUserPages = (data) => {
   console.log('----- getUserPages --------');
   console.log(data);
 
-  const key = util.format("%s:%s", key_route_info, data.user_id);
+  const key = util.format('%s:%s', key_route_info, data.user_id);
   console.log('key =>', key);
-  return redishelpers.redis.zadd(key, data.page_number, data.page_name);
-}
+  return redishelpers.redis.zadd(key, data.page_name, data.page_name);
+};
 
 const deleteUserComponent = (data) => {
   console.log('----- deleteUserComponent --------');
   console.log(data);
 
-  const key = util.format("%s:%s:%s", key_component_info, data.user_id, data.page_number);
+  const key = util.format(
+    '%s:%s:%s',
+    key_component_info,
+    data.user_id,
+    data.page_name
+  );
   console.log('key =>', key);
   return redishelpers.redis.del(key);
-}
+};
 
 const deleteUserPageByPageNumber = (data) => {
   console.log('----- deleteUserPageByPageNumber --------');
   console.log(data);
 
-  const key = util.format("%s:%s", key_route_info, data.user_id);
+  const key = util.format('%s:%s', key_route_info, data.user_id);
   console.log('key =>', key);
-  return redishelpers.redis.zremrangebyscore(key, data.page_number, data.page_number);
-}
+  return redishelpers.redis.zremrangebyscore(
+    key,
+    data.page_name,
+    data.page_name
+  );
+};
 
 const setComponentLocation = (data) => {
   console.log('----- setComponentLocation --------');
   console.log(data);
 
-  const key = util.format("%s:%s:%s:%s", key_component_location, data.user_id, data.page_name, data.component_info);
+  const key = util.format(
+    '%s:%s:%s:%s',
+    key_component_location,
+    data.user_id,
+    data.page_name,
+    data.component_info
+  );
   console.log('key =>', key);
 
   return redishelpers.redis.set(key, data.component_location);
-}
+};
 
 const getComponentLocation = (data) => {
   console.log('----- getComponentLocation --------');
   console.log(data);
 
-  const key = util.format("%s:%s:%s", key_component_location, data.user_id, data.page_name, data.component_info);
+  const key = util.format(
+    '%s:%s:%s',
+    key_component_location,
+    data.user_id,
+    data.page_name,
+    data.component_info
+  );
   console.log('key =>', key);
 
   return redishelpers.redis.get(key);
-}
-
+};
 
 /////////////////////////////////
 
@@ -205,7 +233,7 @@ const setExpireDate = (data) => {
   console.log('set expire key');
   console.log('key: ', key, 'expire_time: ', expire_time);
   return redishelpers.redis.expire(key, expire_time);
-}
+};
 // expire test
 
 ///////////////////////////////
@@ -218,7 +246,6 @@ module.exports = {
   key_user_info: key_user_info,
   key_component_location: key_component_location,
 
-
   // methods
   setUserStatus: setUserStatus,
   getUserStatus: getUserStatus,
@@ -230,8 +257,6 @@ module.exports = {
   setUserInfo: setUserInfo,
   getUserInfo: getUserInfo,
 
-
-
   // User Route Page Methods
   setUserComponents: setUserComponents,
   getUserComponents: getUserComponents,
@@ -242,11 +267,10 @@ module.exports = {
   setComponentLocation: setComponentLocation,
   getComponentLocation: getComponentLocation,
 
-  setUserBackground : setUserBackground,
-  getUserBackGround : getUserBackGround,
-
+  setUserBackground: setUserBackground,
+  getUserBackGround: getUserBackGround,
 
   // Expire Test
   //expireTest: expireTest,
-  setExpireDate: setExpireDate,
-}
+  setExpireDate: setExpireDate
+};

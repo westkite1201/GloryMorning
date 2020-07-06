@@ -111,17 +111,17 @@ router.post('/getUserBackground', async (req, res) => {
 router.post('/set_user_components', async (req, res) => {
   try {
     const userId = req.body.user_id;
-    const pageNumber = req.body.page_number;
+    const pageName = req.body.page_name;
     const componentList = req.body.component_list;
 
     await userRedis.deleteUserComponent({
       user_id: userId,
-      page_number: pageNumber
+      page_name: pageName
     });
 
     await userRedis.setUserComponents({
       user_id: userId,
-      page_number: pageNumber,
+      page_name: pageName,
       component_list: componentList
     });
 
@@ -144,11 +144,11 @@ router.post('/set_user_components', async (req, res) => {
 router.post('/get_user_components', async (req, res) => {
   try {
     const userId = req.body.user_id;
-    const pageNumber = req.body.page_number;
+    const pageName = req.body.page_name;
 
     const componentList = await userRedis.getUserComponents({
       user_id: userId,
-      page_number: pageNumber
+      page_name: pageName
     });
 
     return res.json({

@@ -3,11 +3,7 @@ import { Route } from 'react-router-dom';
 import Dashboard from '../layouts/DashBoard';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  loadTextures,
-  init,
-  changeWeatherToOnClick,
-} from '../lib/rain/lib/src/main.js';
+
 class App extends Component {
   state = {};
   componentDidMount() {

@@ -4,55 +4,70 @@ import {
   init,
   changeWeatherToOnClick,
 } from '../../lib/rain/lib/src/main.js';
+import * as helpers from '../../lib/helpers';
 import './Rain.css';
+import Snowfall from 'react-snowfall';
 import { observer } from 'mobx-react';
 import UseStores from '../Setting/UseStores';
-let width = 1000;
-let height = 1000;
+let width = 1920;
+let height = 1080;
 
 const Rain = observer(() => {
   const [render, setRender] = useState(false);
-  const { edit } = UseStores();
+  const { edit, weather } = UseStores();
   let defaultYn = true;
   useEffect(() => {
+    alert('rain useEfftect, ' + edit.isRainRender);
     async function loadRainDrop() {
+      alert('loadRainDrop');
       //let targetDiv = document.getElementById('rain-container').getBoundingClientRect();
       let render = await loadTextures(width, height, defaultYn);
       setRender(render);
     }
-    loadRainDrop();
+    if (!edit.isRainRender) {
+      loadRainDrop();
+    }
+    return () => {
+      alert('RAIN return');
+      edit.setRainRender(false);
+    };
   }, []);
 
   useEffect(() => {
     if (render) {
       edit.setRainRender(true);
       edit.handleRainContainerResize();
+      if (weather.weatherInfoObject.weatherInfoCode) {
+        let weatherInfoCode = weather.weatherInfoObject.weatherInfoCode;
+        let rainViewName = helpers.rainViewCodeConverter(weatherInfoCode);
+        alert(rainViewName);
+        changeWeatherToOnClick(rainViewName);
+      }
     }
-  }, [render]);
+  }, [render, weather.weatherInfoObject]);
+
   return (
     <Fragment>
-      {/*<div style={{ marginTop: '50px' }}></div>*/}
-      {/*
-      <button onClick={() => changeWeatherToOnClick('storm')}>
-        버튼 클릭 테스트 STORM{' '}
-      </button>
-      <button onClick={() => changeWeatherToOnClick('drizzle')}>
-        버튼 클릭 테스트 drizzle{' '}
-      </button>
-      <button onClick={() => this.reRenderRain()}> rain 재 랜더링 </button>
-      */}
-      <div className="rain-container">
+      <div className="rain-container" id="rain">
         <div className="slideshow">
           <canvas id="rain-container"></canvas>
-          {<div className="test">비가 옵니다</div>}
+          <div className="rain-info">
+            {weather.weatherInfoObject.weatherInfoGamsung}
+          </div>
         </div>
-        {/*
-        <p className="nosupport">
-          Sorry, but your browser does not support WebGL!
-        </p>
-        */}
+
+        <div
+          style={{
+            height: 200,
+            width: 400,
+            background: '#282c34',
+            display: 'none',
+          }}
+        >
+          <Snowfall />
+        </div>
       </div>
     </Fragment>
   );
 });
-export default Rain;
+export default React.memo(Rain);

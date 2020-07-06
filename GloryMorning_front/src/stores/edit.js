@@ -15,7 +15,7 @@ export default class EditStore {
     this.rootStore = rootStore;
   }
   @observable isRainRender = false;
-  @observable page_number = 'home';
+  @observable page_name = 'home';
   @observable layout = [];
   @observable editPageFlag = false;
   @observable locationViewFlag = false;
@@ -41,8 +41,13 @@ export default class EditStore {
   //   }
   // }
   @action
-  setRainRender = () => {
-    this.isRainRender = true;
+  setLayout = value => {
+    this.layout = value;
+  };
+  @action
+  setRainRender = (value = true) => {
+    alert('ISRAINRender');
+    this.isRainRender = value;
   };
   @action
   setLocationFlagView = () => {
@@ -143,7 +148,7 @@ export default class EditStore {
     //   }
     // });
 
-    //this.handleRainContainerResize();
+    this.handleRainContainerResize();
   };
 
   handleRainContainerResize() {
@@ -193,7 +198,9 @@ export default class EditStore {
       targetDiv.style.width = rect.width;
       targetDiv.style.height = rect.height;
     }
-    this.reRenderRain(rect.width, rect.height);
+    if (document.getElementById('rain')) {
+      this.reRenderRain(rect.width, rect.height);
+    }
     this.allChartResizing();
   };
   /*
@@ -293,25 +300,29 @@ export default class EditStore {
   };
 
   @action
+  setPageName = pageName => {
+    this.page_name = pageName;
+  };
+  @action
   loadPage = async () => {
-    //console.log('loadpage' );
+    console.log('loadpage', this.page_name);
     try {
       await axios
         .post(clientConfig.endpoint.api + '/bus/get_user_components', {
           user_id: 'sampleId',
-          page_number: this.page_number,
+          page_name: this.page_name,
         })
         .then(async res => {
-          //console.log('res', res.data.component_list);
+          console.log('loadpage res', res.data.component_list);
           if (helpers.isEmpty(res.data.component_list)) {
-            this.initlayout(this.page_number);
-            this.page_number = this.page_number;
+            this.initlayout(this.page_name);
+            this.page_name = this.page_name;
           } else {
             console.log(
               '[seo][res.data.component_list] ',
               res.data.component_list,
             );
-            this.page_number = this.page_number;
+            this.page_name = this.page_name;
             if (res.data.component_list[0] === '') {
               this.layout = [];
             } else {
@@ -443,7 +454,7 @@ x를 클릭한 컴포넌트를 제거하는 함수
     axios
       .post(clientConfig.endpoint.api + '/bus/set_user_components', {
         user_id: 'sampleId',
-        page_number: this.page_number,
+        page_name: this.page_name,
         component_list: LayoutTemporaryStorage,
       })
       .then(res => {

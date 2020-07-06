@@ -6,12 +6,13 @@ import * as _ from 'lodash';
 import * as helpers from '../lib/helpers';
 import * as weatherApi from '../lib/api/weatherApi';
 import clientConfig from '../configuration/clientConfig';
+
 // PRIVATE -> API 키 이용해서 직접 호출
 // MEMBER -> 내 DB에서 조회 호출
 //const MODE = "PRIVATE_MODE" // PRIVATE_MODE 모드 DEFAULT 세팅 없음 개인 유저키로 운영
 const MODE = 'MEMBER_MODE';
 export default class WeatherStore {
-  locationInfo = null;
+  @observable locationInfo = null;
   @observable timeSocket = null;
   @observable timeObj = {
     hour: '',
@@ -230,27 +231,32 @@ export default class WeatherStore {
   @action
   setSocketConnection = () => {
     // console.log('[SetSocketConnectio]');
-    // if (isEmpty(this.timeSocket)) {
-    //   const timeSocket = io('http://localhost:3031/time');
-    //   // console.log(socket)
-    //   timeSocket.on('connect', () => {
-    //     console.log('[seo] connected');
-    //   });
-    //   this.timeSocket = timeSocket;
-    //   /* socketIo를 통한 시계 구현  */
-    //   timeSocket.on('getTime', data => {
-    //     console.log('data!', data.count);
-    //     if (!_.isNil(data.serverTime)) {
-    //       this.timeObj = data.serverTime;
-    //     }
-    //   });
-    //   /* socket 이름 변경 요망  */
-    //   timeSocket.on('updateWeatherData', data => {
-    //     this.upateWeatherData();
-    //   });
-    // }
+    if (_.isEmpty(this.timeSocket)) {
+      const timeSocket = io('http://localhost:3031/time');
+      // console.log(socket)
+      timeSocket.on('connect', () => {
+        console.log('[seo] connected');
+      });
+      this.timeSocket = timeSocket;
+      /* socketIo를 통한 시계 구현  */
+      timeSocket.on('getTime', data => {
+        console.log('data!', data.count);
+        if (!_.isNil(data.serverTime)) {
+          this.timeObj = data.serverTime;
+        }
+      });
+      /* socket 이름 변경 요망  */
+      timeSocket.on('updateWeatherData', data => {
+        //alert('hell');
+        this.upateWeatherData();
+      });
+    }
   };
 
+  @action
+  settingLocationInfo = async () => {
+    this.locationInfo = await this.nowGeolocation();
+  };
   /*process => 
     0. componentDidMount에서 한번 전체 실행되고 
     그이후 update
@@ -258,10 +264,21 @@ export default class WeatherStore {
   */
   @action
   upateWeatherData = () => {
-    this.getWeatherData('REH');
-    this.getWeatherData('POP');
-    this.getWeatherData('R06');
-    this.getWeatherData('T3H');
+    this.getWeatherDataV2('ALL');
+  };
+
+  @action
+  updateWeatherDataShortTerm = () => {
+    this.getWeatherDataShortTerm();
+  };
+
+  //사용할지 안할지 생각해보기
+  @action
+  initDefaultUpdateWeater = async () => {
+    await this.settingLocationInfo();
+    await this.getWeatherDataV2('ALL');
+    await this.getWeatherDataShortTerm();
+    await this.getDustInfo();
   };
 
   /* 임시로 time socket 사용  */
@@ -367,11 +384,13 @@ export default class WeatherStore {
   @action
   getDustInfo = async (isDefault, item) => {
     try {
-      let locationInfo;
+      let locationInfo = this.locationInfo;
       let tmCordinate;
       if (isDefault) {
         console.log('[SEO] getDustInfo1');
-        locationInfo = await this.nowGeolocation();
+        if (!locationInfo) {
+          locationInfo = await this.nowGeolocation();
+        }
         console.log('[SEO] getDustInfo2 locationInfo', locationInfo);
         tmCordinate = await this.getCordinate('TM', locationInfo);
         console.log('[SEO] getDustInfo3');
@@ -453,14 +472,14 @@ export default class WeatherStore {
   @action
   getWeatherDataShortTerm = async (isDefault, item) => {
     console.log('[SEO][getWeatherDataShortTerm][item] ', item);
-    let locationInfo;
+    let locationInfo = this.locationInfo;
     let dayTimeYn;
     let responsedata;
     let nx;
     let ny;
     try {
       let riseSetInfo = await this.getAreaRiseSetInfo();
-
+      console.log('riseSetInfo ', riseSetInfo);
       /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
       if (!isDefault && !_.isNil(item)) {
         console.log(
@@ -477,7 +496,9 @@ export default class WeatherStore {
         console.log('[SEO][getWeatherDataShortTerm] nx, ny ', nx, ny);
       } else {
         //기본 default
-        locationInfo = await this.nowGeolocation();
+        if (!locationInfo) {
+          locationInfo = await this.nowGeolocation();
+        }
         dayTimeYn = riseSetInfo.item.isDayTimeYn;
         console.log(
           '[SEO][getWeatherDataShortTerm] locationInfo ',
@@ -559,6 +580,10 @@ export default class WeatherStore {
       }
       if (MODE === 'MEMBER_MODE') {
         weatherInfo = response.data;
+        if (!weatherInfo) {
+          alert('getWeatherDataShortTerm not response ');
+          return;
+        }
         console.log(
           '[SEO][getWeatherDataShortTerm] WEATHER INFO ',
           weatherInfo,
@@ -589,15 +614,22 @@ export default class WeatherStore {
         //this.weatherClassName = this.getWeatherClassName(skyInfoStr)
         //this.weatherInfoData = weatherInfo;
         let weatherInfoData = this.getWeatherClassName(skyInfoStr, dayTimeYn);
+        let weatherRainBoxInfoData = this.getWeatherGamsungName(
+          skyInfoStr,
+          dayTimeYn,
+        );
         let weatherInfoObject = {
           baseDate: baseDate,
           baseTime: baseTime,
           weatherClassName: weatherInfoData.weatherClassName,
           weatherInfoName: weatherInfoData.weatherInfoName,
+          weatherInfoGamsung: weatherRainBoxInfoData.info, //rainComponent 용
+          weatherInfoCode: weatherRainBoxInfoData.rainViewCode, //rainComopnent용
           temperatureNow: temperatureNow,
           rainNow: rainNow,
           humidityNow: humidityNow,
         };
+        console.log('weatherInfoObject ', weatherInfoObject);
         this.getJustFitClothes(weatherInfoObject.temperatureNow);
         this.weatherInfoObject = weatherInfoObject;
         this.isFetchingShortTerm = false;
@@ -607,7 +639,47 @@ export default class WeatherStore {
       console.log(e);
     }
   };
-  getWeatherName = () => {};
+
+  getWeatherGamsungName = (skyInfoStr, dayTimeYn) => {
+    //sunny
+    //rain
+    let weatherCode = skyInfoStr.split('');
+    let sky = weatherCode[0];
+    let pty = weatherCode[1];
+    //흐림 0
+    //sunny 1
+    //rain  2
+    //drizzle 3  //추후 추가 예정
+    //storm  4   //추후 추가 예정
+    //snow
+
+    //day 1
+    //night 2
+    if (sky === 1) {
+      if (!dayTimeYn) {
+        return { rainViewCode: '11', info: '맑은 밤이에요.' };
+      }
+      return { rainViewCode: '12', info: '맑은 하루에요.' };
+    } else {
+      if (pty === 1 || pty === 2) {
+        if (!dayTimeYn) {
+          return { rainViewCode: '22', info: '비오는 밤.' };
+        }
+        return { rainViewCode: '12', info: '맑은 밤이에요.' };
+      } else if (pty === 3 || pty === 4) {
+        if (!dayTimeYn) {
+          return { rainViewCode: '52', info: '눈오는 밤.' };
+        }
+        return { rainViewCode: '51', info: '눈이 내려요.' };
+      } else {
+        if (!dayTimeYn) {
+          return { rainViewCode: '02', info: '흐린 밤이네요.' };
+        }
+        return { rainViewCode: '01', info: '흐린 하루에요.' };
+      }
+    }
+  };
+
   getWeatherClassName = (skyInfoStr, dayTimeYn) => {
     let className = '';
     let weatherInfoName = '';
@@ -909,26 +981,43 @@ export default class WeatherStore {
   };
 
   @action
-  getWeatherDataV2 = async category => {
+  getWeatherDataV2 = async (category, isDefault = true, item) => {
     let response;
-    let locationInfo;
+    let locationInfo = this.locationInfo;
     let responsedata;
     let nx;
     let ny;
-    locationInfo = await this.nowGeolocation();
-    const { currentY, currentX } = locationInfo;
-    responsedata = this.convert(currentY, currentX);
-    nx = responsedata.x;
-    ny = responsedata.y;
+
+    //location 클릭 이벤트로 진입
+    if (!isDefault && item) {
+      responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
+      nx = responsedata.x;
+      ny = responsedata.y;
+    } else {
+      if (!locationInfo) {
+        locationInfo = await this.nowGeolocation();
+      }
+      const { currentY, currentX } = locationInfo;
+      responsedata = this.convert(currentY, currentX);
+      nx = responsedata.x;
+      ny = responsedata.y;
+    }
+
     if (category === 'ALL') {
       this.isFetchingHumi = true;
       this.isFetchingRain = true;
       this.isFetchingRainmm = true;
       this.isFetchingSky = true;
       this.isFetchingTemp = true;
+
+      this.isUpdatedHumi = false;
+      this.isUpdatedRain = false;
+      this.isUpdatedRainmm = false;
+      this.isUpdatedSky = false;
+      this.isUpdatedTemp = false;
     }
     if (MODE === 'MEMBER_MODE') {
-      console.log('[seo] response 호출 ');
+      console.log('[seo] response 호출 nx,ny categoty', nx, ny, category);
       response = await weatherApi.getWeatherData(nx, ny, category);
       console.log('[seo] response 중 ');
       if (response.statusText === 'OK') {
@@ -1040,6 +1129,7 @@ export default class WeatherStore {
       default:
         break;
     }
+    this.isWeatherDataFetchedYn = false;
   };
 
   /*
@@ -1055,379 +1145,379 @@ export default class WeatherStore {
       ③ 3 : 구름많음
       ④ 4 : 흐림
     */
-  @action
-  //X,Y가 거꾸로 되어 있는거 같음
-  getWeatherData = async (category, isDefault, item) => {
-    let response;
-    let locationInfo;
-    let responsedata;
-    let nx;
-    let ny;
-    /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
-    if (!isDefault && !_.isNil(item)) {
-      responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
-      nx = responsedata.x;
-      ny = responsedata.y;
-      //console.log("[SEO][getWeatherData] nx, ny ", nx, ny )
-    } else {
-      console.log('[SEO][getWeatherData] nx, ny ', nx, ny);
-      //기본 default
-      locationInfo = await this.nowGeolocation();
-      const { currentY, currentX } = locationInfo;
-      responsedata = this.convert(currentY, currentX);
-      nx = responsedata.x;
-      ny = responsedata.y;
-    }
-    try {
-      if (category === 'REH') {
-        this.isFetchingHumi = true;
-      }
-      if (category === 'POP') {
-        this.isFetchingRain = true;
-      }
-      if (category === 'R06') {
-        this.isFetchingRainmm = true;
-      }
-      if (category === 'SKY') {
-        this.isFetchingSky = true;
-      }
-      if (category === 'T3H') {
-        this.isFetchingTemp = true;
-      }
+  // @action
+  // //X,Y가 거꾸로 되어 있는거 같음
+  // getWeatherData = async (category, isDefault, item) => {
+  //   let response;
+  //   let locationInfo;
+  //   let responsedata;
+  //   let nx;
+  //   let ny;
+  //   /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
+  //   if (!isDefault && !_.isNil(item)) {
+  //     responsedata = this.convert(parseFloat(item.y), parseFloat(item.x));
+  //     nx = responsedata.x;
+  //     ny = responsedata.y;
+  //     //console.log("[SEO][getWeatherData] nx, ny ", nx, ny )
+  //   } else {
+  //     console.log('[SEO][getWeatherData] nx, ny ', nx, ny);
+  //     //기본 default
+  //     locationInfo = await this.nowGeolocation();
+  //     const { currentY, currentX } = locationInfo;
+  //     responsedata = this.convert(currentY, currentX);
+  //     nx = responsedata.x;
+  //     ny = responsedata.y;
+  //   }
+  //   try {
+  //     if (category === 'REH') {
+  //       this.isFetchingHumi = true;
+  //     }
+  //     if (category === 'POP') {
+  //       this.isFetchingRain = true;
+  //     }
+  //     if (category === 'R06') {
+  //       this.isFetchingRainmm = true;
+  //     }
+  //     if (category === 'SKY') {
+  //       this.isFetchingSky = true;
+  //     }
+  //     if (category === 'T3H') {
+  //       this.isFetchingTemp = true;
+  //     }
 
-      /* 추가 */
-      if (category === 'ALL') {
-        this.isFetchingHumi = true;
-        this.isFetchingRain = true;
-        this.isFetchingRainmm = true;
-        this.isFetchingSky = true;
-        this.isFetchingTemp = true;
-      }
+  //     /* 추가 */
+  //     if (category === 'ALL') {
+  //       this.isFetchingHumi = true;
+  //       this.isFetchingRain = true;
+  //       this.isFetchingRainmm = true;
+  //       this.isFetchingSky = true;
+  //       this.isFetchingTemp = true;
+  //     }
 
-      if (MODE === 'MEMBER_MODE') {
-        response = await weatherApi.getWeatherData(nx, ny, category);
-        // console.log("[SEO] WEATHER NX  NY ", nx, ny)
-        // console.log("[SEO] WEATHER RES ",response )
-      } else if (MODE === 'PRIVATE_MODE') {
-        response = await weatherApi.getWeatherDataPrivateMode(nx, ny, false);
-      }
+  //     if (MODE === 'MEMBER_MODE') {
+  //       response = await weatherApi.getWeatherData(nx, ny, category);
+  //       // console.log("[SEO] WEATHER NX  NY ", nx, ny)
+  //       // console.log("[SEO] WEATHER RES ",response )
+  //     } else if (MODE === 'PRIVATE_MODE') {
+  //       response = await weatherApi.getWeatherDataPrivateMode(nx, ny, false);
+  //     }
 
-      if (response.statusText === 'OK') {
-        let weatherArray;
-        let yesterdayArray;
-        if (MODE === 'MEMBER_MODE') {
-          weatherArray = response.data;
-          console.log('[seo] weatherArray! ', weatherArray);
-          //어제 부터 오늘
-          console.log(
-            '[SEO] yesterdayPlus',
-            moment()
-              .subtract(2, 'days')
-              .format('YYYYMMDD'),
-          );
+  //     if (response.statusText === 'OK') {
+  //       let weatherArray;
+  //       let yesterdayArray;
+  //       if (MODE === 'MEMBER_MODE') {
+  //         weatherArray = response.data;
+  //         console.log('[seo] weatherArray! ', weatherArray);
+  //         //어제 부터 오늘
+  //         console.log(
+  //           '[SEO] yesterdayPlus',
+  //           moment()
+  //             .subtract(2, 'days')
+  //             .format('YYYYMMDD'),
+  //         );
 
-          let yesterdayPlus = moment()
-            .subtract(2, 'days')
-            .format('YYYYMMDD');
-          let yesterday = moment()
-            .subtract(1, 'days')
-            .format('YYYYMMDD');
-          let today = moment().format('YYYYMMDD');
-          let tommorow = moment()
-            .add(1, 'days')
-            .format('YYYYMMDD');
+  //         let yesterdayPlus = moment()
+  //           .subtract(2, 'days')
+  //           .format('YYYYMMDD');
+  //         let yesterday = moment()
+  //           .subtract(1, 'days')
+  //           .format('YYYYMMDD');
+  //         let today = moment().format('YYYYMMDD');
+  //         let tommorow = moment()
+  //           .add(1, 'days')
+  //           .format('YYYYMMDD');
 
-          yesterdayArray = weatherArray.filter(item => {
-            return yesterdayPlus <= item.FCST_DATE && item.FCST_DATE <= today;
-          });
-          console.log('[SEO] YESTERDAY ', yesterdayArray);
+  //         yesterdayArray = weatherArray.filter(item => {
+  //           return yesterdayPlus <= item.FCST_DATE && item.FCST_DATE <= today;
+  //         });
+  //         console.log('[SEO] YESTERDAY ', yesterdayArray);
 
-          //현재 ARRAY
-          weatherArray = weatherArray.filter(item => {
-            return yesterday <= item.FCST_DATE && item.FCST_DATE <= tommorow;
-          });
+  //         //현재 ARRAY
+  //         weatherArray = weatherArray.filter(item => {
+  //           return yesterday <= item.FCST_DATE && item.FCST_DATE <= tommorow;
+  //         });
 
-          /* yesterdayArray가 커서 보여지는게 헷갈려서 아예 날려버림  */
-          if (yesterdayArray.length < weatherArray.length) {
-            yesterdayArray = [];
-          }
-        } else if (MODE === 'PRIVATE_MODE') {
-          let responseData = response.data.data.response.body;
-          weatherArray = responseData.items.item;
-        }
+  //         /* yesterdayArray가 커서 보여지는게 헷갈려서 아예 날려버림  */
+  //         if (yesterdayArray.length < weatherArray.length) {
+  //           yesterdayArray = [];
+  //         }
+  //       } else if (MODE === 'PRIVATE_MODE') {
+  //         let responseData = response.data.data.response.body;
+  //         weatherArray = responseData.items.item;
+  //       }
 
-        if (MODE === 'MEMBER_MODE') {
-          switch (category) {
-            case 'REH':
-              this.humidityDataList = this.makeWeatherArray(weatherArray);
-              this.humidityDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingHumi = false;
-              break;
-            case 'POP':
-              this.rainfallDataList = this.makeWeatherArray(weatherArray);
-              this.rainfallDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingRain = false;
-              break;
-            case 'R06':
-              this.rainfallmmDataList = this.makeWeatherArray(weatherArray);
-              this.rainfallmmDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingRainmm = false;
-              break;
-            case 'SKY':
-              this.skyDataList = this.makeWeatherArray(weatherArray);
-              this.skyDataListYesterday = this.makeWeatherArray(yesterdayArray);
-              this.isFetchingSky = false;
-              break;
-            case 'T3H':
-              this.temperatureDataList = this.makeWeatherArray(weatherArray);
-              this.temperatureDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingTemp = false;
-              break;
-            /* 사용 여부 확인  */
-            case 'ALL':
-              this.humidityDataList = this.makeWeatherArray(weatherArray);
-              this.humidityDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingHumi = false;
+  //       if (MODE === 'MEMBER_MODE') {
+  //         switch (category) {
+  //           case 'REH':
+  //             this.humidityDataList = this.makeWeatherArray(weatherArray);
+  //             this.humidityDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingHumi = false;
+  //             break;
+  //           case 'POP':
+  //             this.rainfallDataList = this.makeWeatherArray(weatherArray);
+  //             this.rainfallDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingRain = false;
+  //             break;
+  //           case 'R06':
+  //             this.rainfallmmDataList = this.makeWeatherArray(weatherArray);
+  //             this.rainfallmmDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingRainmm = false;
+  //             break;
+  //           case 'SKY':
+  //             this.skyDataList = this.makeWeatherArray(weatherArray);
+  //             this.skyDataListYesterday = this.makeWeatherArray(yesterdayArray);
+  //             this.isFetchingSky = false;
+  //             break;
+  //           case 'T3H':
+  //             this.temperatureDataList = this.makeWeatherArray(weatherArray);
+  //             this.temperatureDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingTemp = false;
+  //             break;
+  //           /* 사용 여부 확인  */
+  //           case 'ALL':
+  //             this.humidityDataList = this.makeWeatherArray(weatherArray);
+  //             this.humidityDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingHumi = false;
 
-              this.rainfallDataList = this.makeWeatherArray(weatherArray);
-              this.rainfallDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingRain = false;
+  //             this.rainfallDataList = this.makeWeatherArray(weatherArray);
+  //             this.rainfallDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingRain = false;
 
-              this.rainfallmmDataList = this.makeWeatherArray(weatherArray);
-              this.rainfallmmDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingRainmm = false;
+  //             this.rainfallmmDataList = this.makeWeatherArray(weatherArray);
+  //             this.rainfallmmDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingRainmm = false;
 
-              this.skyDataList = this.makeWeatherArray(weatherArray);
-              this.skyDataListYesterday = this.makeWeatherArray(yesterdayArray);
-              this.isFetchingSky = false;
+  //             this.skyDataList = this.makeWeatherArray(weatherArray);
+  //             this.skyDataListYesterday = this.makeWeatherArray(yesterdayArray);
+  //             this.isFetchingSky = false;
 
-              this.temperatureDataList = this.makeWeatherArray(weatherArray);
-              this.temperatureDataListYesterday = this.makeWeatherArray(
-                yesterdayArray,
-              );
-              this.isFetchingTemp = false;
-              break;
-            default:
-              alert('선택한 값이 없습니다.');
-              break;
-          }
-        } else if (MODE === 'PRIVATE_MODE') {
-          let humidityDataList = [];
-          let rainfallDataList = [];
-          let rainfallmmDataList = [];
-          let skyDataList = [];
-          let temperatureDataList = [];
+  //             this.temperatureDataList = this.makeWeatherArray(weatherArray);
+  //             this.temperatureDataListYesterday = this.makeWeatherArray(
+  //               yesterdayArray,
+  //             );
+  //             this.isFetchingTemp = false;
+  //             break;
+  //           default:
+  //             alert('선택한 값이 없습니다.');
+  //             break;
+  //         }
+  //       } else if (MODE === 'PRIVATE_MODE') {
+  //         let humidityDataList = [];
+  //         let rainfallDataList = [];
+  //         let rainfallmmDataList = [];
+  //         let skyDataList = [];
+  //         let temperatureDataList = [];
 
-          console.log('[SEO] weatherArray ', weatherArray);
-          /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
-          if (!isDefault && !_.isNil(item)) {
-            for (let item of weatherArray) {
-              console.log(item);
-              let momentobj;
-              switch (item.category) {
-                case 'REH':
-                  momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  //console.log(momentobj)
-                  humidityDataList.push([
-                    momentobj._d.valueOf(),
-                    parseInt(item.fcstValue),
-                  ]);
-                  break;
+  //         console.log('[SEO] weatherArray ', weatherArray);
+  //         /* 로케이션에서 클릭이벤트로 이함수를 호출했을때  */
+  //         if (!isDefault && !_.isNil(item)) {
+  //           for (let item of weatherArray) {
+  //             console.log(item);
+  //             let momentobj;
+  //             switch (item.category) {
+  //               case 'REH':
+  //                 momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 //console.log(momentobj)
+  //                 humidityDataList.push([
+  //                   momentobj._d.valueOf(),
+  //                   parseInt(item.fcstValue),
+  //                 ]);
+  //                 break;
 
-                case 'POP':
-                  momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  //console.log(momentobj)
-                  rainfallDataList.push([
-                    momentobj._d.valueOf(),
-                    parseInt(item.fcstValue),
-                  ]);
-                  break;
-                case 'R06':
-                  momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  //console.log(momentobj)
-                  rainfallmmDataList.push([
-                    momentobj._d.valueOf(),
-                    parseInt(item.fcstValue),
-                  ]);
-                  break;
-                case 'SKY':
-                  momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  //console.log(momentobj)
-                  skyDataList.push([
-                    momentobj._d.valueOf(),
-                    parseInt(item.fcstValue),
-                  ]);
-                  break;
-                case 'T3H':
-                  momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  //console.log(momentobj)
-                  temperatureDataList.push([
-                    momentobj._d.valueOf(),
-                    parseInt(item.fcstValue),
-                  ]);
-                  break;
-                default:
-                  break;
-              }
-            }
-            this.humidityDataList = humidityDataList;
-            this.rainfallDataList = rainfallDataList;
-            this.rainfallmmDataList = rainfallmmDataList;
-            this.skyDataList = skyDataList;
-            this.temperatureDataList = temperatureDataList;
-            this.isFetchingHumi = false;
-            this.isFetchingRain = false;
-            this.isFetchingRainmm = false;
-            this.isFetchingSky = false;
-            this.isFetchingTemp = false;
-          } else {
-            /* 일반 컴포넌트 호출 시  현재 카테고리에 따라서 한개씩 업뎃하는데 3번 호출되는 안좋은 상황 발생 한번에 받아오는게 좋을듯  */
-            weatherArray = weatherArray.filter(item => {
-              if (item.category === category) {
-                return item;
-              }
-            });
-            switch (category) {
-              case 'REH':
-                this.humidityDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  //console.log(momentobj)
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingHumi = false;
-                break;
-              case 'POP':
-                this.rainfallDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingRain = false;
-                break;
-              case 'R06':
-                this.rainfallmmDataList = weatherArray.map(item => {
-                  // console.log("R06!!!", item)
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingRainmm = false;
-                break;
-              case 'SKY':
-                this.skyDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingSky = false;
-                break;
-              case 'T3H':
-                this.temperatureDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingTemp = false;
-                break;
+  //               case 'POP':
+  //                 momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 //console.log(momentobj)
+  //                 rainfallDataList.push([
+  //                   momentobj._d.valueOf(),
+  //                   parseInt(item.fcstValue),
+  //                 ]);
+  //                 break;
+  //               case 'R06':
+  //                 momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 //console.log(momentobj)
+  //                 rainfallmmDataList.push([
+  //                   momentobj._d.valueOf(),
+  //                   parseInt(item.fcstValue),
+  //                 ]);
+  //                 break;
+  //               case 'SKY':
+  //                 momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 //console.log(momentobj)
+  //                 skyDataList.push([
+  //                   momentobj._d.valueOf(),
+  //                   parseInt(item.fcstValue),
+  //                 ]);
+  //                 break;
+  //               case 'T3H':
+  //                 momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 //console.log(momentobj)
+  //                 temperatureDataList.push([
+  //                   momentobj._d.valueOf(),
+  //                   parseInt(item.fcstValue),
+  //                 ]);
+  //                 break;
+  //               default:
+  //                 break;
+  //             }
+  //           }
+  //           this.humidityDataList = humidityDataList;
+  //           this.rainfallDataList = rainfallDataList;
+  //           this.rainfallmmDataList = rainfallmmDataList;
+  //           this.skyDataList = skyDataList;
+  //           this.temperatureDataList = temperatureDataList;
+  //           this.isFetchingHumi = false;
+  //           this.isFetchingRain = false;
+  //           this.isFetchingRainmm = false;
+  //           this.isFetchingSky = false;
+  //           this.isFetchingTemp = false;
+  //         } else {
+  //           /* 일반 컴포넌트 호출 시  현재 카테고리에 따라서 한개씩 업뎃하는데 3번 호출되는 안좋은 상황 발생 한번에 받아오는게 좋을듯  */
+  //           weatherArray = weatherArray.filter(item => {
+  //             if (item.category === category) {
+  //               return item;
+  //             }
+  //           });
+  //           switch (category) {
+  //             case 'REH':
+  //               this.humidityDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 //console.log(momentobj)
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingHumi = false;
+  //               break;
+  //             case 'POP':
+  //               this.rainfallDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingRain = false;
+  //               break;
+  //             case 'R06':
+  //               this.rainfallmmDataList = weatherArray.map(item => {
+  //                 // console.log("R06!!!", item)
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingRainmm = false;
+  //               break;
+  //             case 'SKY':
+  //               this.skyDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingSky = false;
+  //               break;
+  //             case 'T3H':
+  //               this.temperatureDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingTemp = false;
+  //               break;
 
-              case 'ALL':
-                this.humidityDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  //console.log(momentobj)
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingHumi = false;
+  //             case 'ALL':
+  //               this.humidityDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 //console.log(momentobj)
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingHumi = false;
 
-                this.rainfallDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingRain = false;
+  //               this.rainfallDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingRain = false;
 
-                this.rainfallmmDataList = weatherArray.map(item => {
-                  // console.log("R06!!!", item)
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingRainmm = false;
+  //               this.rainfallmmDataList = weatherArray.map(item => {
+  //                 // console.log("R06!!!", item)
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingRainmm = false;
 
-                this.skyDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingSky = false;
+  //               this.skyDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingSky = false;
 
-                this.temperatureDataList = weatherArray.map(item => {
-                  let momentobj = moment(
-                    String(item.fcstDate) + String(item.fcstTime),
-                    'YYYYMMDDHHmm',
-                  );
-                  return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
-                });
-                this.isFetchingTemp = false;
-              default:
-                alert('선택한 값이 없습니다.');
-                break;
-            }
-          }
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //               this.temperatureDataList = weatherArray.map(item => {
+  //                 let momentobj = moment(
+  //                   String(item.fcstDate) + String(item.fcstTime),
+  //                   'YYYYMMDDHHmm',
+  //                 );
+  //                 return [momentobj._d.valueOf(), parseInt(item.fcstValue)];
+  //               });
+  //               this.isFetchingTemp = false;
+  //             default:
+  //               alert('선택한 값이 없습니다.');
+  //               break;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   @action
   getAllWeatherData = async (locationA, locationB, locationC) => {
@@ -1514,114 +1604,114 @@ export default class WeatherStore {
 
   //use naver crawailng 용 함수들
   //08-02 기준 레거시
-  makeTemperature = (resData, wantApi) => {
-    // weatherInfo.push(timeList) //시간
-    // weatherInfo.push(weatherDetailList) //날씨 한글 축약
-    // weatherInfo.push(temperatureList) //온도
-    // weatherInfo.push(humidityList)     //습도
-    // weatherInfo.push(proPrecipitationList) // 강수확률
-    // weatherInfo.push(precipitation)     //강수량
-    //console.log(resData)
-    //시간 온도
-    if (wantApi === 'TEMPERATURE') {
-      let timeList = resData[0];
-      // console.log(timeList);
-      let weatherDetailList = resData[1];
-      let temperatureList = resData[2];
+  // makeTemperature = (resData, wantApi) => {
+  //   // weatherInfo.push(timeList) //시간
+  //   // weatherInfo.push(weatherDetailList) //날씨 한글 축약
+  //   // weatherInfo.push(temperatureList) //온도
+  //   // weatherInfo.push(humidityList)     //습도
+  //   // weatherInfo.push(proPrecipitationList) // 강수확률
+  //   // weatherInfo.push(precipitation)     //강수량
+  //   //console.log(resData)
+  //   //시간 온도
+  //   if (wantApi === 'TEMPERATURE') {
+  //     let timeList = resData[0];
+  //     // console.log(timeList);
+  //     let weatherDetailList = resData[1];
+  //     let temperatureList = resData[2];
 
-      let chartData = [];
-      for (let i = 0; i < timeList.length; i++) {
-        chartData.push([timeList[i], parseInt(temperatureList[i])]);
-      }
-      return chartData;
-    }
-    //습도
-    if (wantApi === 'HUMIDITY') {
-      let timeList = resData[0];
-      //console.log(timeList);
-      let weatherDetailList = resData[1];
-      let humidityList = resData[3];
+  //     let chartData = [];
+  //     for (let i = 0; i < timeList.length; i++) {
+  //       chartData.push([timeList[i], parseInt(temperatureList[i])]);
+  //     }
+  //     return chartData;
+  //   }
+  //   //습도
+  //   if (wantApi === 'HUMIDITY') {
+  //     let timeList = resData[0];
+  //     //console.log(timeList);
+  //     let weatherDetailList = resData[1];
+  //     let humidityList = resData[3];
 
-      let chartData = [];
-      for (let i = 0; i < timeList.length; i++) {
-        chartData.push([timeList[i], parseInt(humidityList[i])]);
-      }
-      return chartData;
-    }
-    //강수량
-    if (wantApi === 'RAIN') {
-      let timeList = resData[0];
-      //console.log(timeList);
-      let weatherDetailList = resData[1];
-      let proPrecipitationList = resData[4];
-      let precipitationList = resData[5];
-      // console.log(proPrecipitationList.length);
-      // console.log(precipitationList.length);
-      let chartData = [];
-      let proTemp = [];
-      let preTemp = [];
-      for (let i = 0; i < timeList.length; i++) {
-        proTemp.push([timeList[i], parseInt(proPrecipitationList[i])]);
-        //precipitationList[i]
+  //     let chartData = [];
+  //     for (let i = 0; i < timeList.length; i++) {
+  //       chartData.push([timeList[i], parseInt(humidityList[i])]);
+  //     }
+  //     return chartData;
+  //   }
+  //   //강수량
+  //   if (wantApi === 'RAIN') {
+  //     let timeList = resData[0];
+  //     //console.log(timeList);
+  //     let weatherDetailList = resData[1];
+  //     let proPrecipitationList = resData[4];
+  //     let precipitationList = resData[5];
+  //     // console.log(proPrecipitationList.length);
+  //     // console.log(precipitationList.length);
+  //     let chartData = [];
+  //     let proTemp = [];
+  //     let preTemp = [];
+  //     for (let i = 0; i < timeList.length; i++) {
+  //       proTemp.push([timeList[i], parseInt(proPrecipitationList[i])]);
+  //       //precipitationList[i]
 
-        preTemp.push([
-          timeList[i],
-          _.isNaN(parseFloat(precipitationList[i]))
-            ? 0.0
-            : parseFloat(precipitationList[i]),
-        ]);
-      }
-      chartData.push(proTemp);
-      chartData.push(preTemp);
-      //console.log('chartData ', chartData)
-      return chartData;
-    }
-  };
+  //       preTemp.push([
+  //         timeList[i],
+  //         _.isNaN(parseFloat(precipitationList[i]))
+  //           ? 0.0
+  //           : parseFloat(precipitationList[i]),
+  //       ]);
+  //     }
+  //     chartData.push(proTemp);
+  //     chartData.push(preTemp);
+  //     //console.log('chartData ', chartData)
+  //     return chartData;
+  //   }
+  // };
 
-  @action
-  setInterval = wantApi => {
-    let playAlert = setInterval(async () => {
-      //console.log('hello', wantApi)
-      if (wantApi === 'RAIN') {
-        this.isFetchingRain = true;
-        this.rainData = [];
-      }
-      if (wantApi === 'HUMIDITY') {
-        this.isFetchingHumi = true;
-        this.humidityData = [];
-      }
-      if (wantApi === 'TEMPERATURE') {
-        this.temperatureData = [];
-        this.isFetchingTemp = true;
-      }
-      this.weatherData = [];
-      this.error = null;
-      let data = {
-        loc: this.nowLocation,
-      };
-      try {
-        const response = await axios.post(
-          'http://localhost:3031/api/weather/PYTHONTEST',
-          data,
-        );
-        //const response = await axios.post('http://localhost:3031/api/bus/get_data')
-        if (wantApi === 'RAIN') {
-          this.rainData = this.makeTemperature(response.data, wantApi);
-          this.isFetchingRain = false;
-        }
-        if (wantApi === 'HUMIDITY') {
-          this.humidityData = this.makeTemperature(response.data, wantApi);
-          this.isFetchingHumi = false;
-        }
-        if (wantApi === 'TEMPERATURE') {
-          this.temperatureData = this.makeTemperature(response.data, wantApi);
-          this.isFetchingTemp = false;
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }, 30000);
-  };
+  // @action
+  // setInterval = wantApi => {
+  //   let playAlert = setInterval(async () => {
+  //     //console.log('hello', wantApi)
+  //     if (wantApi === 'RAIN') {
+  //       this.isFetchingRain = true;
+  //       this.rainData = [];
+  //     }
+  //     if (wantApi === 'HUMIDITY') {
+  //       this.isFetchingHumi = true;
+  //       this.humidityData = [];
+  //     }
+  //     if (wantApi === 'TEMPERATURE') {
+  //       this.temperatureData = [];
+  //       this.isFetchingTemp = true;
+  //     }
+  //     this.weatherData = [];
+  //     this.error = null;
+  //     let data = {
+  //       loc: this.nowLocation,
+  //     };
+  //     try {
+  //       const response = await axios.post(
+  //         'http://localhost:3031/api/weather/PYTHONTEST',
+  //         data,
+  //       );
+  //       //const response = await axios.post('http://localhost:3031/api/bus/get_data')
+  //       if (wantApi === 'RAIN') {
+  //         this.rainData = this.makeTemperature(response.data, wantApi);
+  //         this.isFetchingRain = false;
+  //       }
+  //       if (wantApi === 'HUMIDITY') {
+  //         this.humidityData = this.makeTemperature(response.data, wantApi);
+  //         this.isFetchingHumi = false;
+  //       }
+  //       if (wantApi === 'TEMPERATURE') {
+  //         this.temperatureData = this.makeTemperature(response.data, wantApi);
+  //         this.isFetchingTemp = false;
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }, 30000);
+  // };
 
   // @action
   // getWeather = async wantApi => {
