@@ -32,14 +32,14 @@ const connection = (io) => {
     });
 
     socket.on('updateWeatherData', function (data) {
-      clearInterval(weatherInterval);
-
+      //clearInterval(weatherInterval);
+      console.log('updateWeatherData');
       weatherInterval = setInterval(function () {
         time.emit('updateWeatherData', {
           message: 'success',
           status: 200,
         });
-      }, 60 * 1000);
+      }, 1000 * 3600);
     });
     //타이머 테스트
     socket.on('time', function (data) {

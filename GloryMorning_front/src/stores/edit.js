@@ -16,7 +16,7 @@ export default class EditStore {
   }
   @observable isRainRender = false;
   @observable page_name = 'home';
-  @observable layout = null;
+  @observable layout = [];
   @observable editPageFlag = false;
   @observable locationViewFlag = false;
 

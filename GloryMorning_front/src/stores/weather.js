@@ -247,6 +247,7 @@ export default class WeatherStore {
       });
       /* socket 이름 변경 요망  */
       timeSocket.on('updateWeatherData', data => {
+        //alert('hell');
         this.upateWeatherData();
       });
     }

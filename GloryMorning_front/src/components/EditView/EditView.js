@@ -22,10 +22,18 @@ class EditView extends Component {
   }
 
   componentDidMount() {
-    let { loadPage, getUserBackground, getWeatherDataV2 } = this.props;
+    let {
+      loadPage,
+      getUserBackground,
+      getWeatherDataV2,
+      setSocketConnection,
+      updateWeatherDataIntevalStart,
+    } = this.props;
     //nowGeolocation();
     alert('componentDidMount');
     loadPage();
+    setSocketConnection();
+    updateWeatherDataIntevalStart();
     getUserBackground('testUser');
     getWeatherDataV2('ALL');
     window.addEventListener('resize', _.debounce(this.updateDimensions, 300));
@@ -33,8 +41,8 @@ class EditView extends Component {
   }
   componentWillUnmount() {
     const { setLayout } = this.props;
-    alert('edit view componentWillUnMount');
-    setLayout(null);
+    //alert('edit view componentWillUnMount');
+    //setLayout(null);
     window.removeEventListener('resize', this.updateDimensions);
   }
   updateDimensions = () => {
@@ -83,22 +91,20 @@ class EditView extends Component {
     return (
       <div className={style.rglContainer} style={style}>
         <div className={style.dropLayout} style={{ width: '100%' }}>
-          {layout && (
-            <ResponsiveReactGridLayout
-              id={'rgl'}
-              //layout={layout}
-              onLayoutChange={onLayoutChange}
-              useCSSTransforms={true}
-              draggableHandle=".dragHandle"
-              resizableHandle=".resizeHandle"
-              margin={[25, 25]}
-              onResize={handleResizeChildComponent}
-              //verticalCompact ={false}
-              {...this.props}
-            >
-              {layout.map((el, index) => createElement(el, index))}
-            </ResponsiveReactGridLayout>
-          )}
+          <ResponsiveReactGridLayout
+            id={'rgl'}
+            layout={layout}
+            onLayoutChange={onLayoutChange}
+            useCSSTransforms={true}
+            draggableHandle=".dragHandle"
+            resizableHandle=".resizeHandle"
+            margin={[25, 25]}
+            onResize={handleResizeChildComponent}
+            //verticalCompact ={false}
+            {...this.props}
+          >
+            {layout.map((el, index) => createElement(el, index))}
+          </ResponsiveReactGridLayout>
         </div>
       </div>
     );
@@ -123,6 +129,7 @@ export default inject(({ edit, setting, weather }) => ({
   backgroundColor: setting.backgroundColor,
   getUserBackground: setting.getUserBackground,
   selectedBackgroundUrl: setting.selectedBackgroundUrl,
-
+  setSocketConnection: weather.setSocketConnection,
+  updateWeatherDataIntevalStart: weather.updateWeatherDataIntevalStart,
   getWeatherDataV2: weather.getWeatherDataV2,
 }))(observer(EditView));
