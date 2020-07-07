@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import * as searchApi from '../lib/api/searchApi';
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 
 /* setting 이지만 현재 backgroundSetting 이라 보는게 맞다  */
 export default class SearchStore {
@@ -55,6 +56,16 @@ export default class SearchStore {
     try {
       const res = await searchApi.settingLocation(this.selectedAddressList);
       if (res.status === 200) {
+          
+        toast.success('🦄 야호 저장에 성공하였습니다!', {
+          position: 'top-center',
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      
         console.log('[SEO][settingLocation] = ', res.data);
         this.selectedAddressList = res.data.map(item => {
           return {
@@ -70,7 +81,7 @@ export default class SearchStore {
         );
       }
     } catch (e) {
-      alert(e);
+      alert("settingLocation 실패 error = ",  e);
     }
   };
 

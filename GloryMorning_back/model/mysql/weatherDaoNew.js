@@ -55,34 +55,35 @@ const settingLocation = async (parameter) => {
     console.log('settingLocationArray ', settingLocationArray);
     console.log('locationArray ', locationArray);
     const connection = await dbHelpers.pool.getConnection(async (conn) => conn);
+    let rows;
     try {
-      await connection.beginTransaction(); // START TRANSACTION
-
-      await connection.query('DELETE FROM setting_location', [locationArray]);
-
-      // /* Step 3. */
-      let sql = `REPLACE INTO setting_location(ADDRESS_NAME ,ADDRESS_TYPE, X ,Y,MEM_IDX)
+      if (locationArray && locationArray.length !== 0) {
+        await connection.beginTransaction(); // START TRANSACTION
+        let res = await connection.query('DELETE FROM setting_location', [
+          locationArray
+        ]);
+        console.log('delete res ');
+        // /* Step 3. */
+        let sql = `REPLACE INTO setting_location(ADDRESS_NAME, ADDRESS_TYPE, X, Y, MEM_IDX)
 					   VALUES ?`;
-
-      const [insertRow] = await connection.query(sql, [locationArray]);
-      const [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);
-
-      // //await connection.beginTransaction(); // START TRANSACTION
-      // //const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
-      // //const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
-      // //const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
-      await connection.commit(); // COMMIT
+        const [insertRow] = await connection.query(sql, [locationArray]);
+        [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);
+        // //await connection.beginTransaction(); // START TRANSACTION
+        // //const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
+        // //const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+        // //const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
+        await connection.commit(); // COMMIT
+      }
       connection.release();
-
       return rows;
     } catch (err) {
       await connection.rollback(); // ROLLBACK
       connection.release();
-      console.log('Query Error');
+      console.log('Query Error', err);
       return false;
     }
   } catch (err) {
-    console.log('DB Error');
+    console.log('DB Error', err);
     return false;
   }
 };
