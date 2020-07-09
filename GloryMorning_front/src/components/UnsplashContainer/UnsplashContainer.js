@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ThumbnailList from './ThumbnailList';
 import * as UnsplashAPI from '../../lib/api/unsplash';
-//import { downloadPhoto } from '../../lib/downloadPhoto';
+import { downloadPhoto } from '../../lib/downloadPhoto';
 import SearchForm from './SearchForm/SearchForm';
 import ScrollContainer from '../base/ScrollContainer';
 import useIntersectionObserver from '../../hooks/useIntersectionObserver';
@@ -70,7 +70,7 @@ const UnsplashContainer = ({ setPhoto }) => {
       currentPage.current = 1;
       try {
         const data = await loadImage({ query, page: 1, per_page: PER_PAGE });
-        console.log('data ', data);
+        console.log('searchImage data ', data);
         setImages(data.results);
       } catch (e) {
         console.error(e);
@@ -109,9 +109,13 @@ const UnsplashContainer = ({ setPhoto }) => {
     async photo => {
       try {
         setLoading(true);
-        // const blob = await downloadPhoto(photo.urls.regular);
-        // setPhoto(blob);
-        // setSelected(photo.id);
+        //const blob = await downloadPhoto(photo.urls.regular);
+        const blob = await UnsplashAPI.getImage(
+          photo.urls.regular,
+          photo.alt_description,
+        );
+        setPhoto(blob);
+        setSelected(photo.id);
       } catch (e) {
         setError(e);
       } finally {
@@ -153,14 +157,10 @@ const UnsplashContainer = ({ setPhoto }) => {
     }
   };
 
-  const a = () => {
-    console.log(images);
-  };
   return (
     <div style={{ marginTop: '50px' }}>
-      <button onClick={a}>heelo</button>
-      <FileUploadForm />
-      {/*
+      {/*<FileUploadForm />*/}
+
       <SearchForm onSearch={searchImage} onRandom={loadRandomImage} />
       <ScrollContainer height={400} vertical ref={rootRef}>
         <ThumbnailList
@@ -171,7 +171,6 @@ const UnsplashContainer = ({ setPhoto }) => {
         <Loading show={loading} />
         <div ref={targetRef} />
       </ScrollContainer>
-      */}
     </div>
   );
 };

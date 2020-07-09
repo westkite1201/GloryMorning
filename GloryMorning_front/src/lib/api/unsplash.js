@@ -15,7 +15,20 @@ export const getRandomPhotos = params =>
 
 export const searchPhotos = params => {
   console.log('searchPhotos ', params);
-  instance
+  return instance
     .get(`/search/photos?${objectToQueryString(params)}`)
     .then(res => res.data);
+};
+
+export const getImage = (url, name) => {
+  return axios
+    .get(url, {
+      responseType: 'blob',
+    })
+    .then(response => {
+      if (response) {
+        var FileSaver = require('file-saver');
+        FileSaver.saveAs(new Blob([response.data]), `${name}.png`);
+      }
+    });
 };
