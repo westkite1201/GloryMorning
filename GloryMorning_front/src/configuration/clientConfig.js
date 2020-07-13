@@ -4,7 +4,7 @@
  */
 module.exports = {
   apiKeys: {
-    kakaoApiKey: 'KakaoAK 964c43954aeb54d0711aed4e57a588e5',
+    kakaoApiKey: '',
     datagoApiKey: '',
   },
 
@@ -13,37 +13,17 @@ module.exports = {
 
   // local dev
   endpoint: {
-    web: 'http://localhost:3031',
+    web: 'http://localhost:1201',
     api: 'http://localhost:3031/api',
+    socket: 'http://localhost:3031/time',
   },
 
   defaultImg: '/images/defaultImg.png',
 
-  // // server
-  // endpoint: {
-  //   web: "http://106.10.51.192:3030",
-  //   api: "http://106.10.51.192:3030/api"
-  // },
-
   // product
   // endpoint: {
-  //  web: "http://211.244.7.139:3030",
-  //  api: "http://211.244.7.139:3030/api"
+  //  web: "http://210.57.226.134:1201/",
+  //  api: "http://210.57.226.134:3031/api"
+  //  socket: 'http://210.57.226.134:3031/time',
   // },
-  // endpoint: {
-  //   web: "http://cqms.skbroadband.com:3030",
-  //   api: "http://cqms.skbroadband.com:3030/api"
-  //  },
-  // endpoint: {
-  //   web: "http://211.200.94.220:3030",
-  //   api: "http://211.200.94.220:3030/api"
-  // },
-  // endpoint: {
-  //   web: "http://cqms-b.skbroadband.com",
-  //   api: "http://cqms-b.skbroadband.com/api"
-  //  },
-  // endpoint: {
-  //   web: "http://59.30.200.65:3030",
-  //   api: "http://59.30.200.65:3030/api"
-  //  },
 };

@@ -232,7 +232,7 @@ export default class WeatherStore {
   setSocketConnection = () => {
     // console.log('[SetSocketConnectio]');
     if (_.isEmpty(this.timeSocket)) {
-      const timeSocket = io('http://localhost:3031/time');
+      const timeSocket = io(clientConfig.endpoint.socket);
       // console.log(socket)
       timeSocket.on('connect', () => {
         console.log('[seo] connected');
