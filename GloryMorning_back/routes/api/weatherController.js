@@ -518,6 +518,43 @@ insertWeatherDataShortTerm = async (nx, ny) => {
     console.log('error ', e);
   }
 };
+insertWeatherDataShortTermLive = async (nx, ny) => {
+  console.log('insertWeatherDataShortTermLive!');
+  getNowTimeForShortTerm();
+  //nx, ny는 디비에서 가져오기
+  //base_date오늘 날짜
+  //이 정보는 디비에서 글고 여기 함수에서 계산되는거임
+  let base_date, base_time, type, shortTermYn;
+  base_date = newdate;
+  base_time = newtime;
+  type = 'json';
+  shortTermYn = true;
+  shortTermLiveYn = true;
+  console.log(nx, ny);
+  try {
+    let result = await CallSeverApi.weatherAsync(
+      base_date,
+      base_time,
+      nx,
+      ny,
+      type,
+      shortTermYn,
+      shortTermLiveYn
+    );
+    //console.log("result " , result.data.response.body.items)
+    let list = result.data.response.body.items.item.map((item) => {
+      return [item.category, item.baseDate, item.baseTime, item.nx, item.ny];
+    });
+
+    let rows = await weatherDaoNew.insertWeatherDataShortTermLive(list);
+    console.log('success', rows);
+    return new Promise((resolve, reject) => {
+      resolve();
+    });
+  } catch (e) {
+    console.log('error ', e);
+  }
+};
 
 /* 이거를 crontab으로 할지   */
 settingWeatherData = async () => {
@@ -536,6 +573,7 @@ settingWeatherData = async () => {
       for (const item of convertList) {
         await insertWeatherData(item.x, item.y);
         await insertWeatherDataShortTerm(item.x, item.y);
+        await insertWeatherDataShortTermLive(item.x, item.y);
       }
     } else {
       console.log('error');
@@ -551,6 +589,7 @@ settingWeatherData = async () => {
       if (minutes === 0 && second === 0) {
         //매 정시
         defaultLocationList.map((item) => {
+          insertWeatherDataShortTermLive(item.nx, item.ny);
           insertWeatherDataShortTerm(item.nx, item.ny);
           insertWeatherData(item.nx, item.ny);
         });

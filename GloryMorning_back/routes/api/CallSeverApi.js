@@ -13,22 +13,30 @@ module.exports = function (callee) {
       maxRedirects: 10
     };
     const PORT = '3500';
-    const BASE_PATH = '/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?';
+
+    //const BASE_PATH = '/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?';
+    //VilageFcstInfoService/getVilageFcst
+    const BASE_PATH = '/1360000/VilageFcstInfoService/getVilageFcst?';
+    // const BASE_PATH_SHORT_TERM =
+    //   '/service/SecndSrtpdFrcstInfoService2/ForecastTimeData?';
     const BASE_PATH_SHORT_TERM =
-      '/service/SecndSrtpdFrcstInfoService2/ForecastTimeData?';
+      '/1360000/VilageFcstInfoService/getUltraSrtFcst?';
+    const BASE_PATH_SHORT_TERM_LIVE =
+      '/1360000/VilageFcstInfoService/getUltraSrtNcst?';
     const BASE_PATH_GET_DUST_INFO =
       '/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?';
     const BASE_PATH_NEAR_STATION =
       '/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?';
-
     const BASE_PATH_RIST_SET =
       '/B090041/openapi/service/RiseSetInfoService/getAreaRiseSetInfo?';
     const BASE_PATH_PIXABAY = '/api/?';
+
     var HOST = null;
     (function () {
       switch (callee) {
         case 'weather':
-          HOST = 'http://newsky2.kma.go.kr';
+          //HOST = 'http://newsky2.kma.go.kr';
+          HOST = 'http://apis.data.go.kr';
           break;
         case 'dust':
           HOST = 'http://openapi.airkorea.or.kr';
@@ -123,7 +131,7 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          _type: type
+          dataType: type
         });
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
@@ -133,6 +141,7 @@ module.exports = function (callee) {
           statusCodeErrorHandler(res.statusCode, callback, result);
         });
       },
+      //http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst
       weatherAsync: async (
         base_date,
         base_time,
@@ -140,6 +149,7 @@ module.exports = function (callee) {
         ny,
         type,
         shortTermYn,
+        shortTermLiveYn,
         callback
       ) => {
         const request = require('request');
@@ -147,7 +157,10 @@ module.exports = function (callee) {
         //console.log("shortTermYn " , (shortTermYn) )
         if (shortTermYn === 'true' || shortTermYn) {
           console.log('tq');
-          OPTIONS.url = HOST + BASE_PATH_SHORT_TERM;
+          let path = shortTermLiveYn
+            ? BASE_PATH_SHORT_TERM_LIVE
+            : BASE_PATH_SHORT_TERM;
+          OPTIONS.url = HOST + path;
         } else {
           OPTIONS.url = HOST + BASE_PATH;
         }
@@ -164,12 +177,12 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          _type: type
+          dataType: type
         });
         console.log('base_date ', base_date, ' base_time', base_time);
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
-        //console.log(OPTIONS)
+        console.log('options ', OPTIONS);
 
         //async를 위해 request 함수 선언
         function doRequest() {
