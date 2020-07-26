@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const userRedis = require('../../model/redis/redisDao');
-const userDao = require('../../model/mysql/userDao');
+const userDao = require('../../model/mysql/UserDao');
 statusCodeErrorHandlerAsync = (statusCode, data, noNeedParse) => {
   try {
     if (noNeedParse) {
