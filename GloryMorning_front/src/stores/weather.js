@@ -868,7 +868,7 @@ export default class WeatherStore {
     try {
       //오류날 경우 반복 요청해야하나?
       const res = await axios.get(
-        'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?',
+        'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json',
         {
           params: {
             // query string
@@ -879,7 +879,7 @@ export default class WeatherStore {
           },
           headers: {
             // 요청 헤더
-            Authorization: clientConfig.apiKeys.kakaoApiKey,
+            Authorization: 'KakaoAK ' + process.env.REACT_APP_KAKAO_API_KEY,
           },
           timeout: 3000, // 3초 이내에 응답이 오지 않으면 에러로 간주
         },

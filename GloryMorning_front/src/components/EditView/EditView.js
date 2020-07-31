@@ -30,7 +30,7 @@ class EditView extends Component {
       updateWeatherDataIntevalStart,
     } = this.props;
     //nowGeolocation();
-    alert('componentDidMount');
+    //alert('componentDidMount');
     loadPage();
     setSocketConnection();
     updateWeatherDataIntevalStart();
