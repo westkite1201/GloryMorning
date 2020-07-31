@@ -26,11 +26,11 @@ let storage = multer.diskStorage({
     const store_file_name = file.originalname;
     // const store_file_name = file.originalname + '_' + test_reg_date;
     cb(null, store_file_name);
-  },
+  }
 });
 
 let upload = multer({
-  storage: storage,
+  storage: storage
 }).array('files', 10);
 
 router.post('/uploadFiles', async (req, res, next) => {
@@ -40,12 +40,12 @@ router.post('/uploadFiles', async (req, res, next) => {
         return res.json({
           code: 400,
           message: 'file upload error',
-          error: err,
+          error: err
         });
       } else {
         return res.json({
           code: 100,
-          message: 'file save complete',
+          message: 'file save complete'
         });
       }
     });
@@ -54,7 +54,7 @@ router.post('/uploadFiles', async (req, res, next) => {
     res.json({
       code: 400,
       message: 'file upload error',
-      error: error,
+      error: error
     });
   }
 });
@@ -132,7 +132,7 @@ async function destFilePathCheck(req) {
     return res.json({
       code: 400,
       message: 'destFilePathCheck Error',
-      error: error,
+      error: error
     });
   }
 }
@@ -158,7 +158,7 @@ router.get('/file-downloads', (req, res) => {
     return res.json({
       code: 400,
       message: 'file download 에러',
-      error: error,
+      error: error
     });
   }
 });
@@ -192,14 +192,36 @@ router.post('/getImageFilePath', function (req, res) {
       code: 200,
       message: 'success',
       data: {
-        files: files,
-      },
+        files: files
+      }
     });
   } catch (e) {
     console.log('error ', e);
   }
 });
 
+//test
+router.post('/getImageDownloadToUrl', function (req, res) {
+  var fs = require('fs'),
+    request = require('request');
+
+  var download = function (uri, filename, callback) {
+    request.head(uri, function (err, res, body) {
+      console.log('content-type:', res.headers['content-type']);
+      console.log('content-length:', res.headers['content-length']);
+
+      request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+  };
+
+  download(
+    'https://www.google.com/images/srpr/logo3w.png',
+    'google.png',
+    function () {
+      console.log('done');
+    }
+  );
+});
 //els 연동시
 //elasticsearchFileDataUpdate
 // // 일지 등록시 파일 저장 이후 elasticsearch 저장

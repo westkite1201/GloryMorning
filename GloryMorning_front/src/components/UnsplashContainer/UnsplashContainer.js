@@ -10,7 +10,7 @@ import FileUploadForm from './FileUploadForm';
 
 const PER_PAGE = 30;
 
-const UnsplashContainer = ({ setPhoto }) => {
+const UnsplashContainer = () => {
   const currentQuery = useRef('');
   const currentPage = useRef(1);
   const totalPage = useRef(0);
@@ -20,7 +20,7 @@ const UnsplashContainer = ({ setPhoto }) => {
 
   const [images, setImages] = useState([]);
   const [selected, setSelected] = useState(null);
-
+  const [photo, setPhoto] = useState(null);
   const rootRef = useRef(null);
   const targetRef = useRef(null);
 
@@ -105,25 +105,24 @@ const UnsplashContainer = ({ setPhoto }) => {
     }
   }
 
-  const downloadImage = useCallback(
-    async photo => {
-      try {
-        setLoading(true);
-        //const blob = await downloadPhoto(photo.urls.regular);
-        const blob = await UnsplashAPI.getImage(
-          photo.urls.regular,
-          photo.alt_description,
-        );
-        setPhoto(blob);
-        setSelected(photo.id);
-      } catch (e) {
-        setError(e);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [setError, setPhoto],
-  );
+  const downloadImage = useCallback(async () => {
+    try {
+      alert('downloadImage');
+      console.log(photo);
+      setLoading(true);
+      //const blob = await downloadPhoto(photo.urls.regular);
+      const blob = await UnsplashAPI.getImage(
+        photo.urls.regular,
+        photo.alt_description,
+      );
+      setPhoto(blob);
+      setSelected(photo.id);
+    } catch (e) {
+      setError(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [setError, setPhoto, photo]);
 
   // useIntersectionObserver({
   //   root: rootRef.current,
@@ -139,6 +138,12 @@ const UnsplashContainer = ({ setPhoto }) => {
   //     }
   //   },
   // });
+
+  const handleSelect = photo => {
+    console.log(photo);
+    setPhoto(photo);
+    setSelected(photo.id);
+  };
 
   useEffect(() => {
     let observer;
@@ -160,11 +165,14 @@ const UnsplashContainer = ({ setPhoto }) => {
   return (
     <div style={{ marginTop: '50px' }}>
       {/*<FileUploadForm />*/}
-
-      <SearchForm onSearch={searchImage} onRandom={loadRandomImage} />
+      <SearchForm
+        onSearch={searchImage}
+        onRandom={loadRandomImage}
+        downloadImage={downloadImage}
+      />
       <ScrollContainer height={400} vertical ref={rootRef}>
         <ThumbnailList
-          onClick={downloadImage}
+          onClick={handleSelect}
           selected={selected}
           thumbnails={images}
         />
