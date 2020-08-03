@@ -162,13 +162,29 @@ const UnsplashContainer = () => {
     }
   };
 
+  const uploadSelectedImage = async () => {
+    console.log('photo', photo.urls.regular);
+    try {
+      if (photo) {
+        let params = {
+          url: photo.urls.regular,
+          id: photo.id,
+        };
+        let res = await UnsplashAPI.getImageDownloadToUrl(params);
+        console.log(res);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <div style={{ marginTop: '50px' }}>
-      {/*<FileUploadForm />*/}
+      {<FileUploadForm />}
       <SearchForm
         onSearch={searchImage}
         onRandom={loadRandomImage}
         downloadImage={downloadImage}
+        uploadSelectedImage={uploadSelectedImage}
       />
       <ScrollContainer height={400} vertical ref={rootRef}>
         <ThumbnailList

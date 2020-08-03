@@ -163,7 +163,7 @@ const getWeatherData = async (parameter) => {
     const nx = parameter.nx;
     const ny = parameter.ny;
     const category = parameter.category;
-    console.log('#################', nx, ny, category);
+    //console.log('#################', nx, ny, category);
     const connection = await dbHelpers.pool.getConnection(async (conn) => conn);
     try {
       let sql = '';
@@ -246,7 +246,7 @@ const getWeatherDataShortTerm = async (parameter) => {
 /* 현재 성공 함 */
 /* WEATHER DATA REPLACE  */
 const insertWeatherData = async (parameter) => {
-  console.log('dao insertWeatherData start ');
+  //console.log('dao insertWeatherData start ');
   let list = parameter;
   try {
     const connection = await dbHelpers.pool.getConnection(async (conn) => conn);
@@ -264,7 +264,7 @@ const insertWeatherData = async (parameter) => {
       await connection.commit(); // COMMIT
       connection.release();
       return new Promise((resolve, reject) => {
-        console.log('return promise');
+        //console.log('return promise');
         resolve(rows);
       });
     } catch (err) {
@@ -282,7 +282,7 @@ const insertWeatherData = async (parameter) => {
 };
 const insertWeatherDataShortTermLive = async (parameter) => {
   let list = parameter;
-  console.log('list ', list);
+  //console.log('list ', list);
   try {
     const connection = await dbHelpers.pool.getConnection(async (conn) => conn);
     try {
@@ -308,7 +308,7 @@ const insertWeatherDataShortTermLive = async (parameter) => {
 
 const insertWeatherDataShortTerm = async (parameter) => {
   let list = parameter;
-  console.log('list ', list);
+  //console.log('list ', list);
   try {
     const connection = await dbHelpers.pool.getConnection(async (conn) => conn);
     try {

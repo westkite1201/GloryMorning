@@ -1,4 +1,6 @@
 import axios from 'axios';
+import cilentConfig from '../../configuration/clientConfig';
+
 import objectToQueryString from '../objectToQueryString';
 
 const instance = axios.create({
@@ -13,14 +15,14 @@ export const getRandomPhotos = params =>
     .get(`/photos/random?${objectToQueryString(params)}`)
     .then(res => res.data);
 
-export const searchPhotos = params => {
+export const searchPhotos = async params => {
   console.log('searchPhotos ', params);
   return instance
     .get(`/search/photos?${objectToQueryString(params)}`)
     .then(res => res.data);
 };
 
-export const getImage = (url, name) => {
+export const getImage = async (url, name) => {
   return axios
     .get(url, {
       responseType: 'blob',
@@ -31,4 +33,16 @@ export const getImage = (url, name) => {
         FileSaver.saveAs(new Blob([response.data]), `${name}.png`);
       }
     });
+};
+
+export const getImageDownloadToUrl = async params => {
+  return axios
+    .get(
+      `${
+        cilentConfig.endpoint.api
+      }/file/getImageDownloadToUrl/${encodeURIComponent(params.url)}/${
+        params.id
+      }/testUser`,
+    )
+    .then(res => res.data);
 };

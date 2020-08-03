@@ -201,26 +201,45 @@ router.post('/getImageFilePath', function (req, res) {
 });
 
 //test
-router.post('/getImageDownloadToUrl', function (req, res) {
-  var fs = require('fs'),
+router.get('/getImageDownloadToUrl/:url/:id/:userId', async function (
+  req,
+  res
+) {
+  let fs = require('fs'),
     request = require('request');
 
-  var download = function (uri, filename, callback) {
-    request.head(uri, function (err, res, body) {
-      console.log('content-type:', res.headers['content-type']);
-      console.log('content-length:', res.headers['content-length']);
+  let url = req.params.url;
+  let path =
+    FILE_ROOT_DIR +
+    FILE_FORDER_PATH +
+    req.params.userId +
+    '/' +
+    req.params.id +
+    '.jpg';
+  // console.log('url', url);
+  // console.log('path ', path);
+  try {
+    let download = function (url, path, callback) {
+      request.head(url, function (err, res, body) {
+        // console.log('content-type:', res.headers['content-type']);
+        // console.log('content-length:', res.headers['content-length']);
+        request(url).pipe(fs.createWriteStream(path)).on('close', callback);
+      });
+    };
 
-      request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-    });
-  };
-
-  download(
-    'https://www.google.com/images/srpr/logo3w.png',
-    'google.png',
-    function () {
+    download(url, path, function () {
       console.log('done');
-    }
-  );
+      res.json({
+        message: 'success',
+        status: '200'
+      });
+    });
+  } catch (e) {
+    res.json({
+      message: 'error' + e,
+      status: '400'
+    });
+  }
 });
 //els 연동시
 //elasticsearchFileDataUpdate

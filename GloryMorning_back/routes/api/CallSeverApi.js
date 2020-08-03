@@ -156,7 +156,7 @@ module.exports = function (callee) {
         const querystring = require('querystring');
         //console.log("shortTermYn " , (shortTermYn) )
         if (shortTermYn === 'true' || shortTermYn) {
-          console.log('tq');
+          //console.log('tq');
           let path = shortTermLiveYn
             ? BASE_PATH_SHORT_TERM_LIVE
             : BASE_PATH_SHORT_TERM;
@@ -165,7 +165,7 @@ module.exports = function (callee) {
           OPTIONS.url = HOST + BASE_PATH;
         }
 
-        console.log('#################!!!!!!!!!!!! nx,ny', nx, ny);
+        //console.log('#################!!!!!!!!!!!! nx,ny', nx, ny);
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
         //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
@@ -182,7 +182,7 @@ module.exports = function (callee) {
         console.log('base_date ', base_date, ' base_time', base_time);
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
-        console.log('options ', OPTIONS);
+        //console.log('options ', OPTIONS);
 
         //async를 위해 request 함수 선언
         function doRequest() {

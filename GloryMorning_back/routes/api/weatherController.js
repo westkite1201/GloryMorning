@@ -375,7 +375,7 @@ router.post('/getWeatherData', async (req, res) => {
     let rows = await weatherDaoNew.getWeatherData(data); // LOCATION 정보 XX,YY
     if (rows && rows.length !== 0) {
       //온경우
-      console.log('return data ', rows);
+      //console.log('return data ', rows);
       return res.json(rows);
     } else {
       let insertYn = await insertWeatherData(data.nx, data.ny);
@@ -429,7 +429,7 @@ router.post('/getWeatherDataPrivateMode', async (req, res) => {
 });
 
 insertWeatherData = async (nx, ny) => {
-  console.log('hello insertWeatherData');
+  //console.log('hello insertWeatherData');
   getNowTime();
   //nx, ny는 디비에서 가져오기
   //base_date오늘 날짜
@@ -439,7 +439,7 @@ insertWeatherData = async (nx, ny) => {
   base_time = newtime;
   type = 'json';
   shortTermYn = false;
-  console.log('nx ', nx, ' ny ', ny);
+  //console.log('nx ', nx, ' ny ', ny);
   //nx =60, ny =125
   try {
     let result = await CallSeverApi.weatherAsync(
@@ -465,7 +465,7 @@ insertWeatherData = async (nx, ny) => {
     });
     //console.log("list", list);
     let rows = await weatherDaoNew.insertWeatherData(list);
-    console.log('weatherDaoNew insertWeatherData ', rows);
+    //console.log('weatherDaoNew insertWeatherData ', rows);
     return new Promise((resolve, reject) => {
       resolve({ message: 'success', status: 200 });
     });
@@ -510,7 +510,7 @@ insertWeatherDataShortTerm = async (nx, ny) => {
     });
 
     let rows = await weatherDaoNew.insertWeatherDataShortTerm(list);
-    console.log('success', rows);
+    //console.log('success', rows);
     return new Promise((resolve, reject) => {
       resolve();
     });
@@ -519,7 +519,7 @@ insertWeatherDataShortTerm = async (nx, ny) => {
   }
 };
 insertWeatherDataShortTermLive = async (nx, ny) => {
-  console.log('insertWeatherDataShortTermLive!');
+  //console.log('insertWeatherDataShortTermLive!');
   getNowTimeForShortTerm();
   //nx, ny는 디비에서 가져오기
   //base_date오늘 날짜
@@ -547,7 +547,7 @@ insertWeatherDataShortTermLive = async (nx, ny) => {
     });
 
     let rows = await weatherDaoNew.insertWeatherDataShortTermLive(list);
-    console.log('success', rows);
+    //console.log('success', rows);
     return new Promise((resolve, reject) => {
       resolve();
     });

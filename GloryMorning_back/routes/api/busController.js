@@ -78,7 +78,7 @@ router.post('/setUserBackground', async (req, res) => {
       userId: userId,
       backgroundURL: backgroundURL
     });
-    console.log('sssss');
+
     return res.json({
       message: 'success',
       api: 'setUserComponents',
