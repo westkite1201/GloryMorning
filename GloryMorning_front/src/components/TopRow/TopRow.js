@@ -18,10 +18,10 @@ const TopRow = observer(() => {
     setIsGrow(true);
   }
   function handleMouseLeave() {
-    setIsGrow(false);
+    setIsGrow(true);
   }
   function switchView(pageName) {
-    alert('switchView');
+    //alert('switchView');
     edit.setPageName(pageName);
     edit.loadPage();
   }
@@ -58,14 +58,16 @@ const TopRow = observer(() => {
             <Button onClick={edit.handleSavePage}>컴포넌트 저장</Button>
           )}
         </div>
-        <div onClick={() => switchView('home')} name="home">
-          home
-        </div>
-        <div onClick={() => switchView('test1')} name="test1">
-          test1
-        </div>
-        <div onClick={() => switchView('test2')} name="test2">
-          test2
+        <div className="tob-row-tab-button">
+          <div onClick={() => switchView('home')} name="home">
+            HOME
+          </div>
+          <div onClick={() => switchView('test1')} name="test1">
+            TEST1
+          </div>
+          <div onClick={() => switchView('test2')} name="test2">
+            TEST2
+          </div>
         </div>
 
         <div>

@@ -187,7 +187,7 @@ router.post('/getImageFilePath', function (req, res) {
   const store_dir = FILE_ROOT_DIR + FILE_FORDER_PATH + req.body.user_id;
   try {
     let files = fs.readdirSync(store_dir); // 디렉토리를 읽어온다
-    console.log(' files', files);
+    //console.log(' files', files);
     return res.json({
       code: 200,
       message: 'success',
