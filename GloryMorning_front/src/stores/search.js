@@ -56,7 +56,6 @@ export default class SearchStore {
     try {
       const res = await searchApi.settingLocation(this.selectedAddressList);
       if (res.status === 200) {
-          
         toast.success('🦄 야호 저장에 성공하였습니다!', {
           position: 'top-center',
           autoClose: 1500,
@@ -65,7 +64,7 @@ export default class SearchStore {
           pauseOnHover: true,
           draggable: true,
         });
-      
+
         console.log('[SEO][settingLocation] = ', res.data);
         this.selectedAddressList = res.data.map(item => {
           return {
@@ -81,7 +80,7 @@ export default class SearchStore {
         );
       }
     } catch (e) {
-      alert("settingLocation 실패 error = ",  e);
+      alert('settingLocation 실패 error = ', e);
     }
   };
 
@@ -108,7 +107,7 @@ export default class SearchStore {
       //오류날 경우 반복 요청해야하나?
       const res = await searchApi.searchAddress(query);
       if (res.status === 200) {
-        console.log('[SEO ] = ', res.data.documents);
+        console.log('[SEO] = ', res.data.documents);
         this.searchAddressList = res.data.documents;
       }
     } catch (e) {}

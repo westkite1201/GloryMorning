@@ -18,7 +18,7 @@ const TopRow = observer(() => {
     setIsGrow(true);
   }
   function handleMouseLeave() {
-    setIsGrow(true);
+    setIsGrow(false);
   }
   function switchView(pageName) {
     //alert('switchView');
@@ -32,8 +32,13 @@ const TopRow = observer(() => {
     //backGroundColor: isGrow ? 'white' : '',
   });
 
-  console.log('[SEO] locationFlagView ', edit.locationFlagView);
+  // console.log(
+  //   '[SEO] locationFlagView ',
+  //   edit.locationFlagView,
+  //   edit.editPageFlag,
+  // );
   let topRowClassName = edit.editPageFlag ? 'top-row-hide' : 'top-row';
+  //console.log('[seo] topRowClassName', topRowClassName);
   return (
     <React.Fragment>
       <div

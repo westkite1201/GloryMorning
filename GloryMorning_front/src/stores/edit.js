@@ -185,12 +185,12 @@ export default class EditStore {
   (단, 컴포넌트의 root div에 wrapperid  + _c 가 id 로 잡혀있는 경우만 해당)
   */
   handleResizeChildComponent = (allChild, target) => {
-    // console.log(
-    //   'handleResizeChildComponent ,allChild',
-    //   allChild,
-    //   ' target ',
-    //   target.i,
-    // );
+    console.log(
+      '[seo] handleResizeChildComponent ,allChild',
+      allChild,
+      ' target ',
+      target.i,
+    );
     let rect = document.getElementById(target.i).getBoundingClientRect();
 
     let targetDiv = document.getElementById(target.i + '_c');

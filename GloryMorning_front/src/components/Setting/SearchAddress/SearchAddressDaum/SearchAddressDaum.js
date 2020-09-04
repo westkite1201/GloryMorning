@@ -23,7 +23,7 @@ const SearchAddressDaum = observer(() => {
       }
       fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
     }
-    console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    console.log('[seo]', fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
     search.searchAddress(fullAddress);
   };
   let searchItems = search.searchAddressList.map((item, key) => {
@@ -34,9 +34,7 @@ const SearchAddressDaum = observer(() => {
 
   return (
     <Fragment>
-      <div style ={{marginTop:'50px'}}> 
-
-      </div>
+      <div style={{ marginTop: '50px' }}></div>
       <DaumPostcode onComplete={handleComplete} />
       <Grid container spacing={3}>
         <Grid item xs={6}>
@@ -49,8 +47,8 @@ const SearchAddressDaum = observer(() => {
             <SearchSelected locationSettingMode={true} />
           </div>
         </Grid>
+        <button onClick={search.settingLocation}> settingLocation </button>
       </Grid>
-      <button onClick={search.settingLocation}> settingLocation </button>
     </Fragment>
   );
 });

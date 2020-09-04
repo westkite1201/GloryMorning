@@ -65,7 +65,7 @@ const dashboardRoutes = [
     component: App,
   },
   {
-    sideView: true,
+    sideView: false,
     //exact : true,
     path: '/setting',
     sidebarName: 'setting',
@@ -83,7 +83,7 @@ const dashboardRoutes = [
     component: WisdomQuotes,
   },
   {
-    sideView: true,
+    sideView: false,
     //exact : true,
     path: '/Rain',
     sidebarName: 'Rain',

@@ -54,8 +54,9 @@ class EditView extends Component {
     let { allChartResizing } = this.props;
     allChartResizing();
   }
+
   render() {
-    console.log('editview render');
+    console.log('[seo] editview render');
     let {
       layout,
       onLayoutChange,
@@ -65,6 +66,7 @@ class EditView extends Component {
       selectedBackgroundUrl,
       useBackgroundURL,
       backgroundColor,
+      editPageFlag,
     } = this.props;
     // let layout = [
     //         {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
@@ -72,7 +74,7 @@ class EditView extends Component {
     //         {i: 'c', x: 4, y: 0, w: 1, h: 2}
     //       ];
     //       console.log('layout ' , layout)
-
+    console.log('editPageFlag', editPageFlag);
     console.log('[SEO] backgroundUrl', backgroundUrl, selectedBackgroundUrl);
     let background = selectedBackgroundUrl
       ? selectedBackgroundUrl
@@ -115,7 +117,7 @@ export default inject(({ edit, setting, weather }) => ({
   index: edit.index,
   layout: edit.layout,
   page_number: edit.page_number,
-
+  editPageFlag: edit.editPageFlag,
   loadPage: edit.loadPage,
   onLayoutChange: edit.onLayoutChange,
   setLayout: edit.setLayout,
