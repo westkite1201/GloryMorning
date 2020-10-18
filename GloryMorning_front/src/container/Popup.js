@@ -1,86 +1,119 @@
-/*global kakao*/
-import React from 'react';
+/*global kakao */
+import React, { useEffect } from 'react';
+import './popup.scss';
+export default function Map() {
+  useEffect(() => {
+    mapscript();
+  }, []);
 
-class PopUp extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  map;
-  markers = [];
-  infowindows = [];
-  componentDidMount() {
-    var container = document.getElementById('myMap'); //지도를 담을 영역의 DOM 레퍼런스
-    var options = {
-      //지도를 생성할 때 필요한 기본 옵션
-      center: new kakao.maps.LatLng(35.157588, 129.058822), //지도의 중심좌표.
-      level: 4, //지도의 레벨(확대, 축소 정도)
+  const mapscript = () => {
+    let container = document.getElementById('map');
+    let options = {
+      center: new kakao.maps.LatLng(37.624915253753194, 127.15122688059974),
+      level: 5,
     };
+    //map
+    const map = new kakao.maps.Map(container, options);
 
-    this.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-
-    // 좌표-주소로 변환 도와줄
-    // geocoder 라이브러리
-    const geocoder = new kakao.maps.services.Geocoder();
-
-    // mousedown 이벤트 맵에 등록
-    this.kakao.event.addListener(this.map, 'mousedown', mouseEvent => {
-      this.removeMarker();
-      //geocoder 라이브러리 addressSearch 메서드 사용
-      console.log(mouseEvent);
-      geocoder.coord2Address(
-        mouseEvent.latLng.getLng(),
-        mouseEvent.latLng.getLat(),
-        async (result, status) => {
-          let address = '';
-          if (result.length >= 1) {
-            if (
-              result[0].road_address != null &&
-              result[0].road_address != undefined
-            ) {
-              address = result[0].road_address.address_name;
-            } else {
-              if (result[0].address != null && result[0].address != undefined) {
-                address = result[0].address.address_name;
-              } else {
-                address = '주소 정보 없음';
-              }
-            }
-          } else {
-            if (result.length >= 1) {
-              if (
-                result.road_address != null &&
-                result.road_address != undefined
-              ) {
-                address = result.road_address.address_name;
-              } else {
-                if (result.address != null && result.address != undefined) {
-                  address = result.address.address_name;
-                } else {
-                  address = '주소 정보 없음';
-                }
-              }
-            }
-          }
-          console.log(address);
-          if (status === kakao.maps.services.Status.OK) {
-            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-            console.log(coords);
-            this.setState({
-              customAddressTitle: '',
-              customAddress: result[0].road_address.address_name,
-            });
-            this.addMarker(mouseEvent.latLng);
-          }
-        },
-      );
-    });
-  }
-  render() {
-    return (
-      <div className="popup">
-        <div id="myMap" style={{ width: '500px', height: '400px' }} />
-      </div>
+    //마커가 표시 될 위치
+    let markerPosition = new kakao.maps.LatLng(
+      37.62197524055062,
+      127.16017523675508,
     );
-  }
+
+    // 마커를 생성
+    // let marker = new kakao.maps.Marker({
+    //   position: markerPosition,
+    // });
+
+    // // 마커를 지도 위에 표시
+    // marker.setMap(map);
+
+    // 주소-좌표 변환 객체를 생성합니다
+    var geocoder = new kakao.maps.services.Geocoder();
+
+    var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
+      infowindow = new kakao.maps.InfoWindow({ zindex: 1 }); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+
+    // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+    searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+
+    // 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
+    kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+      searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          var detailAddr = !!result[0].road_address
+            ? '<div>도로명주소 : ' +
+              result[0].road_address.address_name +
+              '</div>'
+            : '';
+          detailAddr +=
+            '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+
+          var content =
+            '<div class="bAddr">' +
+            '<span class="title">법정동 주소정보</span>' +
+            detailAddr +
+            '</div>';
+
+          // 마커를 클릭한 위치에 표시합니다
+          marker.setPosition(mouseEvent.latLng);
+          marker.setMap(map);
+
+          // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+          infowindow.setContent(content);
+          infowindow.open(map, marker);
+        }
+      });
+    });
+
+    // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+    kakao.maps.event.addListener(map, 'idle', function() {
+      searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+    });
+
+    function searchAddrFromCoords(coords, callback) {
+      // 좌표로 행정동 주소 정보를 요청합니다
+      geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+    }
+
+    function searchDetailAddrFromCoords(coords, callback) {
+      // 좌표로 법정동 상세 주소 정보를 요청합니다
+      geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+    }
+
+    // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+    function displayCenterInfo(result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        var infoDiv = document.getElementById('centerAddr');
+
+        for (var i = 0; i < result.length; i++) {
+          // 행정동의 region_type 값은 'H' 이므로
+          if (result[i].region_type === 'H') {
+            infoDiv.innerHTML = result[i].address_name;
+            break;
+          }
+        }
+      }
+    }
+  };
+
+  return (
+    <div className="map_wrap">
+      <div
+        id="map"
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div className="hAddr">
+          <span className="title">지도중심기준 행정동 주소정보</span>
+          <span id="centerAddr"></span>
+        </div>
+      </div>
+    </div>
+  );
 }
-export default PopUp;

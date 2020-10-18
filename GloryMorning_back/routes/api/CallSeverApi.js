@@ -10,7 +10,7 @@ module.exports = function (callee) {
       method: 'GET',
       timeout: 10000,
       followRedirect: true,
-      maxRedirects: 10
+      maxRedirects: 10,
     };
     const PORT = '3500';
 
@@ -63,7 +63,7 @@ module.exports = function (callee) {
 
         let propertiesObject = querystring.stringify({
           q: query,
-          image_type: imageType
+          image_type: imageType,
         });
 
         OPTIONS.url += 'key=' + serviceKey;
@@ -109,7 +109,7 @@ module.exports = function (callee) {
         ny,
         type,
         shortTermYn,
-        callback
+        callback,
       ) {
         console.log('weather! 사용중 ');
         const request = require('request');
@@ -131,7 +131,7 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          dataType: type
+          dataType: type,
         });
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
@@ -150,7 +150,7 @@ module.exports = function (callee) {
         type,
         shortTermYn,
         shortTermLiveYn,
-        callback
+        callback,
       ) => {
         const request = require('request');
         const querystring = require('querystring');
@@ -177,7 +177,7 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          dataType: type
+          dataType: type,
         });
         console.log('base_date ', base_date, ' base_time', base_time);
         OPTIONS.url += 'ServiceKey=' + serviceKey;
@@ -236,7 +236,7 @@ module.exports = function (callee) {
         let propertiesObject = querystring.stringify({
           tmX: tmX,
           tmY: tmY,
-          _returnType: 'json'
+          _returnType: 'json',
         });
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
@@ -307,7 +307,7 @@ module.exports = function (callee) {
           pageNo: 1,
           numOfRows: 1,
           ver: 1.3,
-          _returnType: 'json'
+          _returnType: 'json',
         });
 
         propertiesObject = querystring.unescape(propertiesObject);
@@ -348,7 +348,7 @@ module.exports = function (callee) {
         let propertiesObject = querystring.stringify({
           location: location,
           locdate: locDate,
-          _type: 'json'
+          _type: 'json',
         });
 
         propertiesObject = querystring.unescape(propertiesObject);
@@ -381,7 +381,7 @@ module.exports = function (callee) {
 
         let res = await doRequest();
         return res;
-      }
+      },
     };
   }
   function statusCodeErrorHandler(statusCode, callback, data) {
