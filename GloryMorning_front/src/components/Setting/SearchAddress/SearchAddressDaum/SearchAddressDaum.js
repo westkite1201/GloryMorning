@@ -7,8 +7,6 @@ import SearchAddressItem from '../SearchAddressItem';
 import SearchSelected from '../SearchSelected';
 const SearchAddressDaum = observer(() => {
   const { search } = UseStores();
-  const [value, setValue] = useState('');
-
   const handleComplete = data => {
     let fullAddress = data.address;
     let extraAddress = '';

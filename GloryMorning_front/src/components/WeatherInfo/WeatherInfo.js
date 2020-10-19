@@ -27,7 +27,7 @@ class WeatherInfo extends Component {
       weatherInfoObject.weatherClassName + ' weather_icon';
     let weatherInfoName = weatherInfoObject.weatherInfoName;
     //console.log('weatherClassNames!!!!', weatherClassNames);
-
+    console.log('weatherInfoObject', weatherInfoObject);
     const override = `
     display: block;
     margin: 0 auto;

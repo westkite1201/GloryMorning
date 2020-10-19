@@ -1,11 +1,33 @@
 /*global kakao */
 import React, { useEffect } from 'react';
 import './popup.scss';
-export default function Map() {
+import { observer } from 'mobx-react';
+import UseStores from '../components/Setting/UseStores';
+import SearchAddressDaum from '../components/Setting/SearchAddress/SearchAddressDaum';
+let map;
+const Map = observer(() => {
+  const { search } = UseStores();
   useEffect(() => {
     mapscript();
   }, []);
 
+  function panTo(lat, lng) {
+    console.log('[seo] lat = ', lat, 'lng = ', lng);
+
+    // 이동할 위도 경도 위치를 생성합니다
+    var moveLatLon = new kakao.maps.LatLng(lat, lng);
+
+    // 지도 중심을 부드럽게 이동시킵니다
+    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    map.panTo(moveLatLon);
+  }
+  useEffect(() => {
+    console.log('[seo] selectedAddress', search.selectedAddress);
+    const { x, y } = search.selectedAddress;
+    let lat = parseFloat(y);
+    let lng = parseFloat(x);
+    if (lat && lng) panTo(lat, lng);
+  }, [search.selectedAddress]);
   const mapscript = () => {
     let container = document.getElementById('map');
     let options = {
@@ -13,7 +35,7 @@ export default function Map() {
       level: 5,
     };
     //map
-    const map = new kakao.maps.Map(container, options);
+    map = new kakao.maps.Map(container, options);
 
     //마커가 표시 될 위치
     let markerPosition = new kakao.maps.LatLng(
@@ -97,9 +119,26 @@ export default function Map() {
       }
     }
   };
+  // function setCenter() {
+  //   // 이동할 위도 경도 위치를 생성합니다
+  //   var moveLatLon = new kakao.maps.LatLng(33.452613, 126.570888);
+
+  //   // 지도 중심을 이동 시킵니다
+  //   map.setCenter(moveLatLon);
+  // }
+
+  // function panTo() {
+  //   // 이동할 위도 경도 위치를 생성합니다
+  //   var moveLatLon = new kakao.maps.LatLng(33.45058, 126.574942);
+
+  //   // 지도 중심을 부드럽게 이동시킵니다
+  //   // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+  //   map.panTo(moveLatLon);
+  // }
 
   return (
     <div className="map_wrap">
+      <SearchAddressDaum />
       <div
         id="map"
         style={{
@@ -116,4 +155,5 @@ export default function Map() {
       </div>
     </div>
   );
-}
+});
+export default Map;
