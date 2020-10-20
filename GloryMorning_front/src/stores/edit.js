@@ -46,7 +46,7 @@ export default class EditStore {
   };
   @action
   setRainRender = (value = true) => {
-    alert('ISRAINRender');
+    //alert('ISRAINRender');
     this.isRainRender = value;
   };
   @action
@@ -186,7 +186,7 @@ export default class EditStore {
   */
   handleResizeChildComponent = (allChild, target) => {
     console.log(
-      'handleResizeChildComponent ,allChild',
+      '[seo] handleResizeChildComponent ,allChild',
       allChild,
       ' target ',
       target.i,

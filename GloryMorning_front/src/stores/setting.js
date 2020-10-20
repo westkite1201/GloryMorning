@@ -46,6 +46,9 @@ export default class SettingStore {
 
   @observable useBackgroundURL = true;
   @observable backgroundColor = '#fff';
+
+  @observable whiteTheme = true;
+
   @action
   setUseThemeOrURL = () => {
     this.useBackgroundURL = !this.useBackgroundURL;
@@ -189,5 +192,11 @@ export default class SettingStore {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  @action
+  setTheme = value => {
+    this.whiteTheme = value;
+    window.localStorage.setItem(value);
   };
 }

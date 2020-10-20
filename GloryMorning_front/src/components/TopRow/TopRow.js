@@ -21,7 +21,7 @@ const TopRow = observer(() => {
     setIsGrow(false);
   }
   function switchView(pageName) {
-    alert('switchView');
+    //alert('switchView');
     edit.setPageName(pageName);
     edit.loadPage();
   }
@@ -32,8 +32,13 @@ const TopRow = observer(() => {
     //backGroundColor: isGrow ? 'white' : '',
   });
 
-  console.log('[SEO] locationFlagView ', edit.locationFlagView);
+  // console.log(
+  //   '[SEO] locationFlagView ',
+  //   edit.locationFlagView,
+  //   edit.editPageFlag,
+  // );
   let topRowClassName = edit.editPageFlag ? 'top-row-hide' : 'top-row';
+  //console.log('[seo] topRowClassName', topRowClassName);
   return (
     <React.Fragment>
       <div
@@ -58,14 +63,16 @@ const TopRow = observer(() => {
             <Button onClick={edit.handleSavePage}>컴포넌트 저장</Button>
           )}
         </div>
-        <div onClick={() => switchView('home')} name="home">
-          home
-        </div>
-        <div onClick={() => switchView('test1')} name="test1">
-          test1
-        </div>
-        <div onClick={() => switchView('test2')} name="test2">
-          test2
+        <div className="tob-row-tab-button">
+          <div onClick={() => switchView('home')} name="home">
+            HOME
+          </div>
+          <div onClick={() => switchView('test1')} name="test1">
+            TEST1
+          </div>
+          <div onClick={() => switchView('test2')} name="test2">
+            TEST2
+          </div>
         </div>
 
         <div>

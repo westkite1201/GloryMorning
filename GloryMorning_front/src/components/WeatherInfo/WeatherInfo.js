@@ -21,19 +21,21 @@ class WeatherInfo extends Component {
       LocationB,
       LocationC,
       justFitClothes,
+      whiteTheme,
     } = this.props;
     let weatherClassNames =
       weatherInfoObject.weatherClassName + ' weather_icon';
     let weatherInfoName = weatherInfoObject.weatherInfoName;
-    console.log('weatherClassNames!!!!', weatherClassNames);
-
+    //console.log('weatherClassNames!!!!', weatherClassNames);
+    console.log('weatherInfoObject', weatherInfoObject);
     const override = `
     display: block;
     margin: 0 auto;
     border-color: red;
 `;
+
     return (
-      <div className="weather_wrapper">
+      <div className="weather_wrapper" style={{ color: 'black' }}>
         {isFetchingShortTerm ? (
           <ScaleLoader
             css={override}
@@ -56,7 +58,7 @@ class WeatherInfo extends Component {
               <div className="weather-info-name">{weatherInfoName}</div>
             </div>
 
-            <div className="temperture">
+            <div className="temperture" style={{ color: 'black' }}>
               {weatherInfoObject.temperatureNow}
               <i className="wi wi-celsius"></i>
             </div>
@@ -98,7 +100,7 @@ class WeatherInfo extends Component {
     );
   }
 }
-export default inject(({ weather }) => ({
+export default inject(({ weather, edit }) => ({
   LocationA: weather.LocationA,
   LocationB: weather.LocationB,
   LocationC: weather.LocationC,
@@ -111,4 +113,6 @@ export default inject(({ weather }) => ({
   isFetchingShortTerm: weather.isFetchingShortTerm,
 
   justFitClothes: weather.justFitClothes,
+
+  fontColor: edit.fontColor,
 }))(observer(WeatherInfo));

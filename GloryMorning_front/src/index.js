@@ -5,7 +5,7 @@ import './index.css';
 import './Loading.css';
 import Root from './client/Root';
 import RootStore from './stores';
-
+import 'antd/dist/antd.css';
 const root = new RootStore(); // *** 루트 스토어 생성
 
 ReactDOM.render(

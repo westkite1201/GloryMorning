@@ -10,25 +10,33 @@ module.exports = function (callee) {
       method: 'GET',
       timeout: 10000,
       followRedirect: true,
-      maxRedirects: 10
+      maxRedirects: 10,
     };
     const PORT = '3500';
-    const BASE_PATH = '/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?';
+
+    //const BASE_PATH = '/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?';
+    //VilageFcstInfoService/getVilageFcst
+    const BASE_PATH = '/1360000/VilageFcstInfoService/getVilageFcst?';
+    // const BASE_PATH_SHORT_TERM =
+    //   '/service/SecndSrtpdFrcstInfoService2/ForecastTimeData?';
     const BASE_PATH_SHORT_TERM =
-      '/service/SecndSrtpdFrcstInfoService2/ForecastTimeData?';
+      '/1360000/VilageFcstInfoService/getUltraSrtFcst?';
+    const BASE_PATH_SHORT_TERM_LIVE =
+      '/1360000/VilageFcstInfoService/getUltraSrtNcst?';
     const BASE_PATH_GET_DUST_INFO =
       '/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?';
     const BASE_PATH_NEAR_STATION =
       '/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?';
-
     const BASE_PATH_RIST_SET =
       '/B090041/openapi/service/RiseSetInfoService/getAreaRiseSetInfo?';
     const BASE_PATH_PIXABAY = '/api/?';
+
     var HOST = null;
     (function () {
       switch (callee) {
         case 'weather':
-          HOST = 'http://newsky2.kma.go.kr';
+          //HOST = 'http://newsky2.kma.go.kr';
+          HOST = 'http://apis.data.go.kr';
           break;
         case 'dust':
           HOST = 'http://openapi.airkorea.or.kr';
@@ -55,7 +63,7 @@ module.exports = function (callee) {
 
         let propertiesObject = querystring.stringify({
           q: query,
-          image_type: imageType
+          image_type: imageType,
         });
 
         OPTIONS.url += 'key=' + serviceKey;
@@ -101,7 +109,7 @@ module.exports = function (callee) {
         ny,
         type,
         shortTermYn,
-        callback
+        callback,
       ) {
         console.log('weather! 사용중 ');
         const request = require('request');
@@ -123,7 +131,7 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          _type: type
+          dataType: type,
         });
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
@@ -133,6 +141,7 @@ module.exports = function (callee) {
           statusCodeErrorHandler(res.statusCode, callback, result);
         });
       },
+      //http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst
       weatherAsync: async (
         base_date,
         base_time,
@@ -140,19 +149,23 @@ module.exports = function (callee) {
         ny,
         type,
         shortTermYn,
-        callback
+        shortTermLiveYn,
+        callback,
       ) => {
         const request = require('request');
         const querystring = require('querystring');
         //console.log("shortTermYn " , (shortTermYn) )
         if (shortTermYn === 'true' || shortTermYn) {
-          console.log('tq');
-          OPTIONS.url = HOST + BASE_PATH_SHORT_TERM;
+          //console.log('tq');
+          let path = shortTermLiveYn
+            ? BASE_PATH_SHORT_TERM_LIVE
+            : BASE_PATH_SHORT_TERM;
+          OPTIONS.url = HOST + path;
         } else {
           OPTIONS.url = HOST + BASE_PATH;
         }
 
-        console.log('#################!!!!!!!!!!!! nx,ny', nx, ny);
+        //console.log('#################!!!!!!!!!!!! nx,ny', nx, ny);
         //서비스 키에 요상한 값이 있어서 계속 안됌 그래서 그냥 붙히는 걸로 함 ^^;
         //공개 위험
         //let serviceKey = apiConfig.apiKey.datagoApiKey + '&';
@@ -164,12 +177,12 @@ module.exports = function (callee) {
           nx: nx,
           ny: ny,
           numOfRows: 175,
-          _type: type
+          dataType: type,
         });
         console.log('base_date ', base_date, ' base_time', base_time);
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
-        //console.log(OPTIONS)
+        //console.log('options ', OPTIONS);
 
         //async를 위해 request 함수 선언
         function doRequest() {
@@ -223,7 +236,7 @@ module.exports = function (callee) {
         let propertiesObject = querystring.stringify({
           tmX: tmX,
           tmY: tmY,
-          _returnType: 'json'
+          _returnType: 'json',
         });
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
@@ -294,7 +307,7 @@ module.exports = function (callee) {
           pageNo: 1,
           numOfRows: 1,
           ver: 1.3,
-          _returnType: 'json'
+          _returnType: 'json',
         });
 
         propertiesObject = querystring.unescape(propertiesObject);
@@ -335,7 +348,7 @@ module.exports = function (callee) {
         let propertiesObject = querystring.stringify({
           location: location,
           locdate: locDate,
-          _type: 'json'
+          _type: 'json',
         });
 
         propertiesObject = querystring.unescape(propertiesObject);
@@ -368,7 +381,7 @@ module.exports = function (callee) {
 
         let res = await doRequest();
         return res;
-      }
+      },
     };
   }
   function statusCodeErrorHandler(statusCode, callback, data) {

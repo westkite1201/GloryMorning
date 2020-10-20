@@ -3,26 +3,31 @@ import axios from 'axios';
 import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
-import { observer, inject } from 'mobx-react';
+import { observer } from 'mobx-react';
 import UseStores from '../../Setting/UseStores';
+import './FileUploadForm.scss';
 const USER_ID = 'testUser';
 const PATH = 'http://localhost:3031/api/file/';
-function ImageList({ filesPathList, setBackgroundUrl }) {
+function ImageList({ filesPathList, setBackgroundUrl, selectedBackgroundUrl }) {
   console.log(filesPathList);
   if (_.isEmpty(filesPathList)) {
     console.log('isEmpty ');
     return <div></div>;
   } else {
     let imageList = filesPathList.map((item, index) => {
-      console.log(item);
+      let url = PATH + 'image/' + USER_ID + '/' + item;
+      let className = url === selectedBackgroundUrl ? 'selected' : '';
+
       return (
         <Grid item xs={4} key={item}>
-          <div style={{ width: '200px', cursor: 'pointer' }}>
+          <div
+            style={{ width: '200px', height: '100px', cursor: 'pointer' }}
+            className={className}
+          >
             <img
-              src={PATH + 'image/' + USER_ID + '/' + item}
-              onClick={() =>
-                setBackgroundUrl(PATH + 'image/' + USER_ID + '/' + item)
-              }
+              alt="background"
+              src={url}
+              onClick={() => setBackgroundUrl(url)}
             ></img>
           </div>
         </Grid>
@@ -106,7 +111,7 @@ const FileUploadForm = observer(props => {
 
   return (
     <div>
-      <button onClick={getFileList}> 버튼 클릭 </button>
+      <button onClick={getFileList}> getFileList </button>
       <button onClick={setting.settingBackgroundURLRedis}>
         해당 백그라운드 저장
       </button>
@@ -134,6 +139,7 @@ const FileUploadForm = observer(props => {
           <ImageList
             filesPathList={filesPathList}
             setBackgroundUrl={setting.setBackgroundUrl}
+            selectedBackgroundUrl={setting.selectedBackgroundUrl}
           />
         </Grid>
       </div>

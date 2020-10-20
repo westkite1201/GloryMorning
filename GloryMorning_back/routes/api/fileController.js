@@ -26,11 +26,11 @@ let storage = multer.diskStorage({
     const store_file_name = file.originalname;
     // const store_file_name = file.originalname + '_' + test_reg_date;
     cb(null, store_file_name);
-  },
+  }
 });
 
 let upload = multer({
-  storage: storage,
+  storage: storage
 }).array('files', 10);
 
 router.post('/uploadFiles', async (req, res, next) => {
@@ -40,12 +40,12 @@ router.post('/uploadFiles', async (req, res, next) => {
         return res.json({
           code: 400,
           message: 'file upload error',
-          error: err,
+          error: err
         });
       } else {
         return res.json({
           code: 100,
-          message: 'file save complete',
+          message: 'file save complete'
         });
       }
     });
@@ -54,7 +54,7 @@ router.post('/uploadFiles', async (req, res, next) => {
     res.json({
       code: 400,
       message: 'file upload error',
-      error: error,
+      error: error
     });
   }
 });
@@ -132,7 +132,7 @@ async function destFilePathCheck(req) {
     return res.json({
       code: 400,
       message: 'destFilePathCheck Error',
-      error: error,
+      error: error
     });
   }
 }
@@ -158,7 +158,7 @@ router.get('/file-downloads', (req, res) => {
     return res.json({
       code: 400,
       message: 'file download 에러',
-      error: error,
+      error: error
     });
   }
 });
@@ -187,19 +187,60 @@ router.post('/getImageFilePath', function (req, res) {
   const store_dir = FILE_ROOT_DIR + FILE_FORDER_PATH + req.body.user_id;
   try {
     let files = fs.readdirSync(store_dir); // 디렉토리를 읽어온다
-    console.log(' files', files);
+    //console.log(' files', files);
     return res.json({
       code: 200,
       message: 'success',
       data: {
-        files: files,
-      },
+        files: files
+      }
     });
   } catch (e) {
     console.log('error ', e);
   }
 });
 
+//test
+router.get('/getImageDownloadToUrl/:url/:id/:userId', async function (
+  req,
+  res
+) {
+  let fs = require('fs'),
+    request = require('request');
+
+  let url = req.params.url;
+  let path =
+    FILE_ROOT_DIR +
+    FILE_FORDER_PATH +
+    req.params.userId +
+    '/' +
+    req.params.id +
+    '.jpg';
+  // console.log('url', url);
+  // console.log('path ', path);
+  try {
+    let download = function (url, path, callback) {
+      request.head(url, function (err, res, body) {
+        // console.log('content-type:', res.headers['content-type']);
+        // console.log('content-length:', res.headers['content-length']);
+        request(url).pipe(fs.createWriteStream(path)).on('close', callback);
+      });
+    };
+
+    download(url, path, function () {
+      console.log('done');
+      res.json({
+        message: 'success',
+        status: '200'
+      });
+    });
+  } catch (e) {
+    res.json({
+      message: 'error' + e,
+      status: '400'
+    });
+  }
+});
 //els 연동시
 //elasticsearchFileDataUpdate
 // // 일지 등록시 파일 저장 이후 elasticsearch 저장

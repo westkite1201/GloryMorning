@@ -1,5 +1,7 @@
 node_modules/
 /GloryMorning_back/config/auth/apiKeys.js
+/GloryMorning_back/config/auth/dbconfig.js
 /GloryMorning_front/src/configuration/
-
+/GloryMorning_front/.env
+/GloryMorning_back/.env
 ignore-file.txt
