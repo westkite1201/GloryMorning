@@ -41,7 +41,9 @@ var values = [
 const settingLocation = async (parameter) => {
   try {
     const settingLocationArray = parameter.settingLocationArray;
+    console.log('settingLocationArray ', settingLocationArray);
     let locationArray = [];
+
     for (let data of settingLocationArray) {
       let address_name = data.addressName;
       let address_type = data.addressType;
@@ -49,25 +51,130 @@ const settingLocation = async (parameter) => {
       let x = data.x;
       let y = data.y;
       let mem_idx = 1;
-      locationArray.push([address_name, address_type, x, y, mem_idx]);
+      let b_code = '';
+      let h_code = '';
+      let main_address_no = '';
+      let mountain_yn = '';
+      let region_1depth_name = '';
+      let region_2depth_name = '';
+      let region_3depth_h_name = '';
+      let region_3depth_name = '';
+      let sub_address_no = '';
+      //road 관련
+      let road_address_name = '';
+      let building_name = '';
+      let main_building_no = '';
+      let sub_building_no = '';
+      let underground_yn = '';
+      let zone_no = '';
+      if (data.address) {
+        b_code = data.address.b_code;
+        h_code = data.address.h_code;
+        main_address_no = data.address.main_address_no;
+        mountain_yn = data.address.mountain_yn;
+        region_1depth_name = data.address.region_1depth_name;
+        region_2depth_name = data.address.region_2depth_name;
+        region_3depth_h_name = data.address.region_3depth_h_name;
+        region_3depth_name = data.address.region_3depth_name;
+        sub_address_no = data.address.sub_address_no;
+      }
+      if (data.roadAddress) {
+        road_address_name = data.roadAddress.address_name;
+        building_name = data.roadAddress.building_name;
+        main_building_no = data.roadAddress.main_building_no;
+        sub_building_no = data.roadAddress.sub_building_no;
+        underground_yn = data.roadAddress.underground_yn;
+        zone_no = data.roadAddress.zone_no;
+      }
+      //locationArray.push([address_name, address_type, x, y, mem_idx]);
+      locationArray.push([
+        address_name,
+        x,
+        y,
+        mem_idx,
+        b_code,
+        h_code,
+        main_address_no,
+        mountain_yn,
+        region_1depth_name,
+        region_2depth_name,
+        region_3depth_h_name,
+        region_3depth_name,
+        sub_address_no,
+        //load. 관련
+        road_address_name,
+        building_name,
+        main_building_no,
+        sub_building_no,
+        underground_yn,
+        zone_no
+      ]);
     }
 
     console.log('settingLocationArray ', settingLocationArray);
     console.log('locationArray ', locationArray);
     const connection = await dbHelpers.pool.getConnection(async (conn) => conn);
-    let rows;
+    let locationRaw;
+    let data = [];
     try {
       if (locationArray && locationArray.length !== 0) {
         await connection.beginTransaction(); // START TRANSACTION
-        let res = await connection.query('DELETE FROM setting_location', [
+        let res = await connection.query('DELETE FROM LOCATION', [
           locationArray
         ]);
         console.log('delete res ');
         // /* Step 3. */
-        let sql = `REPLACE INTO setting_location(ADDRESS_NAME, ADDRESS_TYPE, X, Y, MEM_IDX)
-					   VALUES ?`;
+        let sql = `REPLACE INTO LOCATION(ADDRESS_NAME,
+          X,
+          Y,
+          MEM_IDX,
+          B_CODE,
+          H_CODE,
+          MAIN_ADDRESS_NO,
+          MOUNTAIN_YN,
+          REGION_1DEPTH_NAME,
+          REGION_2DEPTH_NAME,
+          REGION_3DEPTH_H_NAME,
+          REGION_3DEPTH_NAME,
+          SUB_ADDRESS_NO,
+          ROAD_ADDRESS_NAME,
+          BUILDING_NAME,
+          MAIN_BUILDING_NO,
+          SUB_BUILDING_NO,
+          UNDERGROUND_YN,
+          ZONE_NO) VALUES ?`;
         const [insertRow] = await connection.query(sql, [locationArray]);
-        [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);
+
+        [locationRaw] = await connection.query(`SELECT * FROM LOCATION`);
+
+        for (let rows of locationRaw) {
+          let locationItem = {
+            x: rows.X,
+            y: rows.Y,
+            mem_idx: rows.MEM_IDX,
+            address_name: rows.ADDRESS_NAME,
+            address: {
+              b_code: rows.B_CODE,
+              h_code: rows.H_CODE,
+              main_address_no: rows.MAIN_ADDRESS_NO,
+              mountain_yn: rows.MOUNTAIN_YN,
+              region_1depth_name: rows.REGION_1DEPTH_NAME,
+              region_2depth_name: rows.REGION_2DEPTH_NAME,
+              region_3depth_h_name: rows.REGION_3DEPTH_H_NAME,
+              region_3depth_name: rows.REGION_3DEPTH_NAME,
+              sub_address_no: rows.SUB_ADDRESS_NO
+            },
+            roadAddress: {
+              address_name: rows.ROAD_ADDRESS_NAME,
+              building_name: rows.BUILDING_NAME,
+              main_building_no: rows.MAIN_BUILDING_NO,
+              sub_building_no: rows.SUB_BUILDING_NO,
+              underground_yn: rows.UNDERGROUND_YN,
+              zone_no: rows.ZONE_NO
+            }
+          };
+          data.push(locationItem);
+        }
         // //await connection.beginTransaction(); // START TRANSACTION
         // //const [rows] = await connection.query(sql,[locationA, locationB, locationC]);
         // //const [rows] = await connection.query('INSERT INTO MEMBERS_INFO(ID, PW) VALUES(?, ?)', [ID, PW]);
@@ -75,7 +182,7 @@ const settingLocation = async (parameter) => {
         await connection.commit(); // COMMIT
       }
       connection.release();
-      return rows;
+      return data;
     } catch (err) {
       await connection.rollback(); // ROLLBACK
       connection.release();
@@ -93,12 +200,42 @@ const getSettingLocation = async () => {
   try {
     const connection = await dbHelpers.pool.getConnection(async (conn) => conn);
     try {
-      const [rows] = await connection.query(`SELECT * FROM SETTING_LOCATION`);
-      //console.log("[SEO] ROWS ", rows)
+      const [locationRaw] = await connection.query(`SELECT * FROM LOCATION`);
+
+      let data = [];
+      for (let rows of locationRaw) {
+        let locatonItem = {
+          x: rows.X,
+          y: rows.Y,
+          mem_idx: rows.MEM_IDX,
+          address_name: rows.ADDRESS_NAME,
+          address: {
+            b_code: rows.B_CODE,
+            h_code: rows.H_CODE,
+            main_address_no: rows.MAIN_ADDRESS_NO,
+            mountain_yn: rows.MOUNTAIN_YN,
+            region_1depth_name: rows.REGION_1DEPTH_NAME,
+            region_2depth_name: rows.REGION_2DEPTH_NAME,
+            region_3depth_h_name: rows.REGION_3DEPTH_H_NAME,
+            region_3depth_name: rows.REGION_3DEPTH_NAME,
+            sub_address_no: rows.SUB_ADDRESS_NO
+          },
+          roadAddress: {
+            address_name: rows.ROAD_ADDRESS_NAME,
+            building_name: rows.BUILDING_NAME,
+            main_building_no: rows.MAIN_BUILDING_NO,
+            sub_building_no: rows.SUB_BUILDING_NO,
+            underground_yn: rows.UNDERGROUND_YN,
+            zone_no: rows.ZONE_NO
+          }
+        };
+        data.push(locatonItem);
+      }
+
       await connection.commit(); // COMMIT
       connection.release();
 
-      return rows;
+      return data;
     } catch (err) {
       await connection.rollback(); // ROLLBACK
       connection.release();

@@ -8,6 +8,7 @@ import SearchSelected from '../SearchSelected';
 const SearchAddressDaum = observer(() => {
   const { search } = UseStores();
   const handleComplete = data => {
+    console.log('[seoyeon] data', data);
     let fullAddress = data.address;
     let extraAddress = '';
 

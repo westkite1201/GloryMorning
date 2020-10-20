@@ -18,11 +18,36 @@ export default class SearchStore {
   @observable selectedAddress = {
     addressName: '',
     address: null,
+    roadAddress: null,
     addressType: '',
     memIdx: null,
     x: '',
     y: '',
   };
+  // @observable selectedAddress = {
+  //   address_name: '',
+  //   address: null,
+  //   roadAddress: null,
+  //   b_code: '',
+  //   h_code: '',
+  //   main_address_no: '',
+  //   mountain_yn: '',
+  //   region_1depth_name: '',
+  //   region_2depth_name: '',
+  //   region_3depth_h_name: '',
+  //   region_3depth_name: '',
+  //   sub_address_no: '',
+  //   x: '',
+  //   y: '',
+  //   road_address_name: '',
+  //   address_name: '',
+  //   building_name: '',
+  //   main_building_no: '',
+  //   road_name: '',
+  //   sub_building_no: '',
+  //   underground_yn: '',
+  //   zone_no: '',
+  // };
 
   /* 선택된 로케이션으로 .현재 weather  */
   @action
@@ -52,7 +77,7 @@ export default class SearchStore {
   */
   @action
   settingLocation = async () => {
-    console.log('[SEO]  selectedAddressList', this.selectedAddressList);
+    console.log('[seoyeon]  selectedAddressList', this.selectedAddressList);
     try {
       const res = await searchApi.settingLocation(this.selectedAddressList);
       if (res.status === 200) {
@@ -68,12 +93,14 @@ export default class SearchStore {
         console.log('[SEO][settingLocation] = ', res.data);
         this.selectedAddressList = res.data.map(item => {
           return {
-            addressName: item.ADDRESS_NAME,
-            addressType: item.ADDRESS_TYPE,
-            x: item.X,
-            y: item.Y,
+            addressName: item.address_name,
+            x: item.x,
+            y: item.y,
+            address: item.address,
+            roadAddress: item.road_address,
           };
         });
+
         console.log(
           '[SEO][settingLocation] this.selectedAddressList ',
           this.selectedAddressList,
@@ -88,14 +115,16 @@ export default class SearchStore {
   @action
   getSettingLocation = async () => {
     const res = await searchApi.getSettingLocation();
+    console.log('[seoyeon] getSettingLocation ', res);
     if (res.status === 200) {
       this.selectedAddressList = res.data.map(item => {
         console.log('[SEO] getSettingLocation item', item);
         return {
-          addressName: item.ADDRESS_NAME,
-          addressType: item.ADDRESS_TYPE,
-          x: item.X,
-          y: item.Y,
+          addressName: item.address_name,
+          x: item.x,
+          y: item.y,
+          address: item.address,
+          roadAddress: item.road_address,
         };
       });
     }
@@ -107,7 +136,7 @@ export default class SearchStore {
       //오류날 경우 반복 요청해야하나?
       const res = await searchApi.searchAddress(query);
       if (res.status === 200) {
-        console.log('[SEO] = ', res.data.documents);
+        console.log('[seoyeon] = ', res.data.documents);
         this.searchAddressList = res.data.documents;
       }
     } catch (e) {}

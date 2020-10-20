@@ -10,6 +10,73 @@
 //6 #f08c00  // 주황
 //7 #e03131  //빨강
 //8 #212529  //흑
+
+// const makeLocationObject = item => {
+//   let locationObj = {};
+//   let address_name = data.addressName;
+//   /* INT 로 갈지 말지 정하자  */
+//   let x = data.x;
+//   let y = data.y;
+//   let mem_idx = 1;
+//   let b_code = '';
+//   let h_code = '';
+//   let main_address_no = '';
+//   let mountain_yn = '';
+//   let region_1depth_name = '';
+//   let region_2depth_name = '';
+//   let region_3depth_h_name = '';
+//   let region_3depth_name = '';
+//   let sub_address_no = '';
+//   //road 관련
+//   let road_address_name = '';
+//   let building_name = '';
+//   let main_building_no = '';
+//   let sub_building_no = '';
+//   let underground_yn = '';
+//   let zone_no = '';
+//   if (data.address) {
+//     b_code = data.address.b_code;
+//     h_code = data.address.h_code;
+//     main_address_no = data.address.main_address_no;
+//     mountain_yn = data.address.mountain_yn;
+//     region_1depth_name = data.address.region_1depth_name;
+//     region_2depth_name = data.address.region_2depth_name;
+//     region_3depth_h_name = data.address.region_3depth_h_name;
+//     region_3depth_name = data.address.region_3depth_name;
+//     sub_address_no = data.address.sub_address_no;
+//   }
+//   if (data.roadAddress) {
+//     road_address_name = data.roadAddress.address_name;
+//     building_name = data.roadAddress.building_name;
+//     main_building_no = data.roadAddress.main_building_no;
+//     sub_building_no = data.roadAddress.sub_building_no;
+//     underground_yn = data.roadAddress.underground_yn;
+//     zone_no = data.roadAddress.zone_no;
+//   }
+//   locationObj = {
+//     address_name: address_name,
+//     b_code: b_code,
+//     h_code: h_code,
+//     main_address_no: main_address_no,
+//     mountain_yn: mountain_yn,
+//     region_1depth_name: region_1depth_name,
+//     region_2depth_name: region_2depth_name,
+//     region_3depth_h_name: region_3depth_h_name,
+//     region_3depth_name: region_3depth_name,
+//     sub_address_no: sub_address_no,
+//     x: x,
+//     y: y,
+//     road_address_name: road_address_name,
+//     address_name: address_name,
+//     building_name: building_name,
+//     main_building_no: main_building_no,
+//     road_name: road_name,
+//     sub_building_no: sub_building_no,
+//     underground_yn: underground_yn,
+//     zone_no: zone_no,
+//   };
+//   return locationObj;
+// };
 const colorArray = [
   '#3b5bdb', // 파랑
   '#3bc9db', // 청록
