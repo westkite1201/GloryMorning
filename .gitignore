@@ -5,3 +5,12 @@ node_modules/
 /GloryMorning_front/.env
 /GloryMorning_back/.env
 ignore-file.txt
+GloryMorning_front/public/dump.rdb
+koreaLocation/.idea/.gitignore
+koreaLocation/.idea/koreaLocation.iml
+koreaLocation/.idea/misc.xml
+koreaLocation/.idea/modules.xml
+koreaLocation/.idea/vcs.xml
+koreaLocation/.idea/inspectionProfiles/profiles_settings.xml
+koreaLocation/__pycache__/clientConfig.cpython-37.pyc
+koreaLocation/__pycache__/database.cpython-37.pyc
