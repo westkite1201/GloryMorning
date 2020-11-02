@@ -512,7 +512,11 @@ insertWeatherDataShortTerm = async (nx, ny) => {
     let rows = await weatherDaoNew.insertWeatherDataShortTerm(list);
     //console.log('success', rows);
     return new Promise((resolve, reject) => {
-      resolve();
+      if (rows) {
+        resolve({ message: 'success', status: 200 });
+      } else {
+        reject({ message: 'error', status: 400 });
+      }
     });
   } catch (e) {
     console.log('error ', e);
