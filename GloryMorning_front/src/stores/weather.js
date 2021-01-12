@@ -282,23 +282,26 @@ export default class WeatherStore {
   //사용할지 안할지 생각해보기
   @action
   initDefaultUpdateWeater = async () => {
-    console.log('[seo] initDefaultUpdateWeater 1');
+    //console.log('[seo] initDefaultUpdateWeater 1');
     await this.settingLocationInfo();
-    console.log('[seo] initDefaultUpdateWeater 2');
+    //console.log('[seo] initDefaultUpdateWeater 2');
     //gps기반 세팅이 된경우
     if (this.locationInfo) {
-      console.log('[initDefaultUpdateWeater]');
+      //console.log('[initDefaultUpdateWeater]');
       await this.getWeatherDataV2('ALL');
       await this.getWeatherDataShortTerm();
       await this.getDustInfo();
     } else {
-      console.log('[initDefaultUpdateWeater] ');
+      //console.log('[initDefaultUpdateWeater] this locationInfo is null');
       //아닌 경우
       let addressList = this.rootStore.search.selectedAddressList;
       // db에서 가져와서 세팅이 되어있는 경우
-      if (addressList) {
+      //console.log('[initDefaultUpdateWeater] addressList', addressList);
+      if (addressList && addressList.length !== 0) {
+        //console.log('[initDefaultUpdateWeater] addressList is fine');
         this.rootStore.search.setThisLocation(addressList[0]);
       } else {
+        //console.log('[initDefaultUpdateWeater] addressList is null');
         //아닌경우 호출후 첫번쨰
         await this.rootStore.search.getSettingLocation();
         addressList = this.rootStore.search.selectedAddressList;
@@ -814,33 +817,20 @@ export default class WeatherStore {
 
   @action
   nowGeolocation = async () => {
-    console.log(
-      'nowGeolocation this.locationInfo ',
-      this.locationInfo,
-      navigator.geolocation,
-    );
     if (navigator.geolocation) {
-      console.log('[SEO][nowGeolocation] 1', navigator.geolocation);
       // GPS를 지원하면
       try {
         const position = await this.getPosition();
-        console.log(
-          '[SEO][nowGeolocation] ',
-          position.coords.latitude + ' ' + position.coords.longitude,
-        );
         this.currentX = position.coords.longitude;
         this.currentY = position.coords.latitude;
         let currentX = position.coords.longitude;
         let currentY = position.coords.latitude;
         let locationInfo = await this.getLocationName(currentX, currentY);
         this.locationInfo = locationInfo;
-        console.log(
-          'nowGeolocation [SEO] locationInfo 세팅 완료 ',
-          this.locationInfo,
-        );
         return locationInfo;
       } catch (e) {
         console.log('[nowGeolocation] error ', e);
+        return null;
       }
     } else {
       console.log('error gps 자원 안함');

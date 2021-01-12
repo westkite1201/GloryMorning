@@ -12,6 +12,7 @@ const SearchSelected = observer(({ locationSettingMode }) => {
   }, []);
 
   let { addressName } = search.selectedAddress;
+
   let selectedList = search.selectedAddressList.map((item, key) => {
     let selectClassName = `selected-box ${
       addressName === item.addressName ? 'select' : ''
@@ -37,7 +38,7 @@ const SearchSelected = observer(({ locationSettingMode }) => {
             />
           )}
         </div>
-        {addressName === item.addressName && (
+        {addressName && addressName === item.addressName && (
           <div>
             <Check />
           </div>
