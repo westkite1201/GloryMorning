@@ -57,7 +57,7 @@ class SideBar extends Component {
       //fontSize: '2rem'
     };
 
-    console.log(routes);
+    //console.log(routes);
 
     const link = routes.map((prop, key) => {
       if (prop.sideView) {

@@ -67,12 +67,14 @@ const TopRow = observer(() => {
           <div onClick={() => switchView('home')} name="home">
             HOME
           </div>
+          {/*
           <div onClick={() => switchView('test1')} name="test1">
             TEST1
           </div>
           <div onClick={() => switchView('test2')} name="test2">
             TEST2
           </div>
+          */}
         </div>
 
         <div>

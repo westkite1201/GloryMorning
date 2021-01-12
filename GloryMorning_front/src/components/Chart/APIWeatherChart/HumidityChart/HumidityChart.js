@@ -238,7 +238,6 @@ class HumidityChart extends Component {
     return (
       <div>
         <ReactHighcharts config={config} ref="chart"></ReactHighcharts>
-        <button onClick={() => this.props.getWeather('REH')}>버튼클릭</button>
       </div>
     );
   }

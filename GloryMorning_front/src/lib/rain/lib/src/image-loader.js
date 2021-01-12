@@ -6,7 +6,7 @@ function loadImage(src, i, onLoad) {
         src,
       };
     }
-    console.log('[rain] src', src);
+    //console.log('[rain] src', src);
     let img = new Image();
     img.crossOrigin = 'anonymous';
     src.img = img;
@@ -16,19 +16,19 @@ function loadImage(src, i, onLoad) {
         if (typeof onLoad == 'function') {
           onLoad.call(null, img, i);
         }
-        console.log('[rain] resolve');
+        //console.log('[rain] resolve');
         resolve(src);
       });
       img.src = src.src;
     } catch (e) {
-      console.log('[rain] ', e);
+      //console.log('[rain] ', e);
       reject();
     }
   });
 }
 
 function loadImages(images, onLoad) {
-  console.log('[rain] loadImages');
+  //console.log('[rain] loadImages');
   return Promise.all(
     images.map((src, i) => {
       return loadImage(src, i, onLoad);

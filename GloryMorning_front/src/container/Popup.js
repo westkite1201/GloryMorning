@@ -28,6 +28,7 @@ const Map = observer(() => {
     let lng = parseFloat(x);
     if (lat && lng) panTo(lat, lng);
   }, [search.selectedAddress]);
+
   const mapscript = () => {
     let container = document.getElementById('map');
     let options = {

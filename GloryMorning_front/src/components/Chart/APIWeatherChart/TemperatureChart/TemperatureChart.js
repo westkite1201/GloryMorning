@@ -31,13 +31,13 @@ class TemperatureChart extends Component {
   }
 
   render() {
-    console.log('render');
+    //console.log('render');
     const {
       wrapperid,
       temperatureDataList,
       temperatureDataListYesterday,
     } = this.props;
-    console.log('temperatureData ', temperatureDataList);
+    //console.log('temperatureData ', temperatureDataList);
 
     const config = {
       chart: {

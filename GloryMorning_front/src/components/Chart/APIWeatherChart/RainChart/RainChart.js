@@ -37,8 +37,8 @@ class RainChart extends Component {
       getWeather('R06');
     }
 
-    console.log('componentDidUpdate');
-    console.log('isFetching', isFetchingRain);
+    // console.log('componentDidUpdate');
+    // console.log('isFetching', isFetchingRain);
 
     //this.chartUpdate()
   }

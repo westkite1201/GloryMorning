@@ -179,10 +179,10 @@ module.exports = function (callee) {
           numOfRows: 175,
           dataType: type,
         });
-        console.log('base_date ', base_date, ' base_time', base_time);
+        //console.log('base_date ', base_date, ' base_time', base_time);
         OPTIONS.url += 'ServiceKey=' + serviceKey;
         OPTIONS.url += propertiesObject;
-        //console.log('options ', OPTIONS);
+        //console.log('[weatherAsync] options ', OPTIONS);
 
         //async를 위해 request 함수 선언
         function doRequest() {
@@ -222,7 +222,7 @@ module.exports = function (callee) {
         }
 
         let res = await doRequest();
-        //console.log("response " , res)
+        console.log('response ', res.data);
         return res;
       },
       getDustNearStation: async (tmX, tmY) => {

@@ -5,26 +5,26 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 import _ from 'lodash';
-const data = {
-  id: 'root',
-  name: 'NCMS',
-  children: [
-    {
-      id: '1',
-      name: '분석',
-    },
-    {
-      id: '3',
-      name: '측정',
-      children: [
-        {
-          id: '4',
-          name: 'Child - 4',
-        },
-      ],
-    },
-  ],
-};
+// const data = {
+//   id: 'root',
+//   name: 'NCMS',
+//   children: [
+//     {
+//       id: '1',
+//       name: '분석',
+//     },
+//     {
+//       id: '3',
+//       name: '측정',
+//       children: [
+//         {
+//           id: '4',
+//           name: 'Child - 4',
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 // const useStyles = makeStyles({
 //   root: {
@@ -38,7 +38,7 @@ const RecursiveTreeView = ({ pureComponents, addSelectedComponent }) => {
   const [objectArr, setObjectArr] = useState([]);
 
   useEffect(() => {
-    console.log('pureComponents', pureComponents);
+    //console.log('pureComponents', pureComponents);
     let hello = _.groupBy(pureComponents, 'category');
     let objectArr = Object.keys(hello).map((item, key) => {
       let objectCategory = hello[item];
@@ -86,7 +86,7 @@ const RecursiveTreeView = ({ pureComponents, addSelectedComponent }) => {
         : null}
     </TreeItem>
   );
-  console.log('objectArr ', objectArr);
+  //console.log('objectArr ', objectArr);
   if (objectArr.length === 0) {
     return null;
   }

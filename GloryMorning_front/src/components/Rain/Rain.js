@@ -17,9 +17,9 @@ const Rain = observer(() => {
   const { edit, weather } = UseStores();
   let defaultYn = true;
   useEffect(() => {
-    alert('rain useEfftect, ' + edit.isRainRender);
+    //alert('rain useEfftect, ' + edit.isRainRender);
     async function loadRainDrop() {
-      alert('loadRainDrop');
+      //alert('loadRainDrop');
       //let targetDiv = document.getElementById('rain-container').getBoundingClientRect();
       let render = await loadTextures(width, height, defaultYn);
       setRender(render);
@@ -28,7 +28,7 @@ const Rain = observer(() => {
       loadRainDrop();
     }
     return () => {
-      alert('RAIN return');
+      //alert('RAIN return');
       edit.setRainRender(false);
     };
   }, []);
@@ -40,7 +40,7 @@ const Rain = observer(() => {
       if (weather.weatherInfoObject.weatherInfoCode) {
         let weatherInfoCode = weather.weatherInfoObject.weatherInfoCode;
         let rainViewName = helpers.rainViewCodeConverter(weatherInfoCode);
-        alert(rainViewName);
+        //alert(rainViewName);
         changeWeatherToOnClick(rainViewName);
       }
     }

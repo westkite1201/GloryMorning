@@ -51,7 +51,7 @@ export default class EditStore {
   };
   @action
   setLocationFlagView = () => {
-    console.log('[seo] setLocationFlagView ', this.locationViewFlag);
+    //console.log('[seo] setLocationFlagView ', this.locationViewFlag);
     let flag = !this.locationViewFlag;
     this.locationViewFlag = flag;
   };
@@ -91,11 +91,11 @@ export default class EditStore {
     foreach 사용이 불가하다고 한다.
   */
   handleResizable = flag => {
-    console.log('[SEO] handleResizable!', flag);
+    //console.log('[SEO] handleResizable!', flag);
     let childs = document.getElementsByClassName('react-resizable-handle');
     if (!helpers.isEmpty(childs)) {
       [...childs].forEach(item => {
-        console.log('[SEO][resizeable] ', item);
+        //console.log('[SEO][resizeable] ', item);
         item.style.display = flag ? 'initial' : 'none';
       });
     }
@@ -185,12 +185,6 @@ export default class EditStore {
   (단, 컴포넌트의 root div에 wrapperid  + _c 가 id 로 잡혀있는 경우만 해당)
   */
   handleResizeChildComponent = (allChild, target) => {
-    console.log(
-      '[seo] handleResizeChildComponent ,allChild',
-      allChild,
-      ' target ',
-      target.i,
-    );
     let rect = document.getElementById(target.i).getBoundingClientRect();
 
     let targetDiv = document.getElementById(target.i + '_c');
@@ -292,7 +286,6 @@ export default class EditStore {
   @action
   putComponentList = componentList => {
     this.componentList = componentList;
-    console.log('[SEO] this.componentList', this.componentList);
   };
   @action
   initComponetList = () => {
@@ -303,9 +296,9 @@ export default class EditStore {
   setPageName = pageName => {
     this.page_name = pageName;
   };
+
   @action
   loadPage = async () => {
-    console.log('loadpage', this.page_name);
     try {
       await axios
         .post(clientConfig.endpoint.api + '/bus/get_user_components', {
@@ -313,15 +306,10 @@ export default class EditStore {
           page_name: this.page_name,
         })
         .then(async res => {
-          console.log('loadpage res', res.data.component_list);
           if (helpers.isEmpty(res.data.component_list)) {
             this.initlayout(this.page_name);
             this.page_name = this.page_name;
           } else {
-            console.log(
-              '[seo][res.data.component_list] ',
-              res.data.component_list,
-            );
             this.page_name = this.page_name;
             if (res.data.component_list[0] === '') {
               this.layout = [];
@@ -377,7 +365,7 @@ export default class EditStore {
       cursor: 'pointer',
       zIndex: 99,
     };
-    let Tag = helpers.isEmpty(el.TagName)
+    const Tag = helpers.isEmpty(el.TagName)
       ? 'div'
       : this.searchComponentByName(el.TagName);
     //let Tag = 'div'

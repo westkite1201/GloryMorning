@@ -29,7 +29,7 @@ class HumidityChart extends Component {
   }
 
   render() {
-    console.log('render');
+    //console.log('render');
     const { wrapperid, humidityData } = this.props;
     const config = {
       chart: {

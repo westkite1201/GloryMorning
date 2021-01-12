@@ -28,19 +28,17 @@ class EditView extends Component {
       getWeatherDataV2,
       setSocketConnection,
       updateWeatherDataIntevalStart,
+      initDefaultUpdateWeater,
     } = this.props;
-    //nowGeolocation();
-    //alert('componentDidMount');
     loadPage();
     setSocketConnection();
-    updateWeatherDataIntevalStart();
     getUserBackground('testUser');
-    getWeatherDataV2('ALL');
+    initDefaultUpdateWeater();
+    updateWeatherDataIntevalStart();
     window.addEventListener('resize', _.debounce(this.updateDimensions, 300));
     //window.onresize = this.handleResizeEnd;
   }
   componentWillUnmount() {
-    const { setLayout } = this.props;
     //alert('edit view componentWillUnMount');
     //setLayout(null);
     window.removeEventListener('resize', this.updateDimensions);
@@ -56,7 +54,7 @@ class EditView extends Component {
   }
 
   render() {
-    console.log('[seo] editview render');
+    //console.log('[seo] editview render');
     let {
       layout,
       onLayoutChange,
@@ -74,8 +72,6 @@ class EditView extends Component {
     //         {i: 'c', x: 4, y: 0, w: 1, h: 2}
     //       ];
     //       console.log('layout ' , layout)
-    console.log('editPageFlag', editPageFlag);
-    console.log('[SEO] backgroundUrl', backgroundUrl, selectedBackgroundUrl);
     let background = selectedBackgroundUrl
       ? selectedBackgroundUrl
       : backgroundUrl;
@@ -134,4 +130,5 @@ export default inject(({ edit, setting, weather }) => ({
   setSocketConnection: weather.setSocketConnection,
   updateWeatherDataIntevalStart: weather.updateWeatherDataIntevalStart,
   getWeatherDataV2: weather.getWeatherDataV2,
+  initDefaultUpdateWeater: weather.initDefaultUpdateWeater,
 }))(observer(EditView));

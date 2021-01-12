@@ -53,9 +53,9 @@ RainRenderer.prototype = {
   renderShadow: false,
   options: null,
   init() {
-    console.log('shader');
-    console.log('vertShader ', vertShader);
-    console.log('fragShader ', fragShader);
+    // console.log('shader');
+    // console.log('vertShader ', vertShader);
+    // console.log('fragShader ', fragShader);
 
     this.width = this.canvas.width;
     this.height = this.canvas.height;

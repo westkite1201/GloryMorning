@@ -107,7 +107,7 @@ const UnsplashContainer = () => {
 
   const downloadImage = useCallback(async () => {
     try {
-      alert('downloadImage');
+      //alert('downloadImage');
       console.log(photo);
       setLoading(true);
       //const blob = await downloadPhoto(photo.urls.regular);

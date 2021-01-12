@@ -28,7 +28,7 @@ import App from '../App';
 
 const dashboardRoutes = [
   {
-    sideView: true,
+    sideView: false,
     //exact : true,
     path: '/popup',
     sidebarName: 'Popup',
@@ -56,7 +56,7 @@ const dashboardRoutes = [
   },
 
   {
-    sideView: true,
+    sideView: false,
     //exact : true,
     path: '/SearchAddress',
     sidebarName: 'SearchAddress',
@@ -68,9 +68,9 @@ const dashboardRoutes = [
   {
     sideView: true,
     //exact : true,
-    path: '/seoPage',
-    sidebarName: 'seoPage',
-    navbarName: 'seoPage',
+    path: '/main',
+    sidebarName: 'main',
+    navbarName: 'main',
     icon: Dashboard,
     component: App,
   },
@@ -84,7 +84,7 @@ const dashboardRoutes = [
     component: SettingBackground,
   },
   {
-    sideView: true,
+    sideView: false,
     //exact : true,
     path: '/WisdomQuotes',
     sidebarName: 'WisdomQuotes',
