@@ -52,7 +52,7 @@
     "gl-shader": "^4.2.1",
     "glslify": "^7.0.0",
     "glslify-loader": "^2.0.0",
-    "gsap": "^3.3.1",
+    "gsap": "^3.6.0",
     "highlight.js": "^9.15.6",
     "history": "^4.9.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
